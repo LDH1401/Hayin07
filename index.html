@@ -517,9 +517,10 @@
   // rẻ tiền, thay cho shadowBlur trên từng ký tự (thứ đã làm chữ nhoè thành khối).
   const gcv = document.createElement("canvas");
   const gctx = gcv.getContext("2d");
-  let tcell = 9, textCells = [], textGlyph = [], textOrder = [];
+  let tcell = 9, textCells = [], textTone = [], delayIn = [], delayOut = [];
+  const TONES = ["#ffffff", "#dceeff", "#9dc6ee"];
   let textStart = 0, lastText = 0, lastLit = -1;
-  let textScrim = null, curPhrase = "";
+  let curPhrase = "";
   const PHRASE = 2700;
 
   function pool(text){
@@ -572,7 +573,7 @@
                    'px "Roboto Mono", ui-monospace, monospace';
       colTrail[i] = TRAIL[band];
       colHead[i] = HEAD[band];
-      colDim[i] = 0.3 + d * 0.7;
+      colDim[i] = 0.44 + d * 0.56;
     }
 
     ctx.fillStyle = "#04060f";
@@ -686,8 +687,8 @@
     }
 
     // Ô lưới suy từ cỡ chữ, không từ lưới mưa, nên chữ đọc được như nhau trên mọi
-    // màn hình. Mỗi nét chữ cần vắt qua khoảng ba ô mới đặc.
-    tcell = Math.max(4, Math.min(12, Math.round(fs * 0.062)));
+    // màn hình. Nét chữ đậm dày chừng 0,16em nên mỗi nét vắt qua khoảng ba ô vuông.
+    tcell = Math.max(4, Math.min(10, Math.round(fs * 0.055)));
 
     mctx.clearRect(0, 0, W, H);
     mctx.font = '800 ' + fs.toFixed(1) + 'px "Be Vietnam Pro", system-ui, sans-serif';
@@ -697,7 +698,7 @@
     mctx.strokeStyle = "#fff";
     mctx.lineJoin = "round";
     // Nới nét ra nửa ô: chỉ lấy mẫu ở tâm ô thì các ô rìa nét bị bỏ sót, chữ thủng lỗ.
-    mctx.lineWidth = tcell * 0.6;
+    mctx.lineWidth = tcell * 0.3;
     const lh = fs * 1.04;
     const y0 = H * 0.47 - (lines.length - 1) * lh / 2;
     lines.forEach((l, i) => {
@@ -722,45 +723,95 @@
       }
     }
 
-    // Làm tối nền ngay sau lưng câu chữ, nếu không mưa và chữ cùng sáng thì rối mắt.
-    textScrim = null;
-    if (textCells.length){
-      const bx = (x0 + x1) / 2, by = (y0b + y1b) / 2;
-      const br = Math.max(x1 - x0, y1b - y0b) * 0.78 + fs;
-      const g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
-      g.addColorStop(0, "rgba(4,6,15,.82)");
-      g.addColorStop(0.55, "rgba(4,6,15,.6)");
-      g.addColorStop(1, "rgba(4,6,15,0)");
-      textScrim = { g, bx, by, br };
+    /* Không hạ nền sau lưng câu chữ nữa. Ô vuông trắng đặc đã sáng hơn mưa rất
+       nhiều nên tự nổi; hạ nền chỉ làm tắt mất chính hiệu ứng chữ rơi. */
+    /* Mỗi ô có độ trễ riêng. Lúc kết chữ, độ trễ chạy từ trái sang phải nên các
+       hạt đáp xuống thành một làn sóng; lúc tan thì trên rơi trước dưới rơi sau. */
+    let cMin = Infinity, cMax = -Infinity, rMin = Infinity, rMax = -Infinity;
+    for (const p of textCells){
+      if (p.c < cMin) cMin = p.c;
+      if (p.c > cMax) cMax = p.c;
+      if (p.r < rMin) rMin = p.r;
+      if (p.r > rMax) rMax = p.r;
     }
-    textGlyph = textCells.map(pick);
-    textOrder = textCells.map((_, i) => i);
-    for (let i = textOrder.length - 1; i > 0; i--){
-      const j = (Math.random() * (i + 1)) | 0;
-      const t = textOrder[i]; textOrder[i] = textOrder[j]; textOrder[j] = t;
+    const span = 1 - WIN;
+    textTone = []; delayIn = []; delayOut = [];
+    for (const p of textCells){
+      const t = Math.random();
+      textTone.push(t < 0.62 ? 0 : t < 0.9 ? 1 : 2);
+      const cn = cMax > cMin ? (p.c - cMin) / (cMax - cMin) : 0;
+      const rn = rMax > rMin ? (p.r - rMin) / (rMax - rMin) : 0;
+      delayIn.push((cn * 0.64 + Math.random() * 0.36) * span);
+      delayOut.push((rn * 0.42 + Math.random() * 0.58) * span);
     }
   }
 
-  function renderText(n, scramble){
-    tctx.clearRect(0, 0, W, H);
-    // Không dùng shadowBlur ở đây. Hàng trăm ký tự chồng nhau, mỗi ký tự một quầng
-    // thì cộng dồn thành một mảng trắng nhoè. Nét vẽ sắc, quầng sáng tạo riêng bên dưới.
-    // Phông đều nét chỉ rộng chừng 0,6em, nên phải vẽ gấp 1,8 lần ô thì các ký tự
-    // mới chạm nhau. Vẽ vừa ô là chữ hở toang thành lấm tấm.
-    tctx.font = (tcell * 1.95).toFixed(1) + 'px "Roboto Mono", ui-monospace, monospace';
-    tctx.textAlign = "center";
-    tctx.textBaseline = "middle";
-    for (let i = 0; i < n; i++){
-      const k = textOrder[i], p = textCells[k];
-      if (!RM && Math.random() < scramble) textGlyph[k] = pick();
-      const t = Math.random();
-      tctx.fillStyle = t < 0.55 ? "#ffffff" : t < 0.85 ? "#d6e9ff" : "#a6c8ee";
-      tctx.fillText(textGlyph[k], p.c * tcell + tcell / 2, p.r * tcell + tcell / 2);
+  const hasRound = typeof tctx.roundRect === "function";
+  const IN = 0.24, OUT = 0.76, WIN = 0.34;   // mốc kết chữ, mốc tan, bề rộng cửa sổ mỗi ô
+
+  function box(x, y, w, h, r){
+    if (hasRound){
+      tctx.beginPath();
+      tctx.roundRect(x, y, w, h, Math.min(r, w / 2, h / 2));
+      tctx.fill();
+    } else {
+      tctx.fillRect(x, y, w, h);
     }
+  }
+
+  /* Mỗi ô sáng là một ô vuông nhỏ chứ không phải một ký tự — ký tự đều nét luôn
+     chừa khe hở làm chữ rỗ. Ô đang rơi thì kéo dài ra thành giọt và sáng trắng,
+     chạm chỗ thì co lại thành vuông và lắng về sắc độ của nó. t là tiến độ câu. */
+  function renderText(t){
+    tctx.clearRect(0, 0, W, H);
+    const N = textCells.length;
+    const size = tcell * 0.82;
+    const r = size * 0.26;
+    const drop = tcell * 10;
+    const hold = t >= IN && t <= OUT;
+
+    for (let i = 0; i < N; i++){
+      const p = textCells[i];
+      let g = 1, dy = 0, a = 1, hot = 0;
+
+      if (t < IN){
+        const u = (t / IN - delayIn[i]) / WIN;
+        if (u <= 0) continue;
+        g = u >= 1 ? 1 : u;
+        const e = (1 - g) * (1 - g);
+        dy = -e * drop;
+        a = Math.min(1, g * 2.4);
+        hot = e;
+      } else if (t > OUT){
+        const u = ((t - OUT) / (1 - OUT) - delayOut[i]) / WIN;
+        if (u >= 1) continue;
+        if (u > 0){
+          const e = u * u;
+          dy = e * drop * 1.5;
+          a = 1 - u;
+          g = 1 - u * 0.3;
+          hot = e * 0.8;
+        }
+      } else if (!RM && Math.random() < 0.015){
+        const q = Math.random();
+        textTone[i] = q < 0.62 ? 0 : q < 0.9 ? 1 : 2;
+      }
+
+      const st = 1 + hot * 2.6;                 // kéo dài theo phương rơi
+      const h = size * g * st;
+      const w = size * g * (1 - hot * 0.24);
+      tctx.globalAlpha = a;
+      // hạt còn bay thì trắng như đầu vệt mưa, đáp xuống rồi mới về sắc độ riêng
+      tctx.fillStyle = hot > 0.12 ? "#ffffff" : TONES[textTone[i]];
+      box(p.c * tcell + (tcell - w) / 2,
+          p.r * tcell + (tcell - h) / 2 + dy, w, h, r);
+    }
+    tctx.globalAlpha = 1;
 
     // Thu nhỏ rồi tí nữa phóng ngược lên: đó là lớp quầng sáng.
     gctx.clearRect(0, 0, gcv.width, gcv.height);
     gctx.drawImage(tcv, 0, 0, gcv.width, gcv.height);
+    return hold;
   }
 
   function renderHeart(n){
@@ -800,7 +851,7 @@
   }
 
   function draw(now){
-    ctx.fillStyle = "rgba(4,6,15,0.06)";
+    ctx.fillStyle = "rgba(4,6,15,0.045)";
     ctx.fillRect(0, 0, W, H);
 
     ctx.textAlign = "center";
@@ -836,21 +887,11 @@
         gctx.clearRect(0, 0, gcv.width, gcv.height);
       } else {
         // vào nhanh, đứng yên cho đọc, rồi tan dần theo thứ tự ngẫu nhiên
-        let f, scramble;
-        if (t < 0.18){ f = t / 0.18; scramble = 0.5; }
-        else if (t < 0.74){ f = 1; scramble = 0.05; }
-        else { f = 1 - (t - 0.74) / 0.26; scramble = 0.35; }
-        const lit = Math.round(textCells.length * Math.max(0, f));
-        if (now - lastText > 33 || lit !== lastLit){
-          lastText = now; lastLit = lit;
-          renderText(lit, scramble);
+        if (now - lastText > 24){
+          lastText = now;
+          renderText(t);
         }
-        if (textScrim){
-          ctx.fillStyle = textScrim.g;
-          ctx.fillRect(textScrim.bx - textScrim.br, textScrim.by - textScrim.br,
-                       textScrim.br * 2, textScrim.br * 2);
-        }
-        ctx.globalAlpha = 0.6;
+        ctx.globalAlpha = 0.78;
         ctx.drawImage(gcv, 0, 0, W, H);   // quầng sáng
         ctx.globalAlpha = 1;
         ctx.drawImage(tcv, 0, 0, W, H);   // nét chữ sắc

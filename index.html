@@ -63,7 +63,7 @@
 
   /* ---------- màn mở ---------- */
   .gate{
-    display:flex;flex-direction:column;align-items:center;gap:26px;
+    display:flex;flex-direction:column;align-items:center;gap:30px;
     pointer-events:auto;
     transition:opacity .6s ease, transform .6s ease;
   }
@@ -76,18 +76,20 @@
     color:var(--mute);
   }
   .to{
-    font-size:clamp(1.75rem,8.5vw,2.9rem);
+    font-size:clamp(2.2rem,11vw,3.5rem);
     font-weight:800;letter-spacing:-.02em;line-height:1.06;
     text-wrap:balance;max-width:16ch;
     margin:0;
     text-shadow:0 0 22px rgba(190,222,255,.4),0 0 60px rgba(74,124,212,.35);
   }
 
+  .gate-cta{display:flex;flex-direction:column;align-items:center;gap:16px}
+
   .unwrap{
     position:relative;
     width:112px;height:112px;border-radius:50%;
     border:1px solid rgba(110,205,255,.55);
-    background:radial-gradient(circle at 50% 45%, rgba(110,205,255,.28), rgba(110,205,255,.04) 70%);
+    background:radial-gradient(circle at 50% 45%, rgba(110,205,255,.36), rgba(110,205,255,.05) 72%);
     color:var(--paper);
     font-family:inherit;font-size:26px;
     display:grid;place-items:center;
@@ -105,6 +107,64 @@
   @keyframes ring{
     0%{transform:scale(1);opacity:.85}
     100%{transform:scale(1.75);opacity:0}
+  }
+
+  /* Trái tim ở màn mở dùng đúng đường cong với trái tim ở cuối, chỉ khác là
+     nét vẽ thay vì đắp bằng ký tự — mở đầu và kết thúc soi vào nhau. */
+  .gate-heart{
+    width:58px;height:58px;overflow:visible;
+    animation:beat 1.15s 2.2s ease-out infinite;
+  }
+  /* Cùng nhịp hai phách với trái tim ở cuối trang. */
+  @keyframes beat{
+    0%{transform:scale(1)}
+    8%{transform:scale(1.13)}
+    17%{transform:scale(1)}
+    26%{transform:scale(1.07)}
+    36%{transform:scale(1)}
+    100%{transform:scale(1)}
+  }
+  .gate-heart path{
+    fill:none;stroke:var(--ice-soft);
+    stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round;
+    filter:drop-shadow(0 0 5px rgba(110,205,255,.85));
+    stroke-dasharray:var(--len,240);stroke-dashoffset:var(--len,240);
+    animation:drawHeart 1.7s .4s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes drawHeart{to{stroke-dashoffset:0}}
+
+  /* ---------- vòng đếm ---------- */
+  .ring{
+    width:clamp(228px,64vw,330px);height:clamp(228px,64vw,330px);
+    opacity:0;pointer-events:none;overflow:visible;
+    transition:opacity .7s ease;
+  }
+  .ring.on{opacity:1}
+  .ring circle{
+    fill:none;stroke-linecap:round;
+    transform:rotate(-90deg);transform-origin:50% 50%;
+  }
+  .ring-track{stroke:rgba(186,210,255,.08);stroke-width:.55}
+  .ring-arc{
+    stroke:var(--ice);stroke-width:1;opacity:.55;
+    stroke-dasharray:282.74;stroke-dashoffset:0;
+    filter:drop-shadow(0 0 3px rgba(110,205,255,.9));
+  }
+
+  /* ---------- quầng sáng lúc trái tim khép lại ---------- */
+  .bloom{
+    position:fixed;left:var(--hx,50%);top:var(--hy,50%);
+    width:var(--bw,340px);height:var(--bw,340px);
+    transform:translate(-50%,-50%);
+    border-radius:50%;opacity:0;pointer-events:none;
+    background:radial-gradient(circle,
+      rgba(180,232,255,.5) 0%, rgba(110,205,255,.16) 44%, rgba(110,205,255,0) 70%);
+  }
+  .bloom.pop{animation:bloom 1s cubic-bezier(.2,.7,.3,1)}
+  @keyframes bloom{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}
+    26%{opacity:1}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(1.3)}
   }
 
   .tap{
@@ -137,20 +197,13 @@
     100%{transform:scale(1);filter:blur(0);opacity:1}
   }
 
-  /* ---------- ba câu ---------- */
+  /* ---------- ba câu ----------
+     Chữ được đắp bằng ký tự trên canvas. Thẻ <p> vẫn giữ nội dung nhưng ẩn khỏi
+     mắt, để trình đọc màn hình còn đọc được từng câu. */
   .line{
-    font-size:clamp(2.1rem,12.5vw,4.1rem);
-    font-weight:800;line-height:1.08;letter-spacing:-.03em;
-    text-wrap:balance;max-width:11ch;
-    opacity:0;margin:0;
-    text-shadow:0 0 18px rgba(219,232,255,.75),0 0 48px rgba(120,180,255,.55),0 0 96px rgba(74,124,212,.4);
-  }
-  .line.run{animation:lineIn 2.7s cubic-bezier(.2,.8,.25,1) forwards}
-  @keyframes lineIn{
-    0%{opacity:0;transform:translateY(20px) scale(.96);filter:blur(14px)}
-    22%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
-    74%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
-    100%{opacity:0;transform:translateY(-8px) scale(1.03);filter:blur(9px)}
+    position:absolute;width:1px;height:1px;
+    margin:-1px;padding:0;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap;
   }
 
   /* ---------- lời nhắn trong tim ---------- */
@@ -223,20 +276,32 @@
   /* ---------- bảng tự tạo ---------- */
   .sheet{
     position:fixed;inset:0;z-index:9;
-    background:rgba(4,6,15,.93);
-    backdrop-filter:blur(14px);
-    overflow-y:auto;
-    padding:28px 20px 40px;
-    display:none;
+    background:rgba(4,6,15,.95);
+    backdrop-filter:blur(16px);
+    display:none;flex-direction:column;
   }
-  .sheet.is-open{display:block}
-  .sheet-inner{max-width:30rem;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+  .sheet.is-open{display:flex}
+  .sheet-scroll{flex:1;overflow-y:auto;padding:26px 20px 30px;-webkit-overflow-scrolling:touch}
+  .sheet-inner{max-width:30rem;margin:0 auto;display:flex;flex-direction:column;gap:30px}
   .sheet h2{
-    font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin:0;
+    font-size:1.65rem;font-weight:800;letter-spacing:-.03em;margin:0 0 10px;
+    text-wrap:balance;
   }
   .sheet p.lead{
-    font-size:.85rem;line-height:1.6;color:var(--mute);margin:0;max-width:34ch;
+    font-size:.87rem;line-height:1.65;color:var(--mute);margin:0;max-width:36ch;
   }
+
+  /* Gom theo từng chặng của màn trình diễn để người điền biết mình đang viết cho đoạn nào. */
+  .group{display:flex;flex-direction:column;gap:16px}
+  .group-title{
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:9.5px;font-weight:400;
+    letter-spacing:.28em;text-transform:uppercase;
+    color:rgba(110,205,255,.75);
+    margin:0;padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+  }
+
   .field{display:flex;flex-direction:column;gap:7px}
   .field label{
     font-family:"Roboto Mono",ui-monospace,monospace;
@@ -246,12 +311,32 @@
     font-family:inherit;font-size:1rem;color:var(--paper);
     background:rgba(12,24,56,.7);
     border:1px solid var(--line);
-    border-radius:10px;padding:12px 14px;
+    border-radius:11px;padding:13px 15px;
     width:100%;
+    transition:border-color .18s ease, box-shadow .18s ease;
   }
-  .field input:focus{outline:none;border-color:rgba(110,205,255,.6);box-shadow:0 0 0 3px rgba(110,205,255,.14)}
+  .field input:focus{outline:none;border-color:rgba(110,205,255,.65);box-shadow:0 0 0 3px rgba(110,205,255,.14)}
+  .field input::placeholder{color:rgba(186,210,255,.28)}
   .field small{font-family:"Roboto Mono",ui-monospace,monospace;font-size:9.5px;color:rgba(186,210,255,.34);letter-spacing:.06em}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .field small.warn{color:#ffc46b}
+
+  .sheet-x{
+    position:absolute;top:14px;right:14px;z-index:2;
+    width:36px;height:36px;border-radius:50%;
+    background:rgba(12,24,56,.6);border:1px solid var(--line);
+    color:var(--mute);font-size:14px;line-height:1;cursor:pointer;
+    display:grid;place-items:center;
+  }
+  .sheet-x:hover,.sheet-x:focus-visible{color:var(--paper);border-color:rgba(110,205,255,.5)}
+  .sheet-x:focus-visible{outline:2px solid var(--ice-soft);outline-offset:3px}
+
+  /* Nút chính luôn nằm trong tầm ngón tay, không phải cuộn xuống đáy mới thấy. */
+  .sheet-bar{
+    flex-shrink:0;display:flex;gap:10px;justify-content:center;
+    padding:14px 20px max(14px,env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);
+    background:rgba(8,14,32,.94);
+  }
   .primary{
     background:linear-gradient(135deg,#5ec8ff,#6f7bff);
     color:#fff;border:none;
@@ -273,7 +358,10 @@
 
   @media (prefers-reduced-motion:reduce){
     .unwrap::before{animation:none;opacity:0}
-    .count.tick,.line.run{animation-timing-function:linear}
+    .gate-heart{animation:none}
+    .gate-heart path{animation:none;stroke-dashoffset:0}
+    .bloom.pop{animation-duration:.01s}
+    .count.tick{animation-timing-function:linear}
   }
 </style>
 
@@ -285,15 +373,24 @@
   <section class="gate" id="gate">
     <span class="eyebrow" id="eyebrow">Một lời nhắn dành riêng cho</span>
     <h1 class="to" id="toName">Em</h1>
-    <button class="unwrap" id="openBtn" aria-label="Mở lời nhắn">💌</button>
-    <span class="tap">Chạm để mở</span>
+    <div class="gate-cta">
+      <button class="unwrap" id="openBtn" aria-label="Mở lời nhắn">
+        <svg class="gate-heart" viewBox="0 0 100 100" aria-hidden="true"><path id="gateHeart"></path></svg>
+      </button>
+      <span class="tap">Chạm để mở</span>
+    </div>
     <p class="hint">Bật loa để trọn cảm xúc</p>
   </section>
 
+  <svg class="ring" id="ring" viewBox="0 0 100 100" aria-hidden="true">
+    <circle class="ring-track" cx="50" cy="50" r="45"></circle>
+    <circle class="ring-arc" id="ringArc" cx="50" cy="50" r="45"></circle>
+  </svg>
   <div class="count" id="count" aria-hidden="true"></div>
-  <p class="line" id="line"></p>
+  <p class="line" id="line" aria-live="polite"></p>
 </main>
 
+<div class="bloom" id="bloom" aria-hidden="true"></div>
 <p class="final" id="final"></p>
 
 <audio id="bgm" playsinline preload="none"></audio>
@@ -306,49 +403,72 @@
 </div>
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-  <div class="sheet-inner">
-    <h2 id="sheetTitle">Tạo lời nhắn của bạn</h2>
-    <p class="lead">Điền vào bên dưới rồi bấm <strong>Tạo link</strong>. Bạn sẽ nhận được một đường dẫn và mã QR — gửi cho người ấy, họ mở ra là thấy đúng lời của bạn.</p>
+  <button class="sheet-x" id="closeBtn" aria-label="Đóng bảng">✕</button>
 
-    <div class="field">
-      <label for="fTo">Gửi tới</label>
-      <input id="fTo" type="text" maxlength="28" placeholder="Tên người ấy">
-    </div>
-    <div class="field">
-      <label for="fBg">Câu nền rơi liên tục</label>
-      <input id="fBg" type="text" maxlength="24" placeholder="Anh thích em">
-      <small>3–5 chữ, đây là câu tạo nên mưa chữ và trái tim</small>
-    </div>
-    <div class="field">
-      <label for="f1">Câu 1</label>
-      <input id="f1" type="text" maxlength="30" placeholder="Anh muốn tiến xa hơn">
-    </div>
-    <div class="field">
-      <label for="f2">Câu 2</label>
-      <input id="f2" type="text" maxlength="30" placeholder="trong mối quan hệ này">
-    </div>
-    <div class="field">
-      <label for="f3">Câu 3</label>
-      <input id="f3" type="text" maxlength="30" placeholder="Em đồng ý">
-      <small>Mỗi câu 3–5 chữ cho cân đối</small>
-    </div>
-    <div class="field">
-      <label for="fF">Câu cuối trong trái tim</label>
-      <input id="fF" type="text" maxlength="60" placeholder="Làm bạn gái anh nhé">
-      <small>5–8 chữ</small>
-    </div>
+  <div class="sheet-scroll">
+    <div class="sheet-inner">
+      <header>
+        <h2 id="sheetTitle">Tạo lời nhắn của bạn</h2>
+        <p class="lead">Điền vào bên dưới rồi bấm Tạo link. Bạn nhận được một đường dẫn kèm mã QR — gửi cho người ấy, họ mở ra là thấy đúng lời của bạn.</p>
+      </header>
 
-    <div class="row">
-      <button class="btn primary" id="genBtn">Tạo link</button>
-      <button class="btn" id="tryBtn">Xem thử ngay</button>
-      <button class="btn" id="closeBtn">Đóng</button>
-    </div>
+      <section class="group">
+        <h3 class="group-title">Màn mở</h3>
+        <div class="field">
+          <label for="fTo">Gửi tới</label>
+          <input id="fTo" type="text" maxlength="28" placeholder="Tên người ấy">
+        </div>
+        <div class="field">
+          <label for="fBg">Câu nền rơi liên tục</label>
+          <input id="fBg" type="text" maxlength="24" placeholder="Anh thích em">
+          <small class="tally" data-min="2" data-max="5">Câu này tạo nên mưa chữ và các ký tự đắp thành trái tim</small>
+        </div>
+        <div class="field">
+          <label for="fDem">Đếm ngược bao nhiêu giây</label>
+          <input id="fDem" type="number" min="1" max="60" step="1" placeholder="15">
+          <small>Từ 1 đến 60. Càng lâu càng hồi hộp, nhưng đừng quá 20.</small>
+        </div>
+      </section>
 
-    <div class="qr" id="qrWrap">
-      <div class="qr-box" id="qrBox"></div>
-      <p class="link" id="linkOut"></p>
-      <button class="btn" id="copyBtn">Sao chép link</button>
+      <section class="group">
+        <h3 class="group-title">Ba câu sau khi đếm xong</h3>
+        <div class="field">
+          <label for="f1">Câu 1</label>
+          <input id="f1" type="text" maxlength="30" placeholder="Anh muốn tiến xa hơn">
+          <small class="tally" data-min="3" data-max="5"></small>
+        </div>
+        <div class="field">
+          <label for="f2">Câu 2</label>
+          <input id="f2" type="text" maxlength="30" placeholder="trong mối quan hệ này">
+          <small class="tally" data-min="3" data-max="5"></small>
+        </div>
+        <div class="field">
+          <label for="f3">Câu 3</label>
+          <input id="f3" type="text" maxlength="30" placeholder="Em đồng ý">
+          <small class="tally" data-min="3" data-max="5"></small>
+        </div>
+      </section>
+
+      <section class="group">
+        <h3 class="group-title">Câu cuối trong trái tim</h3>
+        <div class="field">
+          <label for="fF">Lời kết</label>
+          <input id="fF" type="text" maxlength="60" placeholder="Làm bạn gái anh nhé">
+          <small class="tally" data-min="5" data-max="8"></small>
+        </div>
+      </section>
+
+      <div class="qr" id="qrWrap">
+        <div class="qr-box" id="qrBox"></div>
+        <p class="link" id="linkOut"></p>
+        <button class="btn" id="copyBtn">Sao chép link</button>
+      </div>
     </div>
+  </div>
+
+  <div class="sheet-bar">
+    <button class="btn primary" id="genBtn">Tạo link</button>
+    <button class="btn" id="tryBtn">Xem thử ngay</button>
   </div>
 </div>
 
@@ -377,6 +497,7 @@
   /* ============ mưa chữ ============ */
   let W = 0, H = 0, cell = 16, cols = 0, rows = 0;
   let drops = [], nextAt = [], pace = [];
+  let colFont = [], colTrail = [], colHead = [], colDim = [];
   let heartCells = [], heartGlyph = [], heartBox = null;
   let rainAlpha = 0.34, heartReveal = 0, pulse = 0;
 
@@ -385,6 +506,21 @@
   const hcv = document.createElement("canvas");
   const hctx = hcv.getContext("2d");
   let hDpr = 1, lastHeart = 0, lastCount = -1;
+
+  // Ba câu cũng được đắp bằng ký tự như trái tim, nhưng trên lưới mịn hơn
+  // để nét chữ còn đọc được. tcv là lớp vẽ sẵn, mcv dùng để đo hình chữ.
+  const tcv = document.createElement("canvas");
+  const tctx = tcv.getContext("2d");
+  const mcv = document.createElement("canvas");
+  const mctx = mcv.getContext("2d", { willReadFrequently: true });
+  // gcv là bản thu nhỏ của lớp chữ; phóng ngược lên chính là một lớp quầng sáng
+  // rẻ tiền, thay cho shadowBlur trên từng ký tự (thứ đã làm chữ nhoè thành khối).
+  const gcv = document.createElement("canvas");
+  const gctx = gcv.getContext("2d");
+  let tcell = 9, textCells = [], textGlyph = [], textOrder = [];
+  let textStart = 0, lastText = 0, lastLit = -1;
+  let textScrim = null, curPhrase = "";
+  const PHRASE = 2700;
 
   function pool(text){
     const base = (text || "love").replace(/\s+/g, "");
@@ -402,6 +538,11 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     hcv.width = cv.width; hcv.height = cv.height; hDpr = dpr;
     hctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    tcv.width = cv.width; tcv.height = cv.height;
+    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    mcv.width = W; mcv.height = H;
+    gcv.width = Math.max(1, Math.round(W / 4));
+    gcv.height = Math.max(1, Math.round(H / 4));
 
     cell = Math.max(13, Math.min(22, Math.round(Math.min(W, H) / 26)));
     cols = Math.ceil(W / cell) + 1;
@@ -410,16 +551,34 @@
     drops = new Array(cols);
     nextAt = new Array(cols);
     pace = new Array(cols);
+    colFont = new Array(cols);
+    colTrail = new Array(cols);
+    colHead = new Array(cols);
+    colDim = new Array(cols);
+
+    // Mỗi cột nằm ở một độ sâu riêng: cột gần thì chữ to, sáng, rơi nhanh;
+    // cột xa thì nhỏ, mờ, rơi chậm. Đây là thứ tạo ra chiều sâu cho màn mưa.
+    const TRAIL = ["#2f5390", "#3c68b4", "#4a7cd4"];
+    const HEAD  = ["#7ea3dd", "#b3ccf2", "#eaf3ff"];
     const now = performance.now();
     for (let i = 0; i < cols; i++){
+      const d = Math.random();
+      const band = d < 0.34 ? 0 : d < 0.68 ? 1 : 2;
       drops[i] = -Math.random() * rows;
-      pace[i] = (RM ? 260 : 44) + Math.random() * (RM ? 420 : 62);
+      pace[i] = RM ? 260 + Math.random() * 420
+                   : 104 - d * 58 + Math.random() * 26;
       nextAt[i] = now + Math.random() * 900;
+      colFont[i] = (cell * (0.74 + d * 0.46)).toFixed(1) +
+                   'px "Roboto Mono", ui-monospace, monospace';
+      colTrail[i] = TRAIL[band];
+      colHead[i] = HEAD[band];
+      colDim[i] = 0.3 + d * 0.7;
     }
 
     ctx.fillStyle = "#04060f";
     ctx.fillRect(0, 0, W, H);
     buildHeart();
+    if (curPhrase) buildText(curPhrase);
   }
 
   /* Trái tim được dựng từ chính lưới ký tự đang rơi — không phải một hình vẽ
@@ -452,11 +611,156 @@
     const half = 16 * scale * cell;
     heartBox = { cx: cxg * cell, cy: (cyg + 0.5 * scale) * cell, w: half * 2 };
 
-    const f = $("final");
-    f.style.setProperty("--hx", heartBox.cx + "px");
-    f.style.setProperty("--hy", heartBox.cy + "px");
-    f.style.setProperty("--hw", Math.round(heartBox.w * 0.54) + "px");
-    f.style.setProperty("--hf", Math.max(11, Math.min(20, heartBox.w * 0.072)) + "px");
+    const root = document.documentElement.style;
+    root.setProperty("--hx", Math.round(heartBox.cx) + "px");
+    root.setProperty("--hy", Math.round(heartBox.cy) + "px");
+    root.setProperty("--hw", Math.round(heartBox.w * 0.54) + "px");
+    root.setProperty("--hf", Math.max(11, Math.min(20, heartBox.w * 0.072)).toFixed(1) + "px");
+    root.setProperty("--bw", Math.round(heartBox.w * 1.35) + "px");
+  }
+
+  /* Ngắt dòng sao cho các dòng cân nhau nhất, chứ không nhồi đầy dòng trên rồi
+     bỏ một chữ lẻ xuống dòng dưới. */
+  function splitBalanced(ww, space, k){
+    const n = ww.length;
+    if (k > n) return null;
+    const width = (a, b) => {
+      let sum = 0;
+      for (let i = a; i < b; i++) sum += ww[i];
+      return sum + space * Math.max(0, b - a - 1);
+    };
+    if (k === 1) return { cuts: [0, n], max: width(0, n) };
+    let best = null;
+    if (k === 2){
+      for (let i = 1; i < n; i++){
+        const m = Math.max(width(0, i), width(i, n));
+        if (!best || m < best.max) best = { cuts: [0, i, n], max: m };
+      }
+    } else {
+      for (let i = 1; i < n - 1; i++){
+        for (let j = i + 1; j < n; j++){
+          const m = Math.max(width(0, i), width(i, j), width(j, n));
+          if (!best || m < best.max) best = { cuts: [0, i, j, n], max: m };
+        }
+      }
+    }
+    return best;
+  }
+
+  /* Vẽ câu ra canvas đo, rồi quét từng ô lưới xem tâm ô có nằm trong nét chữ
+     không. Ô nào nằm trong thì tí nữa được đắp một ký tự sáng lên. */
+  function buildText(str){
+    textCells = []; lastLit = -1;
+    if (!str) return;
+
+    curPhrase = str;
+    const words = str.split(/\s+/).filter(Boolean);
+    if (!words.length) return;
+
+    const maxW = W * 0.88, maxH = H * 0.44;
+    const FS_MAX = Math.min(W * 0.20, H * 0.24, 200);
+
+    // Đo một lần ở cỡ 100px rồi suy ra cỡ chữ thật, khỏi dò từng bước.
+    mctx.font = '800 100px "Be Vietnam Pro", system-ui, sans-serif';
+    const ww = words.map(x => mctx.measureText(x).width);
+    const space = mctx.measureText(" ").width;
+
+    const opts = [];
+    for (const k of [1, 2, 3]){
+      const sp = splitBalanced(ww, space, k);
+      if (!sp) break;
+      opts.push({ k, sp, fs: Math.min(FS_MAX, maxW / sp.max * 100, maxH / (k * 1.04)) });
+    }
+
+    // Một dòng chỉ dành cho câu thật ngắn. Từ 4 chữ trở lên luôn xuống hai dòng,
+    // vì trải một hàng dài ngang màn hình rộng thì chữ vừa bé vừa khó đọc.
+    let chosen = opts[opts.length - 1];
+    for (const o of opts){
+      if (o.k === 1 && words.length <= 3 && o.fs >= FS_MAX * 0.75){ chosen = o; break; }
+      if (o.k === 2 && o.fs >= FS_MAX * 0.45){ chosen = o; break; }
+    }
+    const fs = chosen.fs;
+    const lines = [];
+    for (let i = 0; i + 1 < chosen.sp.cuts.length; i++){
+      lines.push(words.slice(chosen.sp.cuts[i], chosen.sp.cuts[i + 1]).join(" "));
+    }
+
+    // Ô lưới suy từ cỡ chữ, không từ lưới mưa, nên chữ đọc được như nhau trên mọi
+    // màn hình. Mỗi nét chữ cần vắt qua khoảng ba ô mới đặc.
+    tcell = Math.max(4, Math.min(12, Math.round(fs * 0.062)));
+
+    mctx.clearRect(0, 0, W, H);
+    mctx.font = '800 ' + fs.toFixed(1) + 'px "Be Vietnam Pro", system-ui, sans-serif';
+    mctx.textAlign = "center";
+    mctx.textBaseline = "middle";
+    mctx.fillStyle = "#fff";
+    mctx.strokeStyle = "#fff";
+    mctx.lineJoin = "round";
+    // Nới nét ra nửa ô: chỉ lấy mẫu ở tâm ô thì các ô rìa nét bị bỏ sót, chữ thủng lỗ.
+    mctx.lineWidth = tcell * 0.6;
+    const lh = fs * 1.04;
+    const y0 = H * 0.47 - (lines.length - 1) * lh / 2;
+    lines.forEach((l, i) => {
+      mctx.fillText(l, W / 2, y0 + i * lh);
+      mctx.strokeText(l, W / 2, y0 + i * lh);
+    });
+
+    const img = mctx.getImageData(0, 0, W, H).data;
+    const tc = Math.ceil(W / tcell), tr = Math.ceil(H / tcell);
+    let x0 = W, x1 = 0, y0b = H, y1b = 0;
+    for (let r = 0; r < tr; r++){
+      const py = Math.min(H - 1, Math.round(r * tcell + tcell / 2));
+      for (let c = 0; c < tc; c++){
+        const px = Math.min(W - 1, Math.round(c * tcell + tcell / 2));
+        if (img[(py * W + px) * 4 + 3] > 110){
+          textCells.push({ c, r });
+          if (px < x0) x0 = px;
+          if (px > x1) x1 = px;
+          if (py < y0b) y0b = py;
+          if (py > y1b) y1b = py;
+        }
+      }
+    }
+
+    // Làm tối nền ngay sau lưng câu chữ, nếu không mưa và chữ cùng sáng thì rối mắt.
+    textScrim = null;
+    if (textCells.length){
+      const bx = (x0 + x1) / 2, by = (y0b + y1b) / 2;
+      const br = Math.max(x1 - x0, y1b - y0b) * 0.78 + fs;
+      const g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+      g.addColorStop(0, "rgba(4,6,15,.82)");
+      g.addColorStop(0.55, "rgba(4,6,15,.6)");
+      g.addColorStop(1, "rgba(4,6,15,0)");
+      textScrim = { g, bx, by, br };
+    }
+    textGlyph = textCells.map(pick);
+    textOrder = textCells.map((_, i) => i);
+    for (let i = textOrder.length - 1; i > 0; i--){
+      const j = (Math.random() * (i + 1)) | 0;
+      const t = textOrder[i]; textOrder[i] = textOrder[j]; textOrder[j] = t;
+    }
+  }
+
+  function renderText(n, scramble){
+    tctx.clearRect(0, 0, W, H);
+    // Không dùng shadowBlur ở đây. Hàng trăm ký tự chồng nhau, mỗi ký tự một quầng
+    // thì cộng dồn thành một mảng trắng nhoè. Nét vẽ sắc, quầng sáng tạo riêng bên dưới.
+    // Phông đều nét chỉ rộng chừng 0,6em, nên phải vẽ gấp 1,8 lần ô thì các ký tự
+    // mới chạm nhau. Vẽ vừa ô là chữ hở toang thành lấm tấm.
+    tctx.font = (tcell * 1.95).toFixed(1) + 'px "Roboto Mono", ui-monospace, monospace';
+    tctx.textAlign = "center";
+    tctx.textBaseline = "middle";
+    for (let i = 0; i < n; i++){
+      const k = textOrder[i], p = textCells[k];
+      if (!RM && Math.random() < scramble) textGlyph[k] = pick();
+      const t = Math.random();
+      tctx.fillStyle = t < 0.55 ? "#ffffff" : t < 0.85 ? "#d6e9ff" : "#a6c8ee";
+      tctx.fillText(textGlyph[k], p.c * tcell + tcell / 2, p.r * tcell + tcell / 2);
+    }
+
+    // Thu nhỏ rồi tí nữa phóng ngược lên: đó là lớp quầng sáng.
+    gctx.clearRect(0, 0, gcv.width, gcv.height);
+    gctx.drawImage(tcv, 0, 0, gcv.width, gcv.height);
   }
 
   function renderHeart(n){
@@ -464,9 +768,16 @@
     hctx.font = cell + 'px "Roboto Mono", ui-monospace, monospace';
     hctx.textAlign = "center";
     hctx.textBaseline = "middle";
-    pulse += 0.09;
+    // Vẽ xong rồi thì tim đập theo nhịp hai phách thật, không phải sóng sin đều đều.
+    let glow = 0.9;
+    if (heartReveal >= 1 && !RM){
+      const t = (performance.now() / 1000 % 1.15) / 1.15;
+      const beat = Math.exp(-Math.pow((t - 0.07) / 0.05, 2)) +
+                   0.55 * Math.exp(-Math.pow((t - 0.26) / 0.055, 2));
+      glow = 0.62 + beat * 0.8;
+    }
     hctx.shadowColor = "rgba(110,205,255,.95)";
-    hctx.shadowBlur = cell * (0.85 + Math.sin(pulse) * 0.2);
+    hctx.shadowBlur = cell * glow;
     for (let i = 0; i < n; i++){
       if (!RM && Math.random() < 0.08) heartGlyph[i] = pick();
       const p = heartCells[i];
@@ -476,11 +787,22 @@
     hctx.shadowBlur = 0;
   }
 
+  // Cùng công thức với trái tim đắp bằng ký tự, chỉ xuất ra dạng nét vẽ SVG.
+  function heartPath(k){
+    let d = "";
+    for (let i = 0; i <= 140; i++){
+      const t = i / 140 * Math.PI * 2;
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+      d += (i ? "L" : "M") + (50 + x * k).toFixed(2) + " " + (50 - (y + 2.5) * k).toFixed(2);
+    }
+    return d + "Z";
+  }
+
   function draw(now){
     ctx.fillStyle = "rgba(4,6,15,0.06)";
     ctx.fillRect(0, 0, W, H);
 
-    ctx.font = cell + 'px "Roboto Mono", ui-monospace, monospace';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
@@ -491,11 +813,13 @@
       const y = drops[i] * cell + cell / 2;
 
       if (drops[i] >= 0 && drops[i] < rows){
-        ctx.globalAlpha = rainAlpha * 0.75;
-        ctx.fillStyle = "#4a7cd4";
+        const dim = colDim[i];
+        ctx.font = colFont[i];
+        ctx.globalAlpha = rainAlpha * dim * 0.7;
+        ctx.fillStyle = colTrail[i];
         ctx.fillText(pick(), x, y - cell);
-        ctx.globalAlpha = rainAlpha;
-        ctx.fillStyle = "#dbe8ff";
+        ctx.globalAlpha = rainAlpha * dim;
+        ctx.fillStyle = colHead[i];
         ctx.fillText(pick(), x, y);
         ctx.globalAlpha = 1;
       }
@@ -504,9 +828,38 @@
       if (drops[i] > rows + Math.random() * 24) drops[i] = -Math.random() * 12;
     }
 
+    if (textStart && textCells.length){
+      const t = (now - textStart) / PHRASE;
+      if (t >= 1){
+        textStart = 0; lastLit = -1; curPhrase = "";
+        tctx.clearRect(0, 0, W, H);
+        gctx.clearRect(0, 0, gcv.width, gcv.height);
+      } else {
+        // vào nhanh, đứng yên cho đọc, rồi tan dần theo thứ tự ngẫu nhiên
+        let f, scramble;
+        if (t < 0.18){ f = t / 0.18; scramble = 0.5; }
+        else if (t < 0.74){ f = 1; scramble = 0.05; }
+        else { f = 1 - (t - 0.74) / 0.26; scramble = 0.35; }
+        const lit = Math.round(textCells.length * Math.max(0, f));
+        if (now - lastText > 33 || lit !== lastLit){
+          lastText = now; lastLit = lit;
+          renderText(lit, scramble);
+        }
+        if (textScrim){
+          ctx.fillStyle = textScrim.g;
+          ctx.fillRect(textScrim.bx - textScrim.br, textScrim.by - textScrim.br,
+                       textScrim.br * 2, textScrim.br * 2);
+        }
+        ctx.globalAlpha = 0.6;
+        ctx.drawImage(gcv, 0, 0, W, H);   // quầng sáng
+        ctx.globalAlpha = 1;
+        ctx.drawImage(tcv, 0, 0, W, H);   // nét chữ sắc
+      }
+    }
+
     if (heartReveal > 0 && heartCells.length){
       const n = Math.floor(heartCells.length * heartReveal);
-      if (now - lastHeart > 50 || n !== lastCount){
+      if (now - lastHeart > 33 || n !== lastCount){
         lastHeart = now; lastCount = n;
         renderHeart(n);
       }
@@ -636,6 +989,10 @@
     const cnt = $("count"), ln = $("line"), fin = $("final");
     cnt.textContent = ""; ln.textContent = "";
     cnt.classList.remove("on", "tick", "out");
+    $("bloom").classList.remove("pop");
+    textStart = 0; lastLit = -1; curPhrase = "";
+    tctx.clearRect(0, 0, W, H);
+    gctx.clearRect(0, 0, gcv.width, gcv.height);
     fin.classList.remove("show");
     $("actions").classList.remove("show");
     heartReveal = 0; lastCount = -1;
@@ -647,7 +1004,18 @@
     }, 40);
 
     const N = CONFIG.dem;
+    const ring = $("ring"), arc = $("ringArc");
     cnt.classList.remove("out");
+    ring.classList.remove("on");
+    arc.style.transition = "none";
+    arc.style.strokeDashoffset = "0";
+    arc.getBoundingClientRect();          // ép trình duyệt nhận mốc 0 trước khi chạy
+    at(700, () => {
+      ring.classList.add("on");
+      arc.style.transition = "stroke-dashoffset " + N + "s linear";
+      arc.style.strokeDashoffset = "282.74";
+    });
+
     for (let i = 0; i < N; i++){
       at(700 + i * 1000, () => {
         cnt.textContent = N - i;
@@ -656,15 +1024,20 @@
       });
     }
     const tEnd = 700 + N * 1000;
-    at(tEnd, () => { cnt.classList.remove("on", "tick"); cnt.classList.add("out"); });
+    at(tEnd, () => {
+      cnt.classList.remove("on", "tick");
+      cnt.classList.add("out");
+      ring.classList.remove("on");
+    });
 
     const tLines = tEnd + 300;
-    [CONFIG.l1, CONFIG.l2, CONFIG.l3].forEach((txt, i) => at(tLines + i * 2700, () => {
+    [CONFIG.l1, CONFIG.l2, CONFIG.l3].forEach((txt, i) => at(tLines + i * PHRASE, () => {
       ln.textContent = txt;
-      replay(ln, "run");
+      buildText(txt);
+      textStart = performance.now();
     }));
 
-    const tHeart = tLines + 3 * 2700 + 100;
+    const tHeart = tLines + 3 * PHRASE + 100;
     at(tHeart, () => {
       const dur = RM ? 900 : 2600;
       const t0 = performance.now();
@@ -676,6 +1049,7 @@
       grow();
     });
 
+    at(tHeart + 2650, () => replay($("bloom"), "pop"));
     at(tHeart + 3000, () => { fin.textContent = CONFIG.fin; fin.classList.add("show"); });
     at(tHeart + 4800, () => $("actions").classList.add("show"));
   }
@@ -687,6 +1061,10 @@
     $("edge").textContent = CONFIG.to ? CONFIG.to + " · " + CONFIG.bg : CONFIG.bg;
     GLYPHS = pool(CONFIG.bg);
   }
+
+  const gh = $("gateHeart");
+  gh.setAttribute("d", heartPath(1.4));
+  gh.style.setProperty("--len", Math.ceil(gh.getTotalLength()) + "");
 
   paint();
   resize();
@@ -713,8 +1091,32 @@
   const sheet = $("sheet");
   const fields = { to: $("fTo"), bg: $("fBg"), l1: $("f1"), l2: $("f2"), l3: $("f3"), fin: $("fF") };
 
+  /* Độ dài câu quyết định trang có cân đối hay không, nên đếm chữ ngay lúc gõ
+     thay vì để người dùng tạo link xong mới phát hiện câu bị tràn. */
+  function wireTally(input, tip){
+    const min = +tip.dataset.min, max = +tip.dataset.max;
+    const base = tip.textContent;
+    const show = () => {
+      const n = input.value.trim().split(/\s+/).filter(Boolean).length;
+      const range = "nên " + min + "–" + max + " chữ";
+      if (!n){ tip.textContent = base || range; tip.classList.remove("warn"); return; }
+      tip.textContent = n + " chữ · " + range;
+      tip.classList.toggle("warn", n < min || n > max);
+    };
+    input.addEventListener("input", show);
+    return show;
+  }
+  const tallies = [];
+  document.querySelectorAll(".tally").forEach(tip => {
+    const input = tip.parentElement.querySelector("input");
+    if (input) tallies.push(wireTally(input, tip));
+  });
+  const refreshTallies = () => tallies.forEach(f => f());
+
   function openSheet(){
     for (const k in fields) fields[k].value = CONFIG[k];
+    $("fDem").value = CONFIG.dem;
+    refreshTallies();
     sheet.classList.add("is-open");
     fields.to.focus();
   }
@@ -723,6 +1125,8 @@
       const v = fields[k].value.trim();
       if (v) CONFIG[k] = v;
     }
+    const d = parseInt($("fDem").value, 10);
+    if (d) CONFIG.dem = Math.max(1, Math.min(60, d));
   }
   function buildLink(){
     const p = new URLSearchParams({

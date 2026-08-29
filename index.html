@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04060f">
+<meta property="og:title" content="Có một điều anh muốn nói...">
+<meta property="og:description" content="Chạm để mở lời nhắn dành riêng cho bạn.">
+<style>*{margin:0}html,body{background:#04060f}</style>
+</head>
+<body>
+<title>Trái Tim Đếm Ngược</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+  /* Trang này cố ý chỉ có một tông tối — đây là một màn mở quà lúc đêm,
+     nền sáng sẽ phá hỏng toàn bộ hiệu ứng. Mọi màu đều được tô tường minh. */
+  :root{
+    --void:#04060f;
+    --deep:#0a1430;
+    --rain:#4a7cd4;
+    --rain-hot:#dbe8ff;
+    --ice:#5ec8ff;
+    --ice-soft:#c9f1ff;
+    --paper:#eef5ff;
+    --mute:rgba(186,210,255,.42);
+    --line:rgba(186,210,255,.16);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--void);
+    color:var(--paper);
+    font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+    overflow:hidden;
+    overscroll-behavior:none;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  #rain{position:fixed;inset:0;width:100%;height:100%;display:block}
+
+  .vignette{
+    position:fixed;inset:0;pointer-events:none;
+    background:
+      radial-gradient(120% 75% at 50% 42%, rgba(4,6,15,0) 38%, rgba(4,6,15,.78) 100%),
+      linear-gradient(180deg, rgba(12,24,56,.5) 0%, rgba(4,6,15,0) 22%);
+  }
+
+  .stage{
+    position:fixed;inset:0;
+    display:grid;place-items:center;
+    padding:24px;
+    text-align:center;
+    user-select:none;-webkit-user-select:none;
+    pointer-events:none;
+  }
+  .stage > *{grid-area:1/1}
+
+  /* ---------- màn mở ---------- */
+  .gate{
+    display:flex;flex-direction:column;align-items:center;gap:26px;
+    pointer-events:auto;
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .gate.gone{opacity:0;transform:translateY(-10px);pointer-events:none}
+
+  .eyebrow{
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:10px;font-weight:400;
+    letter-spacing:.34em;text-transform:uppercase;
+    color:var(--mute);
+  }
+  .to{
+    font-size:clamp(1.75rem,8.5vw,2.9rem);
+    font-weight:800;letter-spacing:-.02em;line-height:1.06;
+    text-wrap:balance;max-width:16ch;
+    margin:0;
+    text-shadow:0 0 22px rgba(190,222,255,.4),0 0 60px rgba(74,124,212,.35);
+  }
+
+  .unwrap{
+    position:relative;
+    width:112px;height:112px;border-radius:50%;
+    border:1px solid rgba(110,205,255,.55);
+    background:radial-gradient(circle at 50% 45%, rgba(110,205,255,.28), rgba(110,205,255,.04) 70%);
+    color:var(--paper);
+    font-family:inherit;font-size:26px;
+    display:grid;place-items:center;
+    cursor:pointer;
+    transition:transform .25s ease, box-shadow .25s ease;
+    box-shadow:0 0 34px rgba(110,205,255,.28);
+  }
+  .unwrap:hover,.unwrap:focus-visible{transform:scale(1.06);box-shadow:0 0 52px rgba(110,205,255,.45)}
+  .unwrap:focus-visible{outline:2px solid var(--ice-soft);outline-offset:6px}
+  .unwrap::before{
+    content:"";position:absolute;inset:-1px;border-radius:50%;
+    border:1px solid rgba(110,205,255,.5);
+    animation:ring 2.6s ease-out infinite;
+  }
+  @keyframes ring{
+    0%{transform:scale(1);opacity:.85}
+    100%{transform:scale(1.75);opacity:0}
+  }
+
+  .tap{
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--mute);
+  }
+  .hint{
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:10px;letter-spacing:.1em;color:rgba(186,210,255,.3);
+    margin:0;
+  }
+
+  /* ---------- đếm ngược ---------- */
+  .count{
+    font-size:clamp(4.5rem,24vw,9rem);
+    font-weight:400;line-height:1;
+    letter-spacing:-.02em;
+    opacity:0;
+    font-variant-numeric:tabular-nums;
+    text-shadow:0 0 30px rgba(190,222,255,.55),0 0 90px rgba(110,205,255,.35);
+    transition:opacity .55s ease, transform .55s ease, filter .55s ease;
+  }
+  /* Đếm dài thì số phải đứng yên, mỗi giây nảy một nhịp — hiện/tắt 15 lần sẽ rối mắt. */
+  .count.on{opacity:1}
+  .count.out{opacity:0;transform:scale(.86);filter:blur(6px)}
+  .count.tick{animation:tick .5s cubic-bezier(.2,.9,.3,1)}
+  @keyframes tick{
+    0%{transform:scale(1.24);filter:blur(6px);opacity:.5}
+    100%{transform:scale(1);filter:blur(0);opacity:1}
+  }
+
+  /* ---------- ba câu ---------- */
+  .line{
+    font-size:clamp(2.1rem,12.5vw,4.1rem);
+    font-weight:800;line-height:1.08;letter-spacing:-.03em;
+    text-wrap:balance;max-width:11ch;
+    opacity:0;margin:0;
+    text-shadow:0 0 18px rgba(219,232,255,.75),0 0 48px rgba(120,180,255,.55),0 0 96px rgba(74,124,212,.4);
+  }
+  .line.run{animation:lineIn 2.7s cubic-bezier(.2,.8,.25,1) forwards}
+  @keyframes lineIn{
+    0%{opacity:0;transform:translateY(20px) scale(.96);filter:blur(14px)}
+    22%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+    74%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+    100%{opacity:0;transform:translateY(-8px) scale(1.03);filter:blur(9px)}
+  }
+
+  /* ---------- lời nhắn trong tim ---------- */
+  .final{
+    position:fixed;
+    left:var(--hx,50%);top:var(--hy,50%);
+    transform:translate(-50%,-50%);
+    width:var(--hw,220px);
+    font-size:var(--hf,15px);
+    font-weight:600;line-height:1.4;letter-spacing:.005em;
+    text-wrap:balance;margin:0;
+    text-align:center;
+    color:#fff;
+    text-shadow:0 0 14px rgba(110,205,255,.9),0 0 34px rgba(110,205,255,.5);
+    opacity:0;
+    transition:opacity 1.3s ease;
+  }
+  .final.show{opacity:1}
+
+  /* ---------- chân trang ---------- */
+  .actions{
+    position:fixed;left:0;right:0;bottom:max(22px,env(safe-area-inset-bottom));
+    display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+    padding:0 20px;
+    opacity:0;pointer-events:none;
+    transition:opacity 1s ease;
+  }
+  .actions.show{opacity:1;pointer-events:auto}
+  .btn{
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--mute);
+    background:rgba(12,24,56,.55);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:11px 18px;
+    cursor:pointer;
+    backdrop-filter:blur(8px);
+    transition:color .2s ease,border-color .2s ease,background .2s ease;
+  }
+  .btn:hover,.btn:focus-visible{color:var(--paper);border-color:rgba(110,205,255,.55);background:rgba(110,205,255,.1)}
+  .btn:focus-visible{outline:2px solid var(--ice-soft);outline-offset:3px}
+
+  .sound{
+    position:fixed;top:max(16px,env(safe-area-inset-top));right:16px;
+    width:38px;height:38px;border-radius:50%;
+    display:grid;place-items:center;
+    background:rgba(12,24,56,.5);
+    border:1px solid var(--line);
+    color:var(--mute);
+    cursor:pointer;font-size:15px;line-height:1;
+    backdrop-filter:blur(8px);
+    transition:color .2s ease,border-color .2s ease;
+    z-index:4;
+  }
+  .sound:hover,.sound:focus-visible{color:var(--paper);border-color:rgba(110,205,255,.5)}
+  .sound:focus-visible{outline:2px solid var(--ice-soft);outline-offset:3px}
+
+  .edge{
+    position:fixed;left:10px;top:50%;
+    transform:translateY(-50%) rotate(180deg);
+    writing-mode:vertical-rl;
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;
+    color:rgba(186,210,255,.24);
+    pointer-events:none;
+    max-height:70vh;overflow:hidden;
+  }
+
+  /* ---------- bảng tự tạo ---------- */
+  .sheet{
+    position:fixed;inset:0;z-index:9;
+    background:rgba(4,6,15,.93);
+    backdrop-filter:blur(14px);
+    overflow-y:auto;
+    padding:28px 20px 40px;
+    display:none;
+  }
+  .sheet.is-open{display:block}
+  .sheet-inner{max-width:30rem;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+  .sheet h2{
+    font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin:0;
+  }
+  .sheet p.lead{
+    font-size:.85rem;line-height:1.6;color:var(--mute);margin:0;max-width:34ch;
+  }
+  .field{display:flex;flex-direction:column;gap:7px}
+  .field label{
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--mute);
+  }
+  .field input{
+    font-family:inherit;font-size:1rem;color:var(--paper);
+    background:rgba(12,24,56,.7);
+    border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;
+    width:100%;
+  }
+  .field input:focus{outline:none;border-color:rgba(110,205,255,.6);box-shadow:0 0 0 3px rgba(110,205,255,.14)}
+  .field small{font-family:"Roboto Mono",ui-monospace,monospace;font-size:9.5px;color:rgba(186,210,255,.34);letter-spacing:.06em}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .primary{
+    background:linear-gradient(135deg,#5ec8ff,#6f7bff);
+    color:#fff;border:none;
+  }
+  .primary:hover,.primary:focus-visible{color:#fff;background:linear-gradient(135deg,#6fc8ff,#8a92ff)}
+  .qr{
+    display:none;flex-direction:column;align-items:center;gap:12px;
+    padding:18px;border:1px solid var(--line);border-radius:14px;
+    background:rgba(12,24,56,.5);
+  }
+  .qr.show{display:flex}
+  .qr-box{background:#fff;padding:12px;border-radius:10px;line-height:0}
+  .qr-box img,.qr-box canvas{display:block}
+  .link{
+    font-family:"Roboto Mono",ui-monospace,monospace;
+    font-size:10px;color:var(--mute);word-break:break-all;line-height:1.6;
+    text-align:center;max-width:100%;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .unwrap::before{animation:none;opacity:0}
+    .count.tick,.line.run{animation-timing-function:linear}
+  }
+</style>
+
+<canvas id="rain" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="edge" id="edge"></div>
+
+<main class="stage">
+  <section class="gate" id="gate">
+    <span class="eyebrow" id="eyebrow">Một lời nhắn dành riêng cho</span>
+    <h1 class="to" id="toName">Em</h1>
+    <button class="unwrap" id="openBtn" aria-label="Mở lời nhắn">💌</button>
+    <span class="tap">Chạm để mở</span>
+    <p class="hint">Bật loa để trọn cảm xúc</p>
+  </section>
+
+  <div class="count" id="count" aria-hidden="true"></div>
+  <p class="line" id="line"></p>
+</main>
+
+<p class="final" id="final"></p>
+
+<audio id="bgm" playsinline preload="none"></audio>
+
+<button class="sound" id="soundBtn" aria-label="Tắt nhạc" title="Nhạc nền">♪</button>
+
+<div class="actions" id="actions">
+  <button class="btn" id="replayBtn">Xem lại</button>
+  <button class="btn" id="makeBtn">Tự tạo lời nhắn</button>
+</div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-inner">
+    <h2 id="sheetTitle">Tạo lời nhắn của bạn</h2>
+    <p class="lead">Điền vào bên dưới rồi bấm <strong>Tạo link</strong>. Bạn sẽ nhận được một đường dẫn và mã QR — gửi cho người ấy, họ mở ra là thấy đúng lời của bạn.</p>
+
+    <div class="field">
+      <label for="fTo">Gửi tới</label>
+      <input id="fTo" type="text" maxlength="28" placeholder="Tên người ấy">
+    </div>
+    <div class="field">
+      <label for="fBg">Câu nền rơi liên tục</label>
+      <input id="fBg" type="text" maxlength="24" placeholder="Anh thích em">
+      <small>3–5 chữ, đây là câu tạo nên mưa chữ và trái tim</small>
+    </div>
+    <div class="field">
+      <label for="f1">Câu 1</label>
+      <input id="f1" type="text" maxlength="30" placeholder="Anh muốn tiến xa hơn">
+    </div>
+    <div class="field">
+      <label for="f2">Câu 2</label>
+      <input id="f2" type="text" maxlength="30" placeholder="trong mối quan hệ này">
+    </div>
+    <div class="field">
+      <label for="f3">Câu 3</label>
+      <input id="f3" type="text" maxlength="30" placeholder="Em đồng ý">
+      <small>Mỗi câu 3–5 chữ cho cân đối</small>
+    </div>
+    <div class="field">
+      <label for="fF">Câu cuối trong trái tim</label>
+      <input id="fF" type="text" maxlength="60" placeholder="Làm bạn gái anh nhé">
+      <small>5–8 chữ</small>
+    </div>
+
+    <div class="row">
+      <button class="btn primary" id="genBtn">Tạo link</button>
+      <button class="btn" id="tryBtn">Xem thử ngay</button>
+      <button class="btn" id="closeBtn">Đóng</button>
+    </div>
+
+    <div class="qr" id="qrWrap">
+      <div class="qr-box" id="qrBox"></div>
+      <p class="link" id="linkOut"></p>
+      <button class="btn" id="copyBtn">Sao chép link</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const q = new URLSearchParams(location.search);
+
+  const CONFIG = {
+    to:   q.get("to") || "Em",
+    bg:   q.get("bg") || "Anh thích em",
+    l1:   q.get("l1") || "Anh muốn tiến xa hơn",
+    l2:   q.get("l2") || "trong mối quan hệ này",
+    l3:   q.get("l3") || "Em đồng ý",
+    fin:  q.get("f")  || "Làm bạn gái anh nhé",
+    dem:  Math.max(1, Math.min(60, parseInt(q.get("dem"), 10) || 15)),
+    mp3:  q.get("mp3") === null ? "nhac.mp3" : q.get("mp3"),
+    from: parseFloat(q.get("s")) || 0
+  };
+
+  const $ = id => document.getElementById(id);
+  const cv = $("rain"), ctx = cv.getContext("2d");
+
+  /* ============ mưa chữ ============ */
+  let W = 0, H = 0, cell = 16, cols = 0, rows = 0;
+  let drops = [], nextAt = [], pace = [];
+  let heartCells = [], heartGlyph = [], heartBox = null;
+  let rainAlpha = 0.34, heartReveal = 0, pulse = 0;
+
+  // Lớp trái tim vẽ sẵn ra canvas phụ rồi ghép vào mỗi khung hình:
+  // fillText có shadowBlur rất nặng, làm lại 20 lần/giây là đủ mượt.
+  const hcv = document.createElement("canvas");
+  const hctx = hcv.getContext("2d");
+  let hDpr = 1, lastHeart = 0, lastCount = -1;
+
+  function pool(text){
+    const base = (text || "love").replace(/\s+/g, "");
+    const chars = Array.from(base.length ? base : "love");
+    return chars.concat(chars, chars, Array.from("0123456789"));
+  }
+  let GLYPHS = pool(CONFIG.bg);
+  const pick = () => GLYPHS[(Math.random() * GLYPHS.length) | 0];
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr);
+    cv.style.width = W + "px"; cv.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    hcv.width = cv.width; hcv.height = cv.height; hDpr = dpr;
+    hctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    cell = Math.max(13, Math.min(22, Math.round(Math.min(W, H) / 26)));
+    cols = Math.ceil(W / cell) + 1;
+    rows = Math.ceil(H / cell) + 1;
+
+    drops = new Array(cols);
+    nextAt = new Array(cols);
+    pace = new Array(cols);
+    const now = performance.now();
+    for (let i = 0; i < cols; i++){
+      drops[i] = -Math.random() * rows;
+      pace[i] = (RM ? 260 : 44) + Math.random() * (RM ? 420 : 62);
+      nextAt[i] = now + Math.random() * 900;
+    }
+
+    ctx.fillStyle = "#04060f";
+    ctx.fillRect(0, 0, W, H);
+    buildHeart();
+  }
+
+  /* Trái tim được dựng từ chính lưới ký tự đang rơi — không phải một hình vẽ
+     đè lên trên. Hai đường viền lồng nhau cho nét dày như trong video. */
+  function buildHeart(){
+    const seen = new Map();
+    const gw = W / cell, gh = H / cell;
+    const cxg = gw / 2;
+    const cyg = gh * 0.47;
+    const scale = Math.min((gw * 0.80) / 32, (gh * 0.52) / 29);
+
+    for (const k of [1, 0.955]){
+      for (let i = 0; i < 1500; i++){
+        const t = (i / 1500) * Math.PI * 2;
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+        const c = Math.round(cxg + x * scale * k);
+        const r = Math.round(cyg - (y + 2.5) * scale * k);
+        if (c < 0 || c >= cols || r < 0 || r >= rows) continue;
+        const key = c + ":" + r;
+        const d = Math.abs(t - Math.PI);
+        const prev = seen.get(key);
+        if (!prev || d < prev.d) seen.set(key, { c, r, d });
+      }
+    }
+    heartCells = [...seen.values()].sort((a, b) => a.d - b.d);
+    heartGlyph = heartCells.map(pick);
+    lastCount = -1;
+
+    const half = 16 * scale * cell;
+    heartBox = { cx: cxg * cell, cy: (cyg + 0.5 * scale) * cell, w: half * 2 };
+
+    const f = $("final");
+    f.style.setProperty("--hx", heartBox.cx + "px");
+    f.style.setProperty("--hy", heartBox.cy + "px");
+    f.style.setProperty("--hw", Math.round(heartBox.w * 0.54) + "px");
+    f.style.setProperty("--hf", Math.max(11, Math.min(20, heartBox.w * 0.072)) + "px");
+  }
+
+  function renderHeart(n){
+    hctx.clearRect(0, 0, W, H);
+    hctx.font = cell + 'px "Roboto Mono", ui-monospace, monospace';
+    hctx.textAlign = "center";
+    hctx.textBaseline = "middle";
+    pulse += 0.09;
+    hctx.shadowColor = "rgba(110,205,255,.95)";
+    hctx.shadowBlur = cell * (0.85 + Math.sin(pulse) * 0.2);
+    for (let i = 0; i < n; i++){
+      if (!RM && Math.random() < 0.08) heartGlyph[i] = pick();
+      const p = heartCells[i];
+      hctx.fillStyle = Math.random() < 0.2 ? "#ffffff" : "#5ec8ff";
+      hctx.fillText(heartGlyph[i], p.c * cell + cell / 2, p.r * cell + cell / 2);
+    }
+    hctx.shadowBlur = 0;
+  }
+
+  function draw(now){
+    ctx.fillStyle = "rgba(4,6,15,0.06)";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.font = cell + 'px "Roboto Mono", ui-monospace, monospace';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    for (let i = 0; i < cols; i++){
+      if (now < nextAt[i]) continue;
+      nextAt[i] = now + pace[i];
+      const x = i * cell + cell / 2;
+      const y = drops[i] * cell + cell / 2;
+
+      if (drops[i] >= 0 && drops[i] < rows){
+        ctx.globalAlpha = rainAlpha * 0.75;
+        ctx.fillStyle = "#4a7cd4";
+        ctx.fillText(pick(), x, y - cell);
+        ctx.globalAlpha = rainAlpha;
+        ctx.fillStyle = "#dbe8ff";
+        ctx.fillText(pick(), x, y);
+        ctx.globalAlpha = 1;
+      }
+
+      drops[i]++;
+      if (drops[i] > rows + Math.random() * 24) drops[i] = -Math.random() * 12;
+    }
+
+    if (heartReveal > 0 && heartCells.length){
+      const n = Math.floor(heartCells.length * heartReveal);
+      if (now - lastHeart > 50 || n !== lastCount){
+        lastHeart = now; lastCount = n;
+        renderHeart(n);
+      }
+      ctx.drawImage(hcv, 0, 0, W, H);
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  /* ============ nhạc nền ============ */
+  let audio = null, muted = false, step = 0, tickTimer = null;
+  let bgm = null, useFile = false, musicOn = false;
+  const CHORDS = [
+    [65, 69, 72, 76, 79],
+    [64, 67, 72, 76, 79],
+    [62, 65, 69, 72, 76],
+    [58, 62, 65, 69, 72]
+  ];
+  const PATTERN = [0, 1, 2, 3, 4, 3, 2, 1];
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+
+  /* Ưu tiên file nhạc đặt cạnh trang (mặc định nhac.mp3). Thiếu file, sai định dạng
+     hoặc bị chặn tải thì lặng lẽ quay về bản nhạc tổng hợp bên dưới. */
+  function startMusic(){
+    if (musicOn) return;
+    musicOn = true;
+
+    const src = (CONFIG.mp3 || "").trim();
+    if (!src){ startAudio(); return; }
+
+    bgm = $("bgm");
+    const fallback = () => { if (!useFile && !audio) startAudio(); };
+
+    bgm.addEventListener("error", fallback, { once: true });
+    bgm.addEventListener("loadedmetadata", () => {
+      if (CONFIG.from > 0){ try { bgm.currentTime = CONFIG.from; } catch (e) {} }
+    }, { once: true });
+    bgm.addEventListener("ended", () => {
+      try { bgm.currentTime = CONFIG.from; bgm.play(); } catch (e) {}
+    });
+
+    bgm.src = src;
+    bgm.volume = 0;
+
+    const p = bgm.play();
+    if (p && p.then) p.then(fadeInFile).catch(fallback);
+    else fadeInFile();
+  }
+
+  function fadeInFile(){
+    useFile = true;
+    let v = 0;
+    const id = setInterval(() => {
+      v = Math.min(0.72, v + 0.03);
+      bgm.volume = v;
+      if (v >= 0.72) clearInterval(id);
+    }, 90);
+  }
+
+  function startAudio(){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audio = { ctx: new AC() };
+    const a = audio.ctx;
+
+    audio.master = a.createGain();
+    audio.master.gain.setValueAtTime(0.0001, a.currentTime);
+    audio.master.gain.exponentialRampToValueAtTime(0.2, a.currentTime + 3);
+    audio.master.connect(a.destination);
+
+    const delay = a.createDelay(1);
+    delay.delayTime.value = 0.34;
+    const fb = a.createGain(); fb.gain.value = 0.32;
+    const lp = a.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2000;
+    delay.connect(fb); fb.connect(lp); lp.connect(delay); lp.connect(audio.master);
+    audio.send = delay;
+
+    tick();
+  }
+
+  function pluck(midi, when, gain, type){
+    const a = audio.ctx;
+    const o = a.createOscillator();
+    const g = a.createGain();
+    o.type = type || "triangle";
+    o.frequency.value = hz(midi);
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(gain, when + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + 1.9);
+    o.connect(g); g.connect(audio.master); g.connect(audio.send);
+    o.start(when); o.stop(when + 2);
+  }
+
+  function tick(){
+    if (!audio) return;
+    const chord = CHORDS[(step >> 3) % CHORDS.length];
+    const idx = PATTERN[step % 8];
+    const t = audio.ctx.currentTime + 0.02;
+    pluck(chord[idx] + 12, t, 0.16);
+    if (step % 8 === 0) pluck(chord[0] - 12, t, 0.1, "sine");
+    if (step % 4 === 2) pluck(chord[(idx + 2) % 5] + 24, t, 0.05);
+    step++;
+    tickTimer = setTimeout(tick, 300);
+  }
+
+  $("soundBtn").addEventListener("click", () => {
+    muted = !muted;
+    if (bgm) bgm.muted = muted;
+    if (audio) audio.master.gain.setTargetAtTime(muted ? 0.0001 : 0.2, audio.ctx.currentTime, 0.2);
+    $("soundBtn").textContent = muted ? "𝄽" : "♪";
+    $("soundBtn").setAttribute("aria-label", muted ? "Bật nhạc" : "Tắt nhạc");
+  });
+
+  /* ============ kịch bản ============ */
+  let timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const clearAll = () => { timers.forEach(clearTimeout); timers = []; };
+
+  function replay(el, cls){
+    el.classList.remove(cls);
+    void el.offsetWidth;
+    el.classList.add(cls);
+  }
+
+  function run(){
+    clearAll();
+    const cnt = $("count"), ln = $("line"), fin = $("final");
+    cnt.textContent = ""; ln.textContent = "";
+    cnt.classList.remove("on", "tick", "out");
+    fin.classList.remove("show");
+    $("actions").classList.remove("show");
+    heartReveal = 0; lastCount = -1;
+    hctx.clearRect(0, 0, W, H);
+
+    const ramp = setInterval(() => {
+      rainAlpha = Math.min(1, rainAlpha + 0.03);
+      if (rainAlpha >= 1) clearInterval(ramp);
+    }, 40);
+
+    const N = CONFIG.dem;
+    cnt.classList.remove("out");
+    for (let i = 0; i < N; i++){
+      at(700 + i * 1000, () => {
+        cnt.textContent = N - i;
+        cnt.classList.add("on");
+        replay(cnt, "tick");
+      });
+    }
+    const tEnd = 700 + N * 1000;
+    at(tEnd, () => { cnt.classList.remove("on", "tick"); cnt.classList.add("out"); });
+
+    const tLines = tEnd + 300;
+    [CONFIG.l1, CONFIG.l2, CONFIG.l3].forEach((txt, i) => at(tLines + i * 2700, () => {
+      ln.textContent = txt;
+      replay(ln, "run");
+    }));
+
+    const tHeart = tLines + 3 * 2700 + 100;
+    at(tHeart, () => {
+      const dur = RM ? 900 : 2600;
+      const t0 = performance.now();
+      const grow = () => {
+        const p = Math.min(1, (performance.now() - t0) / dur);
+        heartReveal = 1 - Math.pow(1 - p, 3);
+        if (p < 1) requestAnimationFrame(grow);
+      };
+      grow();
+    });
+
+    at(tHeart + 3000, () => { fin.textContent = CONFIG.fin; fin.classList.add("show"); });
+    at(tHeart + 4800, () => $("actions").classList.add("show"));
+  }
+
+  /* ============ khởi động ============ */
+  function paint(){
+    $("toName").textContent = CONFIG.to;
+    $("final").textContent = CONFIG.fin;
+    $("edge").textContent = CONFIG.to ? CONFIG.to + " · " + CONFIG.bg : CONFIG.bg;
+    GLYPHS = pool(CONFIG.bg);
+  }
+
+  paint();
+  resize();
+  requestAnimationFrame(draw);
+
+  let rt;
+  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(resize, 180); });
+
+  function shutGate(){
+    const g = $("gate");
+    g.classList.add("gone");
+    setTimeout(() => { g.style.display = "none"; }, 650);
+  }
+
+  $("openBtn").addEventListener("click", () => {
+    shutGate();
+    startMusic();
+    run();
+  });
+
+  $("replayBtn").addEventListener("click", run);
+
+  /* ============ bảng tự tạo ============ */
+  const sheet = $("sheet");
+  const fields = { to: $("fTo"), bg: $("fBg"), l1: $("f1"), l2: $("f2"), l3: $("f3"), fin: $("fF") };
+
+  function openSheet(){
+    for (const k in fields) fields[k].value = CONFIG[k];
+    sheet.classList.add("is-open");
+    fields.to.focus();
+  }
+  function readFields(){
+    for (const k in fields){
+      const v = fields[k].value.trim();
+      if (v) CONFIG[k] = v;
+    }
+  }
+  function buildLink(){
+    const p = new URLSearchParams({
+      to: CONFIG.to, bg: CONFIG.bg,
+      l1: CONFIG.l1, l2: CONFIG.l2, l3: CONFIG.l3, f: CONFIG.fin,
+      dem: String(CONFIG.dem)
+    });
+    return location.origin + location.pathname + "?" + p.toString();
+  }
+
+  $("makeBtn").addEventListener("click", openSheet);
+  $("closeBtn").addEventListener("click", () => sheet.classList.remove("is-open"));
+
+  $("tryBtn").addEventListener("click", () => {
+    readFields();
+    paint();
+    buildHeart();
+    sheet.classList.remove("is-open");
+    shutGate();
+    startMusic();
+    run();
+  });
+
+  $("genBtn").addEventListener("click", () => {
+    readFields();
+    paint();
+    buildHeart();
+    const url = buildLink();
+    $("linkOut").textContent = url;
+    const box = $("qrBox");
+    box.innerHTML = "";
+    if (window.QRCode){
+      new QRCode(box, { text: url, width: 190, height: 190, correctLevel: QRCode.CorrectLevel.M });
+    } else {
+      box.remove();
+    }
+    $("qrWrap").classList.add("show");
+  });
+
+  $("copyBtn").addEventListener("click", async () => {
+    const btn = $("copyBtn");
+    try{
+      await navigator.clipboard.writeText($("linkOut").textContent);
+      btn.textContent = "Đã sao chép";
+    }catch(e){
+      btn.textContent = "Hãy chọn và copy thủ công";
+    }
+    setTimeout(() => { btn.textContent = "Sao chép link"; }, 2200);
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") sheet.classList.remove("is-open");
+  });
+})();
+</script>
+
+</body>
+</html>

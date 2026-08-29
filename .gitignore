@@ -1,0 +1,6 @@
+# Video gốc chỉ dùng để tách nhạc, web không cần
+*.mp4
+
+# Rác hệ điều hành
+.DS_Store
+Thumbs.db

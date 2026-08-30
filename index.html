@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="rose">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#030712">
+  <meta name="theme-color" content="#0c040a">
   <meta name="description" content="Trái Tim Đếm Ngược - Gửi gắm lời yêu thương bất ngờ và lãng mạn nhất">
   <meta property="og:title" content="Có một điều đặc biệt muốn gửi tới bạn...">
   <meta property="og:description" content="Chạm để mở thông điệp bí mật dành riêng cho bạn.">
@@ -785,32 +785,10 @@
     }
 
     /* ==========================================================================
-       3. FLOATING ACTION BAR DOCK (CHÂN TRANG NỔI)
+       3. FLOATING ACTION BAR DOCK (ẨN THEO YÊU CẦU)
        ========================================================================== */
     .dock-actions {
-      position: fixed;
-      left: 50%;
-      bottom: max(20px, env(safe-area-inset-bottom));
-      transform: translateX(-50%) translateY(30px);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55), 0 0 25px var(--primary-glow);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 10;
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .dock-actions.visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      pointer-events: auto;
+      display: none !important;
     }
 
     .dock-btn {
@@ -939,6 +917,284 @@
       border-color: var(--border-glow);
       box-shadow: 0 0 15px var(--primary-glow);
       transform: rotate(30deg) scale(1.05);
+    }
+
+    /* ==========================================================================
+       3.1. AGREEMENT HEART BUTTON (NÚT TRÁI TIM ĐỒNG Ý Ở LỜI NHẮN CUỐI)
+       ========================================================================== */
+    .agree-container {
+      position: fixed;
+      left: 50%;
+      bottom: max(45px, calc(8vh + 15px));
+      transform: translateX(-50%) translateY(24px) scale(0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 15;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .agree-container.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .agree-heart-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .agree-heart-btn {
+      position: relative;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-glow);
+      background: radial-gradient(circle at 45% 38%, var(--bg-surface-hover) 0%, var(--bg-surface) 65%, rgba(3, 7, 18, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow:
+        0 0 30px var(--primary-glow),
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        inset 0 0 16px rgba(255, 255, 255, 0.2);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease, background 0.4s ease;
+      outline: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .agree-heart-btn::before, .agree-heart-btn::after {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1.5px solid var(--primary);
+      pointer-events: none;
+    }
+    .agree-heart-btn::before {
+      animation: sonarPulse 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+    }
+    .agree-heart-btn::after {
+      animation: sonarPulse 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 1.2s;
+    }
+
+    .agree-heart-btn:hover {
+      transform: scale(1.14);
+      box-shadow:
+        0 0 45px var(--primary-glow),
+        0 12px 30px rgba(0, 0, 0, 0.7),
+        inset 0 0 22px rgba(255, 255, 255, 0.35);
+      border-color: var(--primary-light);
+    }
+    .agree-heart-btn:active {
+      transform: scale(0.92);
+    }
+
+    .agree-heart-svg {
+      width: 32px;
+      height: 32px;
+      overflow: visible;
+      animation: heartBeating 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px var(--primary));
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .agree-heart-svg path {
+      fill: var(--primary-glow);
+      stroke: #ffffff;
+      stroke-width: 1.8;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 4px #ffffff);
+      transition: fill 0.3s ease, stroke 0.3s ease;
+    }
+
+    .agree-heart-btn.is-agreed {
+      background: linear-gradient(135deg, #f43f5e, #ec4899);
+      border-color: #ffe4e6;
+      box-shadow:
+        0 0 50px rgba(244, 63, 94, 0.75),
+        0 10px 30px rgba(0, 0, 0, 0.65),
+        inset 0 0 20px rgba(255, 255, 255, 0.5);
+      animation: agreedCelebrate 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .agree-heart-btn.is-agreed .agree-heart-svg {
+      animation: heartBeatingFast 0.8s ease-in-out infinite;
+      filter: drop-shadow(0 0 14px #ffffff);
+    }
+    .agree-heart-btn.is-agreed .agree-heart-svg path {
+      fill: #ffffff;
+      stroke: #fff1f2;
+    }
+
+    @keyframes heartBeatingFast {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.18); }
+      28% { transform: scale(1.04); }
+      42% { transform: scale(1.12); }
+      56% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes agreedCelebrate {
+      0% { transform: scale(0.85) rotate(0deg); }
+      40% { transform: scale(1.3) rotate(-12deg); }
+      70% { transform: scale(0.95) rotate(8deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .agree-hint-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--primary-light);
+      text-shadow: 0 0 10px var(--primary-glow);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      animation: textGlow 2.5s ease-in-out infinite;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .agree-hint-badge.is-agreed {
+      background: rgba(244, 63, 94, 0.25);
+      border-color: rgba(244, 63, 94, 0.6);
+      color: #fff1f2;
+      text-shadow: 0 0 12px rgba(244, 63, 94, 0.8);
+      animation: none;
+    }
+
+    /* Romantic Agreement Popup / Modal */
+    .agree-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(3, 7, 18, 0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: none;
+      place-items: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .agree-modal.open {
+      display: grid;
+      opacity: 1;
+    }
+
+    .agree-modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-glow);
+      border-radius: 28px;
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.75),
+        0 0 50px var(--primary-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      padding: 32px 24px 28px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .agree-modal.open .agree-modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .agree-modal-sparkles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .agree-modal-sparkles span {
+      position: absolute;
+      font-size: 18px;
+      animation: floatSparkle 3s ease-in-out infinite;
+    }
+    .agree-modal-sparkles span:nth-child(1) { top: 12%; left: 12%; animation-delay: 0s; }
+    .agree-modal-sparkles span:nth-child(2) { top: 16%; right: 14%; animation-delay: 0.7s; }
+    .agree-modal-sparkles span:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 1.4s; }
+    .agree-modal-sparkles span:nth-child(4) { bottom: 18%; right: 12%; animation-delay: 2.1s; }
+
+    .agree-modal-heart-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(244, 63, 94, 0.25) 0%, transparent 70%);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .agree-modal-heart-icon svg {
+      width: 58px;
+      height: 58px;
+      animation: heartBeating 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 16px #f43f5e);
+    }
+    .agree-modal-heart-path {
+      fill: #f43f5e;
+      stroke: #ffffff;
+      stroke-width: 1.5;
+    }
+
+    .agree-modal-title {
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 5vw, 1.85rem);
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+      background: linear-gradient(135deg, #ffffff 20%, #fecdd3 60%, #f43f5e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.6));
+    }
+
+    .agree-modal-desc {
+      font-family: var(--font-main);
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin: 0;
+      max-width: 360px;
+    }
+
+    .agree-modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .agree-modal-actions .dock-btn {
+      flex: 1;
+      justify-content: center;
+      padding: 12px 16px;
+      font-size: 13px;
     }
 
     /* ==========================================================================
@@ -1355,6 +1611,25 @@
         height: 36px;
         font-size: 15px;
       }
+      .agree-container {
+        bottom: max(35px, calc(6vh + 12px));
+      }
+      .agree-heart-btn {
+        width: 54px;
+        height: 54px;
+      }
+      .agree-heart-svg {
+        width: 28px;
+        height: 28px;
+      }
+      .agree-hint-badge {
+        font-size: 11px;
+        padding: 4px 12px;
+      }
+      .agree-modal-card {
+        padding: 26px 18px 22px;
+        border-radius: 22px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1381,7 +1656,7 @@
   <div class="cursor-aura" id="cursorAura" aria-hidden="true"></div>
 
   <!-- Decorative Side Brand -->
-  <div class="side-brand" id="sideBrandText">EM · ANH THÍCH EM</div>
+  <div class="side-brand" id="sideBrandText">HAYIN.07 · ANH THÍCH EM</div>
 
   <!-- Top Right Audio Equalizer Toggle -->
   <button class="audio-control-pill" id="soundToggleBtn" aria-label="Bật/Tắt âm thanh" title="Âm thanh">
@@ -1408,7 +1683,7 @@
         <span id="eyebrowText">Một lời nhắn dành riêng cho</span>
       </div>
 
-      <h1 class="recipient-name" id="toRecipientName">Em</h1>
+      <h1 class="recipient-name" id="toRecipientName">Hayin.07</h1>
 
       <div class="gate-action-wrap">
         <button class="unwrap-btn" id="openGiftBtn" aria-label="Chạm để mở lời nhắn bí mật">
@@ -1417,11 +1692,6 @@
           </svg>
         </button>
         <span class="tap-hint-text">Chạm để mở</span>
-      </div>
-
-      <div class="audio-advice-pill">
-        <span class="headphone-icon">🎧</span>
-        <span>Bật âm lượng để trọn vẹn cảm xúc</span>
       </div>
     </section>
 
@@ -1462,12 +1732,24 @@
       </div>
     </div>
 
+    <!-- 5. Interactive Small Heart Agreement Button (Nút hình trái tim nhỏ ở lời nhắn cuối) -->
+    <div class="agree-container" id="agreeContainer" aria-hidden="true">
+      <div class="agree-heart-wrap">
+        <button class="agree-heart-btn" id="agreeHeartBtn" aria-label="Chạm để đồng ý lời nhắn" title="Chạm để đồng ý">
+          <svg class="agree-heart-svg" viewBox="0 0 100 100" aria-hidden="true">
+            <path id="agreeHeartPath"></path>
+          </svg>
+        </button>
+        <span class="agree-hint-badge" id="agreeHintBadge">Chạm để đồng ý ❤️</span>
+      </div>
+    </div>
+
     <!-- Screen Reader Accessible Live Region -->
     <p class="screen-reader-text" id="srMessageLive" aria-live="polite"></p>
   </main>
 
-  <!-- Bottom Floating Action Dock -->
-  <footer class="dock-actions" id="dockActions">
+  <!-- Bottom Floating Action Dock (Ẩn theo yêu cầu) -->
+  <footer class="dock-actions" id="dockActions" style="display: none;" aria-hidden="true">
     <button class="dock-btn" id="replayActionBtn" title="Xem lại từ đầu">
       <i>↺</i>
       <span>Xem lại</span>
@@ -1513,11 +1795,11 @@
         <div class="theme-selector-wrap">
           <span class="presets-label">🎨 Chọn tông màu cảm xúc:</span>
           <div class="theme-swatches" id="themeSwatches">
-            <div class="theme-swatch active" data-theme-name="cyan">
+            <div class="theme-swatch" data-theme-name="cyan">
               <div class="swatch-color" style="background: linear-gradient(135deg, #38bdf8, #2563eb);"></div>
               <span class="swatch-label">Đêm Sao</span>
             </div>
-            <div class="theme-swatch" data-theme-name="rose">
+            <div class="theme-swatch active" data-theme-name="rose">
               <div class="swatch-color" style="background: linear-gradient(135deg, #f43f5e, #ec4899);"></div>
               <span class="swatch-label">Hồng Yêu</span>
             </div>
@@ -1641,6 +1923,34 @@
     </div>
   </div>
 
+  <!-- Romantic Agreement Modal / Dialog -->
+  <div class="agree-modal" id="agreeModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="agree-modal-card">
+      <div class="agree-modal-sparkles">
+        <span>✨</span><span>💖</span><span>✦</span><span>🎉</span>
+      </div>
+      <div class="agree-modal-heart-icon">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <path class="agree-modal-heart-path" id="agreeModalHeartPath"></path>
+        </svg>
+      </div>
+      <h3 class="agree-modal-title">Em Đã Đồng Ý Rồi Nha! 🥰</h3>
+      <p class="agree-modal-desc" id="agreeModalDesc">
+        Khoảnh khắc này thật ngọt ngào! Cảm ơn em vì đã đồng ý, chúc cho tình yêu của chúng mình mãi luôn ngập tràn niềm vui, hạnh phúc và bền lâu! 💖✨
+      </p>
+      <div class="agree-modal-actions">
+        <button class="dock-btn primary-action" id="agreeMoreHeartsBtn">
+          <i>💖</i>
+          <span>Thả thêm tim</span>
+        </button>
+        <button class="dock-btn" id="closeAgreeModalBtn">
+          <i>✨</i>
+          <span>Tuyệt vời</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Floating Toast -->
   <div class="toast-notification" id="toastMessage">
     <span>✨</span>
@@ -1660,10 +1970,10 @@
     const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const urlParams = new URLSearchParams(location.search);
 
-    const THEME_LIST = ["cyan", "rose", "purple", "amber", "emerald"];
+    const THEME_LIST = ["rose", "cyan", "purple", "amber", "emerald"];
 
     const CONFIG = {
-      to:    urlParams.get("to") || "Em",
+      to:    urlParams.get("to") || "Hayin.07",
       bg:    urlParams.get("bg") || "Anh thích em",
       l1:    urlParams.get("l1") || "Anh muốn tiến xa hơn",
       l2:    urlParams.get("l2") || "trong mối quan hệ này",
@@ -1672,19 +1982,19 @@
       dem:   Math.max(3, Math.min(60, parseInt(urlParams.get("dem"), 10) || 14)),
       mp3:   urlParams.get("mp3") === null ? "nhac.mp3" : urlParams.get("mp3"),
       from:  parseFloat(urlParams.get("s")) || 0,
-      theme: THEME_LIST.includes(urlParams.get("theme")) ? urlParams.get("theme") : "cyan"
+      theme: THEME_LIST.includes(urlParams.get("theme")) ? urlParams.get("theme") : "rose"
     };
 
     const PRESET_DATA = {
       love: {
-        to: "Em",
+        to: "Hayin.07",
         bg: "Anh thích em",
         dem: 14,
         l1: "Anh muốn tiến xa hơn",
         l2: "trong mối quan hệ này",
         l3: "Em đồng ý",
         fin: "Làm người yêu anh nhé?",
-        theme: "cyan"
+        theme: "rose"
       },
       birthday: {
         to: "Công Chúa",
@@ -1726,7 +2036,7 @@
        THEME CONTROLLER
        ========================================================================== */
     function applyTheme(themeName) {
-      if (!THEME_LIST.includes(themeName)) themeName = "cyan";
+      if (!THEME_LIST.includes(themeName)) themeName = "rose";
       CONFIG.theme = themeName;
       if (themeName === "cyan") {
         document.documentElement.removeAttribute("data-theme");
@@ -2271,7 +2581,44 @@
       }
       ctx.globalAlpha = 1;
 
+      // 5. Chữ ghép bằng ô vuông: viền tối, quầng sáng, rồi nét chữ sắc
+      if (textStart && textParticles.length) {
+        const rawProgress = (now - textStart) / PHRASE_DURATION;
+        const progress = isTextLast ? Math.min(rawProgress, 0.5) : rawProgress;
 
+        if (progress >= 1) {
+          textStart = 0;
+          curPhrase = "";
+          textCtx.clearRect(0, 0, W, H);
+          glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
+        } else {
+          // Lúc chữ đứng yên chỉ vẽ lại thưa cho vài ô lấp lánh; lúc hạt bay mới vẽ dày.
+          const isStill = progress >= IN_STEP && progress <= OUT_STEP;
+          if (now - lastTextRender > (isStill ? 350 : 15)) {
+            lastTextRender = now;
+            renderTextParticles(progress);
+          }
+
+          let rimAlpha = 1;
+          if (progress < IN_STEP) {
+            const u = Math.max(0, (progress - IN_STEP * 0.4) / (IN_STEP * 0.6));
+            rimAlpha = u * u * (3 - 2 * u);
+          } else if (progress > OUT_STEP) {
+            const u = Math.min(1, (progress - OUT_STEP) / (1 - OUT_STEP) * 1.3);
+            rimAlpha = 1 - u * u * (3 - 2 * u);
+          }
+
+          if (rimAlpha > 0) {
+            ctx.globalAlpha = rimAlpha * 0.92;
+            ctx.drawImage(rimCanvas, 0, 0, W, H);
+            ctx.globalAlpha = 1;
+          }
+          ctx.globalAlpha = 0.42;
+          ctx.drawImage(glowCanvas, 0, 0, W, H);
+          ctx.globalAlpha = 1;
+          ctx.drawImage(textCanvas, 0, 0, W, H);
+        }
+      }
 
       requestAnimationFrame(animateFrame);
     }
@@ -2471,6 +2818,27 @@
       if (msgWrap) msgWrap.classList.remove("show", "leave", "is-climax");
       if (msgContent) msgContent.textContent = "";
 
+      // Reset Agree Heart Button & Modal
+      const agreeWrap = $("agreeContainer");
+      if (agreeWrap) {
+        agreeWrap.classList.remove("visible");
+        agreeWrap.setAttribute("aria-hidden", "true");
+      }
+      const agreeBtn = $("agreeHeartBtn");
+      if (agreeBtn) {
+        agreeBtn.classList.remove("is-agreed");
+      }
+      const agreeBadge = $("agreeHintBadge");
+      if (agreeBadge) {
+        agreeBadge.classList.remove("is-agreed");
+        agreeBadge.textContent = "Chạm để đồng ý ❤️";
+      }
+      const agreeModal = $("agreeModal");
+      if (agreeModal) {
+        agreeModal.classList.remove("open");
+        agreeModal.setAttribute("aria-hidden", "true");
+      }
+
       // Increase rain density during countdown
       const rainRamp = setInterval(() => {
         rainAlpha = Math.min(0.9, rainAlpha + 0.04);
@@ -2525,20 +2893,27 @@
         const startTime = phrasesStartTime + index * PHRASE_DURATION;
 
         schedule(startTime, () => {
-          srEl.textContent = txt;
-          if (msgContent) msgContent.textContent = txt;
-          if (msgWrap) {
-            msgWrap.classList.toggle("is-climax", isLast);
-            msgWrap.classList.remove("leave");
-            msgWrap.classList.add("show");
-          }
-          if (msgStage) msgStage.classList.add("active");
+          srEl.textContent = txt;          // giữ cho trình đọc màn hình
+
+          /* Chữ vẽ bằng lớp hạt ô vuông trên canvas. Thẻ HTML hiện chữ được tắt,
+             nếu bật cả hai thì hai lớp chữ chồng lên nhau. */
+          isTextLast = isLast;
+          buildTextParticles(txt);
+          textStart = performance.now();
 
           if (isLast) {
             schedule(400, () => {
               triggerMultiCelebration();
               playCelebrationFanfare();
               triggerHaptic([40, 60, 80]);
+            });
+
+            // Smoothly show the agree heart button after the final message forms
+            schedule(900, () => {
+              if (agreeWrap) {
+                agreeWrap.classList.add("visible");
+                agreeWrap.setAttribute("aria-hidden", "false");
+              }
             });
           }
         });
@@ -2572,6 +2947,12 @@
     // Gate Heart Path Drawing
     const gateHeart = $("gateHeartPath");
     gateHeart.setAttribute("d", generateHeartSvgPath(0.56));
+
+    // Agreement Heart Paths
+    const agreeHeart = $("agreeHeartPath");
+    if (agreeHeart) agreeHeart.setAttribute("d", generateHeartSvgPath(0.56));
+    const agreeModalHeart = $("agreeModalHeartPath");
+    if (agreeModalHeart) agreeModalHeart.setAttribute("d", generateHeartSvgPath(0.68));
 
     // Countdown Ring Heart Paths
     const countdownHeartD = generateHeartSvgPath(1);
@@ -2845,10 +3226,68 @@
       }, 2600);
     }
 
+    /* ==========================================================================
+       AGREEMENT HEART BUTTON & MODAL LOGIC
+       ========================================================================== */
+    function handleAgreement() {
+      const btn = $("agreeHeartBtn");
+      const badge = $("agreeHintBadge");
+      const isFirst = !btn.classList.contains("is-agreed");
+
+      btn.classList.add("is-agreed");
+      badge.classList.add("is-agreed");
+      badge.textContent = "Đã đồng ý rồi nha! 🥰💖";
+
+      triggerHaptic([50, 80, 120, 160]);
+      triggerMultiCelebration();
+      playCelebrationFanfare();
+
+      const rect = btn.getBoundingClientRect();
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + rect.height / 2;
+      createCelebrationBurst(originX, originY);
+      setTimeout(() => createCelebrationBurst(originX, originY), 220);
+
+      setTimeout(() => {
+        const modalEl = $("agreeModal");
+        if (modalEl) {
+          modalEl.classList.add("open");
+          modalEl.setAttribute("aria-hidden", "false");
+        }
+      }, 550);
+
+      if (isFirst) {
+        showToast("Yayyy! Lời đồng ý ngọt ngào đã được trao trọn vẹn! 💖✨");
+      }
+    }
+
+    $("agreeHeartBtn").addEventListener("click", handleAgreement);
+
+    $("agreeMoreHeartsBtn").addEventListener("click", () => {
+      triggerHaptic([30, 60, 90]);
+      triggerMultiCelebration();
+      playCelebrationFanfare();
+      showToast("Gửi thêm ngàn trái tim yêu thương! 💖✨");
+    });
+
+    function closeAgreeModal() {
+      const modalEl = $("agreeModal");
+      if (modalEl) {
+        modalEl.classList.remove("open");
+        modalEl.setAttribute("aria-hidden", "true");
+      }
+    }
+
+    $("closeAgreeModalBtn").addEventListener("click", closeAgreeModal);
+    $("agreeModal").addEventListener("click", e => {
+      if (e.target === $("agreeModal")) closeAgreeModal();
+    });
+
     // Keyboard Shortcuts
     document.addEventListener("keydown", e => {
-      if (e.key === "Escape" && modal.classList.contains("open")) {
-        closeCreatorModal();
+      if (e.key === "Escape") {
+        if (modal.classList.contains("open")) closeCreatorModal();
+        if ($("agreeModal") && $("agreeModal").classList.contains("open")) closeAgreeModal();
       }
     });
 

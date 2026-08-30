@@ -2352,8 +2352,8 @@
         if (d > maxRadius) maxRadius = d;
       }
 
-      const spread = fs * 0.35;
-      const span = 1 - 0.52;
+      const spread = fs * 0.85;
+      const span = 1 - 0.44;
 
       rimCtx.clearRect(0, 0, W, H);
       rimCtx.fillStyle = "rgba(3, 7, 18, 0.9)";
@@ -2368,69 +2368,105 @@
         const baseAngle = rad < 0.001 ? Math.random() * Math.PI * 2 : Math.atan2(vy, vx);
         const radNorm = rad / maxRadius;
 
-        const angleIn = baseAngle + (Math.random() - 0.5) * 1.2;
-        const distIn = spread * (0.4 + Math.random() * 0.9);
+        // Ethereal spiral cosmic trajectory for silky convergence
+        const spiralDir = Math.random() < 0.5 ? -1 : 1;
+        const swirlAmp = 0.5 + Math.random() * 0.7;
+        const angleIn = baseAngle + (Math.random() - 0.5) * 1.2 + spiralDir * 0.7;
+        const distIn = spread * (0.8 + Math.random() * 1.3);
         const offInX = Math.cos(angleIn) * distIn;
         const offInY = Math.sin(angleIn) * distIn;
 
-        const angleOut = baseAngle + (Math.random() - 0.5) * 1.0;
-        const distOut = spread * (0.6 + Math.random() * 1.1);
+        // Upward floating stardust dispersion trajectory (bay bổng lung linh như bụi sao)
+        const angleOut = -Math.PI / 2 + (Math.random() - 0.5) * 1.6;
+        const distOut = spread * (0.7 + Math.random() * 1.2);
         const offOutX = Math.cos(angleOut) * distOut;
         const offOutY = Math.sin(angleOut) * distOut;
 
-        const delayIn = (radNorm * 0.35 + Math.random() * 0.65) * span;
+        // Staggered wave delays for organic sweeping transition
+        const delayIn = (radNorm * 0.35 + (p.c / tc) * 0.25 + Math.random() * 0.4) * span;
         const delayOut = ((1 - radNorm) * 0.35 + Math.random() * 0.65) * span;
+
+        const randTone = Math.random();
+        const tone = randTone < 0.45 ? 0 : (randTone < 0.75 ? 1 : (randTone < 0.9 ? 2 : 3));
 
         return {
           c: p.c,
           r: p.r,
+          density: p.density,
           targetX: p.c * tcell,
           targetY: p.r * tcell,
-          curX: p.c * tcell,
-          curY: p.r * tcell,
           offInX, offInY,
           offOutX, offOutY,
+          angleIn,
+          spiralDir,
+          swirlAmp,
           delayIn, delayOut,
-          tone: Math.random() < 0.65 ? 0 : (Math.random() < 0.9 ? 1 : 2),
+          tone,
           sparkle: Math.random() * Math.PI * 2
         };
       });
     }
 
-    const IN_STEP = 0.30, OUT_STEP = 0.74, WIN_SPAN = 0.52;
+    const IN_STEP = 0.28, OUT_STEP = 0.72, WIN_SPAN = 0.46;
 
-    function renderTextParticles(progress) {
+    function renderTextParticles(progress, now = performance.now()) {
       textCtx.clearRect(0, 0, W, H);
       const N = textParticles.length;
-      const size = tcell * 0.92;
-      const radius = size * 0.3;
+      const size = tcell * 0.94;
+      const radius = size * 0.42;
+
+      const styles = getComputedStyle(document.documentElement);
+      const priLight = styles.getPropertyValue("--primary-light").trim() || "#fecdd3";
+      const pri = styles.getPropertyValue("--primary").trim() || "#f43f5e";
 
       for (let i = 0; i < N; i++) {
         const p = textParticles[i];
         let dx = 0, dy = 0, alpha = 1, scale = 1, isHot = false;
 
         if (progress < IN_STEP) {
-          const u = (progress / IN_STEP - p.delayIn) / WIN_SPAN;
-          if (u <= 0) continue;
-          const g = u >= 1 ? 1 : u;
-          const k = 1 - g;
-          const ease = 1 - k * k * k * k * k;
-          dx = p.offInX * (1 - ease);
-          dy = p.offInY * (1 - ease);
-          isHot = k > 0.4;
-          scale = 0.5 + 0.5 * ease;
-          alpha = g < 0.5 ? g / 0.5 : 1;
+          const rawU = (progress / IN_STEP - p.delayIn) / WIN_SPAN;
+          if (rawU <= 0) continue;
+          const u = Math.min(1, Math.max(0, rawU));
+          const k = 1 - u;
+          // Smooth quartic easeOut deceleration curve
+          const ease = 1 - k * k * k * k;
+
+          // Spiral vortex trail
+          const swirl = Math.sin(k * Math.PI) * (p.spiralDir * p.swirlAmp * 36);
+          dx = p.offInX * k + Math.cos(p.angleIn + Math.PI / 2) * swirl;
+          dy = p.offInY * k + Math.sin(p.angleIn + Math.PI / 2) * swirl;
+
+          scale = 0.35 + 0.65 * ease;
+          alpha = u < 0.18 ? u / 0.18 : 1;
+          isHot = k > 0.25;
         } else if (progress > OUT_STEP) {
-          const u = ((progress - OUT_STEP) / (1 - OUT_STEP) - p.delayOut) / WIN_SPAN;
-          if (u >= 1) continue;
-          if (u > 0) {
-            const ease = u * u;
-            dx = p.offOutX * ease;
-            dy = p.offOutY * ease;
-            alpha = 1 - u * u;
-            scale = 1 - u * 0.4;
-            isHot = ease > 0.3;
+          const rawU = ((progress - OUT_STEP) / (1 - OUT_STEP) - p.delayOut) / WIN_SPAN;
+          if (rawU >= 1) continue;
+          if (rawU > 0) {
+            const u = Math.min(1, rawU);
+            // Smoothstep acceleration curve
+            const ease = u * u * (3 - 2 * u);
+            const easePow = Math.pow(u, 1.4);
+
+            // Upward cosmic buoyancy & harmonic horizontal stardust wave
+            const driftUp = 75 * easePow;
+            const waveX = Math.sin(u * 4.8 + p.sparkle) * (30 * easePow);
+
+            dx = p.offOutX * ease + waveX;
+            dy = p.offOutY * ease - driftUp;
+
+            alpha = Math.max(0, Math.pow(1 - u, 1.7));
+            scale = Math.max(0, (1 - u * 0.65) * (0.8 + 0.3 * Math.sin(now * 0.006 + p.sparkle)));
+            isHot = ease > 0.12 && ease < 0.75;
           }
+        } else {
+          // Living stardust micro-drift & diamond sparkle while text is fully formed
+          const pulse = Math.sin(now * 0.003 + p.sparkle);
+          dx = Math.sin(now * 0.0018 + p.sparkle) * (tcell * 0.12);
+          dy = Math.cos(now * 0.0022 + p.sparkle) * (tcell * 0.12);
+          scale = 1.0 + 0.05 * pulse;
+          alpha = 0.9 + 0.1 * pulse;
+          isHot = pulse > 0.92;
         }
 
         const w = size * scale;
@@ -2438,15 +2474,23 @@
         const x = p.targetX + (tcell - w) / 2 + dx;
         const y = p.targetY + (tcell - h) / 2 + dy;
 
-        /* Ô nằm ở mép nét chữ chỉ bị che một phần. Dùng luôn density đã tính sẵn
-           lúc dựng mặt nạ để mờ chúng đi theo đúng tỉ lệ bị che — mép chữ mượt ra
-           mà thân chữ vẫn đặc. Trước đây density được tính rồi bỏ không. */
-        textCtx.globalAlpha = alpha * (0.5 + 0.5 * p.density);
-        textCtx.fillStyle = isHot ? "#ffffff" : (p.tone === 0 ? "#ffffff" : (p.tone === 1 ? "#f0f9ff" : "#dbeafe"));
+        textCtx.globalAlpha = Math.max(0, Math.min(1, alpha * (0.55 + 0.45 * p.density)));
+
+        if (isHot) {
+          textCtx.fillStyle = "#ffffff";
+        } else if (p.tone === 0) {
+          textCtx.fillStyle = "#ffffff";
+        } else if (p.tone === 1) {
+          textCtx.fillStyle = priLight;
+        } else if (p.tone === 2) {
+          textCtx.fillStyle = pri;
+        } else {
+          textCtx.fillStyle = "#fef08a";
+        }
 
         textCtx.beginPath();
-        if (typeof textCtx.roundRect === "function" && size > 4) {
-          textCtx.roundRect(x, y, w, h, radius);
+        if (typeof textCtx.roundRect === "function" && size > 3) {
+          textCtx.roundRect(x, y, w, h, radius * scale);
         } else {
           textCtx.rect(x, y, w, h);
         }
@@ -2592,28 +2636,23 @@
           textCtx.clearRect(0, 0, W, H);
           glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
         } else {
-          // Lúc chữ đứng yên chỉ vẽ lại thưa cho vài ô lấp lánh; lúc hạt bay mới vẽ dày.
-          const isStill = progress >= IN_STEP && progress <= OUT_STEP;
-          if (now - lastTextRender > (isStill ? 350 : 15)) {
-            lastTextRender = now;
-            renderTextParticles(progress);
-          }
+          renderTextParticles(progress, now);
 
           let rimAlpha = 1;
           if (progress < IN_STEP) {
-            const u = Math.max(0, (progress - IN_STEP * 0.4) / (IN_STEP * 0.6));
+            const u = Math.max(0, (progress - IN_STEP * 0.25) / (IN_STEP * 0.75));
             rimAlpha = u * u * (3 - 2 * u);
           } else if (progress > OUT_STEP) {
-            const u = Math.min(1, (progress - OUT_STEP) / (1 - OUT_STEP) * 1.3);
+            const u = Math.min(1, (progress - OUT_STEP) / (1 - OUT_STEP) * 1.35);
             rimAlpha = 1 - u * u * (3 - 2 * u);
           }
 
           if (rimAlpha > 0) {
-            ctx.globalAlpha = rimAlpha * 0.92;
+            ctx.globalAlpha = Math.max(0, Math.min(1, rimAlpha * 0.88));
             ctx.drawImage(rimCanvas, 0, 0, W, H);
             ctx.globalAlpha = 1;
           }
-          ctx.globalAlpha = 0.42;
+          ctx.globalAlpha = 0.52;
           ctx.drawImage(glowCanvas, 0, 0, W, H);
           ctx.globalAlpha = 1;
           ctx.drawImage(textCanvas, 0, 0, W, H);
@@ -3236,7 +3275,7 @@
 
       btn.classList.add("is-agreed");
       badge.classList.add("is-agreed");
-      badge.textContent = "Đã đồng ý rồi nha! 🥰💖";
+      badge.textContent = "Em đã đồng ý rồi nha! 🥰💖";
 
       triggerHaptic([50, 80, 120, 160]);
       triggerMultiCelebration();

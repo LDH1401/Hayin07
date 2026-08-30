@@ -1,1190 +1,2665 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#04060f">
-<meta property="og:title" content="Có một điều anh muốn nói...">
-<meta property="og:description" content="Chạm để mở lời nhắn dành riêng cho bạn.">
-<style>*{margin:0}html,body{background:#04060f}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#030712">
+  <meta name="description" content="Trái Tim Đếm Ngược - Gửi gắm lời yêu thương bất ngờ và lãng mạn nhất">
+  <meta property="og:title" content="Có một điều đặc biệt muốn gửi tới bạn...">
+  <meta property="og:description" content="Chạm để mở thông điệp bí mật dành riêng cho bạn.">
+  <title>Trái Tim Đếm Ngược ✨ Lời Yêu Thương</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       THEME VARIABLES & COLOR PALETTES
+       ========================================================================== */
+    :root {
+      /* Default Theme: Midnight Cyan */
+      --bg-base: #030712;
+      --bg-deep: #081226;
+      --bg-surface: rgba(15, 28, 56, 0.72);
+      --bg-surface-hover: rgba(26, 45, 88, 0.85);
+      --border-subtle: rgba(147, 197, 253, 0.2);
+      --border-glow: rgba(56, 189, 248, 0.6);
+
+      --primary: #38bdf8;
+      --primary-light: #bae6fd;
+      --primary-glow: rgba(56, 189, 248, 0.5);
+      --accent: #818cf8;
+      --accent-hot: #e0f2fe;
+
+      --text-main: #f8fafc;
+      --text-muted: rgba(203, 213, 225, 0.78);
+      --text-dim: rgba(148, 163, 184, 0.5);
+
+      --heart-stroke-start: #ffffff;
+      --heart-stroke-mid: #38bdf8;
+      --heart-stroke-end: #2563eb;
+      --heart-core-glow: rgba(56, 189, 248, 0.45);
+
+      --rain-trail-1: #1e3a8a;
+      --rain-trail-2: #2563eb;
+      --rain-trail-3: #38bdf8;
+      --rain-head-1: #60a5fa;
+      --rain-head-2: #93c5fd;
+      --rain-head-3: #ffffff;
+
+      --btn-grad: linear-gradient(135deg, #38bdf8, #6366f1);
+      --btn-grad-hover: linear-gradient(135deg, #60a5fa, #818cf8);
+      --font-main: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+      --font-serif: "Playfair Display", Georgia, serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    /* Theme: Sweet Romance (Rose & Pink) */
+    [data-theme="rose"] {
+      --bg-base: #0c040a;
+      --bg-deep: #21081a;
+      --bg-surface: rgba(48, 14, 38, 0.72);
+      --bg-surface-hover: rgba(74, 22, 58, 0.85);
+      --border-subtle: rgba(251, 182, 206, 0.22);
+      --border-glow: rgba(244, 63, 94, 0.65);
+
+      --primary: #f43f5e;
+      --primary-light: #fecdd3;
+      --primary-glow: rgba(244, 63, 94, 0.5);
+      --accent: #fb7185;
+      --accent-hot: #fff1f2;
+
+      --heart-stroke-start: #ffffff;
+      --heart-stroke-mid: #fb7185;
+      --heart-stroke-end: #e11d48;
+      --heart-core-glow: rgba(244, 63, 94, 0.45);
+
+      --rain-trail-1: #881337;
+      --rain-trail-2: #be123c;
+      --rain-trail-3: #f43f5e;
+      --rain-head-1: #fb7185;
+      --rain-head-2: #fda4af;
+      --rain-head-3: #ffffff;
+
+      --btn-grad: linear-gradient(135deg, #f43f5e, #ec4899);
+      --btn-grad-hover: linear-gradient(135deg, #fb7185, #f472b6);
+    }
+
+    /* Theme: Mystic Violet (Purple & Indigo) */
+    [data-theme="purple"] {
+      --bg-base: #070312;
+      --bg-deep: #160a2c;
+      --bg-surface: rgba(35, 16, 66, 0.72);
+      --bg-surface-hover: rgba(56, 26, 102, 0.85);
+      --border-subtle: rgba(216, 180, 254, 0.22);
+      --border-glow: rgba(168, 85, 247, 0.65);
+
+      --primary: #a855f7;
+      --primary-light: #f3e8ff;
+      --primary-glow: rgba(168, 85, 247, 0.5);
+      --accent: #c084fc;
+      --accent-hot: #faf5ff;
+
+      --heart-stroke-start: #ffffff;
+      --heart-stroke-mid: #c084fc;
+      --heart-stroke-end: #7e22ce;
+      --heart-core-glow: rgba(168, 85, 247, 0.45);
+
+      --rain-trail-1: #581c87;
+      --rain-trail-2: #7e22ce;
+      --rain-trail-3: #a855f7;
+      --rain-head-1: #c084fc;
+      --rain-head-2: #e9d5ff;
+      --rain-head-3: #ffffff;
+
+      --btn-grad: linear-gradient(135deg, #a855f7, #6366f1);
+      --btn-grad-hover: linear-gradient(135deg, #c084fc, #818cf8);
+    }
+
+    /* Theme: Sunset Amber (Gold & Orange) */
+    [data-theme="amber"] {
+      --bg-base: #0f0703;
+      --bg-deep: #241107;
+      --bg-surface: rgba(56, 26, 12, 0.72);
+      --bg-surface-hover: rgba(84, 38, 16, 0.85);
+      --border-subtle: rgba(253, 230, 138, 0.22);
+      --border-glow: rgba(245, 158, 11, 0.65);
+
+      --primary: #f59e0b;
+      --primary-light: #fef3c7;
+      --primary-glow: rgba(245, 158, 11, 0.5);
+      --accent: #fb923c;
+      --accent-hot: #fffbeb;
+
+      --heart-stroke-start: #ffffff;
+      --heart-stroke-mid: #fbbf24;
+      --heart-stroke-end: #ea580c;
+      --heart-core-glow: rgba(245, 158, 11, 0.45);
+
+      --rain-trail-1: #7c2d12;
+      --rain-trail-2: #c2410c;
+      --rain-trail-3: #f59e0b;
+      --rain-head-1: #fbbf24;
+      --rain-head-2: #fde68a;
+      --rain-head-3: #ffffff;
+
+      --btn-grad: linear-gradient(135deg, #f59e0b, #ea580c);
+      --btn-grad-hover: linear-gradient(135deg, #fbbf24, #f97316);
+    }
+
+    /* Theme: Aurora Emerald (Green & Mint) */
+    [data-theme="emerald"] {
+      --bg-base: #020c08;
+      --bg-deep: #082117;
+      --bg-surface: rgba(12, 48, 34, 0.72);
+      --bg-surface-hover: rgba(20, 74, 53, 0.85);
+      --border-subtle: rgba(167, 243, 208, 0.22);
+      --border-glow: rgba(16, 185, 129, 0.65);
+
+      --primary: #10b981;
+      --primary-light: #d1fae5;
+      --primary-glow: rgba(16, 185, 129, 0.5);
+      --accent: #34d399;
+      --accent-hot: #ecfdf5;
+
+      --heart-stroke-start: #ffffff;
+      --heart-stroke-mid: #34d399;
+      --heart-stroke-end: #047857;
+      --heart-core-glow: rgba(16, 185, 129, 0.45);
+
+      --rain-trail-1: #064e3b;
+      --rain-trail-2: #047857;
+      --rain-trail-3: #10b981;
+      --rain-head-1: #34d399;
+      --rain-head-2: #a7f3d0;
+      --rain-head-3: #ffffff;
+
+      --btn-grad: linear-gradient(135deg, #10b981, #0ea5e9);
+      --btn-grad-hover: linear-gradient(135deg, #34d399, #38bdf8);
+    }
+
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    /* ==========================================================================
+       CANVAS & BACKGROUND ATMOSPHERE
+       ========================================================================== */
+    #rainCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+    }
+
+    /* Ambient Nebulae Background Glow */
+    .ambient-nebula {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background:
+        radial-gradient(circle at 50% 38%, var(--primary-glow) 0%, transparent 60%),
+        radial-gradient(circle at 20% 80%, var(--bg-deep) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--bg-deep) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(3, 7, 18, 0.3) 0%, rgba(3, 7, 18, 0.85) 100%);
+      opacity: 0.9;
+      transition: opacity 1.2s ease, background 1s ease;
+    }
+
+    /* Interactive Cursor Glow Aura */
+    .cursor-aura {
+      position: fixed;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0, 0, 0, 0) 70%);
+      opacity: 0;
+      z-index: 2;
+      transition: opacity 0.5s ease;
+      mix-blend-mode: screen;
+    }
+
+    /* Decorative Side Watermark */
+    .side-brand {
+      position: fixed;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      transform-origin: center center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      pointer-events: none;
+      z-index: 3;
+      white-space: nowrap;
+      transition: opacity 0.8s ease;
+    }
+
+    /* ==========================================================================
+       MAIN STAGE CONTAINER
+       ========================================================================== */
+    .stage {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .stage > * {
+      grid-area: 1 / 1;
+    }
+
+    /* ==========================================================================
+       1. OPENING GATE (MÀN MỞ ĐẦU)
+       ========================================================================== */
+    .gate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      pointer-events: auto;
+      text-align: center;
+      max-width: 90vw;
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .gate.gone {
+      opacity: 0;
+      transform: scale(0.92) translateY(-20px);
+      pointer-events: none;
+    }
+
+    /* Capsule Eyebrow Tag */
+    .eyebrow-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.08);
+      animation: floatSlow 4s ease-in-out infinite;
+    }
+    .eyebrow-tag .sparkle-icon {
+      color: var(--primary);
+      font-size: 13px;
+      animation: pulseSparkle 2s ease-in-out infinite;
+    }
+    .eyebrow-tag span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes pulseSparkle {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
+    /* Recipient Name Heading */
+    .recipient-name {
+      font-size: clamp(2.6rem, 12vw, 4.4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 0;
+      max-width: 15ch;
+      text-wrap: balance;
+      background: linear-gradient(135deg, #ffffff 25%, var(--primary-light) 65%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 30px var(--primary-glow)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.9));
+      position: relative;
+    }
+
+    /* Interactive Unwrap Heart Button */
+    .gate-action-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+    }
+
+    .unwrap-btn {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-glow);
+      background: radial-gradient(circle at 45% 38%, var(--bg-surface-hover) 0%, var(--bg-surface) 60%, rgba(3, 7, 18, 0.9) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      color: var(--text-main);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow:
+        0 0 40px var(--primary-glow),
+        0 12px 35px rgba(0, 0, 0, 0.65),
+        inset 0 0 25px rgba(255, 255, 255, 0.2);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+      outline: none;
+    }
+    .unwrap-btn:hover {
+      transform: scale(1.09);
+      box-shadow:
+        0 0 65px var(--primary-glow),
+        0 16px 45px rgba(0, 0, 0, 0.75),
+        inset 0 0 30px rgba(255, 255, 255, 0.3);
+      border-color: var(--primary-light);
+    }
+    .unwrap-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Sonar Ripple Rings */
+    .unwrap-btn::before, .unwrap-btn::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 1.5px solid var(--primary);
+      pointer-events: none;
+    }
+    .unwrap-btn::before {
+      animation: sonarPulse 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+    }
+    .unwrap-btn::after {
+      animation: sonarPulse 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 1.4s;
+    }
+
+    @keyframes sonarPulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      100% { transform: scale(1.95); opacity: 0; }
+    }
+
+    /* Beating Heart Icon Inside Button */
+    .gate-heart-svg {
+      width: 66px;
+      height: 66px;
+      overflow: visible;
+      animation: heartBeating 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      filter: drop-shadow(0 0 14px var(--primary));
+    }
+
+    @keyframes heartBeating {
+      0% { transform: scale(1); }
+      12% { transform: scale(1.18); }
+      24% { transform: scale(1.02); }
+      36% { transform: scale(1.12); }
+      50% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    .gate-heart-svg path {
+      fill: var(--primary-glow);
+      stroke: #ffffff;
+      stroke-width: 2.8;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 6px #ffffff);
+    }
+
+    .tap-hint-text {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--primary-light);
+      text-shadow: 0 0 14px var(--primary-glow);
+      animation: textGlow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes textGlow {
+      0%, 100% { opacity: 0.85; }
+      50% { opacity: 1; filter: drop-shadow(0 0 10px var(--primary)); }
+    }
+
+    /* Sound Advice Pill */
+    .audio-advice-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-subtle);
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      backdrop-filter: blur(12px);
+    }
+    .audio-advice-pill .headphone-icon {
+      font-size: 15px;
+    }
+
+    /* ==========================================================================
+       2. COUNTDOWN RING & TIMER (VÒNG ĐẾM TRÁI TIM)
+       ========================================================================== */
+    .countdown-heart-ring {
+      width: max(260px, min(80vw, 65vh, 440px));
+      height: max(260px, min(80vw, 65vh, 440px));
+      opacity: 0;
+      pointer-events: none;
+      overflow: visible;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+      filter: drop-shadow(0 0 28px var(--primary-glow));
+    }
+    .countdown-heart-ring.active {
+      opacity: 1;
+      animation: heartRingBeat 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes heartRingBeat {
+      0% { transform: scale(1); }
+      10% { transform: scale(1.06); }
+      20% { transform: scale(1.01); }
+      30% { transform: scale(1.035); }
+      45% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    .countdown-heart-ring path {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ring-core-bg {
+      fill: url(#heartGradCore);
+      stroke: none;
+      opacity: 0.65;
+      transition: opacity 0.3s ease;
+    }
+    .countdown-heart-ring.active .ring-core-bg {
+      animation: coreGlowPulse 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes coreGlowPulse {
+      0%, 100% { opacity: 0.45; }
+      10% { opacity: 0.95; }
+      30% { opacity: 0.75; }
+      45% { opacity: 0.45; }
+    }
+
+    .ring-track-line {
+      stroke: var(--border-subtle);
+      stroke-width: 1.5;
+    }
+
+    .ring-active-arc {
+      stroke: url(#heartGradStroke);
+      stroke-width: 3.4;
+      stroke-dashoffset: 0;
+      filter: drop-shadow(0 0 10px var(--primary)) drop-shadow(0 0 20px var(--primary-glow));
+    }
+
+    .ring-spark-head {
+      stroke: #ffffff;
+      stroke-width: 4.8;
+      stroke-dashoffset: 0;
+      filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 16px var(--primary-light));
+    }
+
+    /* Big Glowing Countdown Number */
+    .countdown-number {
+      font-size: clamp(5.5rem, 28vw, 11.5rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      opacity: 0;
+      font-variant-numeric: tabular-nums;
+      color: #ffffff;
+      text-shadow:
+        0 0 30px #ffffff,
+        0 0 60px var(--primary),
+        0 0 110px var(--primary-glow);
+      transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+      z-index: 6;
+      pointer-events: none;
+    }
+    .countdown-number.show {
+      opacity: 1;
+    }
+    .countdown-number.tick-bounce {
+      animation: numberTickBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .countdown-number.vanish {
+      opacity: 0;
+      transform: scale(0.8) translateY(10px);
+      filter: blur(12px);
+    }
+
+    @keyframes numberTickBounce {
+      0% { transform: scale(1.32); filter: blur(4px) brightness(1.6); opacity: 0.6; }
+      60% { transform: scale(0.96); filter: blur(0) brightness(1.2); opacity: 1; }
+      100% { transform: scale(1); filter: blur(0) brightness(1); opacity: 1; }
+    }
+
+    /* Hidden accessible reader line */
+    .screen-reader-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ==========================================================================
+       3. FLOATING ACTION BAR DOCK (CHÂN TRANG NỔI)
+       ========================================================================== */
+    .dock-actions {
+      position: fixed;
+      left: 50%;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(30px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55), 0 0 25px var(--primary-glow);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dock-actions.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    .dock-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-main);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      white-space: nowrap;
+      outline: none;
+    }
+    .dock-btn:hover {
+      color: #ffffff;
+      background: var(--bg-surface-hover);
+      border-color: var(--border-glow);
+      box-shadow: 0 0 18px var(--primary-glow);
+      transform: translateY(-2px);
+    }
+    .dock-btn:active {
+      transform: translateY(0);
+    }
+    .dock-btn.primary-action {
+      background: var(--btn-grad);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 18px var(--primary-glow);
+    }
+    .dock-btn.primary-action:hover {
+      background: var(--btn-grad-hover);
+      box-shadow: 0 6px 28px var(--primary-glow);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    /* Audio Equalizer Top Button */
+    .audio-control-pill {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top));
+      right: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: var(--text-muted);
+      cursor: pointer;
+      z-index: 12;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      transition: all 0.25s ease;
+      outline: none;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .audio-control-pill:hover {
+      color: #ffffff;
+      border-color: var(--border-glow);
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    /* Animated Sound Visualizer Bars */
+    .eq-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 14px;
+      width: 14px;
+    }
+    .eq-bar {
+      width: 3px;
+      height: 100%;
+      background: var(--primary);
+      border-radius: 2px;
+      transform-origin: bottom;
+      animation: eqDance 1.2s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(1) { animation-delay: 0.1s; height: 60%; }
+    .eq-bar:nth-child(2) { animation-delay: 0.3s; height: 100%; }
+    .eq-bar:nth-child(3) { animation-delay: 0.2s; height: 40%; }
+    .audio-control-pill.muted .eq-bar {
+      animation: none;
+      height: 20%;
+      background: var(--text-dim);
+    }
+
+    @keyframes eqDance {
+      0% { transform: scaleY(0.2); }
+      50% { transform: scaleY(1); }
+      100% { transform: scaleY(0.4); }
+    }
+
+    /* Quick Theme Switcher Button */
+    .theme-quick-btn {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top));
+      left: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: var(--text-muted);
+      cursor: pointer;
+      z-index: 12;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      transition: all 0.25s ease;
+      outline: none;
+      font-size: 17px;
+    }
+    .theme-quick-btn:hover {
+      color: #ffffff;
+      border-color: var(--border-glow);
+      box-shadow: 0 0 15px var(--primary-glow);
+      transform: rotate(30deg) scale(1.05);
+    }
+
+    /* ==========================================================================
+       4. CREATOR STUDIO MODAL (BẢNG TỰ TẠO LỜI NHẮN)
+       ========================================================================== */
+    .modal-sheet {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(3, 7, 18, 0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: none;
+      place-items: center;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .modal-sheet.open {
+      display: grid;
+      opacity: 1;
+    }
+
+    .sheet-card {
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      max-height: 90dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.75),
+        0 0 40px var(--primary-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+      transform: scale(0.95) translateY(15px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-sheet.open .sheet-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .sheet-header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sheet-header-title .title-icon {
+      font-size: 20px;
+      color: var(--primary);
+    }
+    .sheet-header-title h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+    .sheet-close-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .sheet-close-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border-color: var(--border-glow);
+    }
+
+    .sheet-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Presets Chips Bar */
+    .presets-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .presets-label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--primary-light);
+    }
+    .presets-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .presets-row::-webkit-scrollbar { display: none; }
+    .preset-chip {
+      padding: 7px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .preset-chip:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--border-glow);
+      color: #ffffff;
+    }
+
+    /* Color Theme Selector */
+    .theme-selector-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+    }
+    .theme-swatches {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .theme-swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 4px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .theme-swatch:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .theme-swatch.active {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+    .swatch-color {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+    .swatch-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* Input Sections */
+    .form-group-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+    }
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .input-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-field label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+    .input-field label .tally-count {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+    .input-field label .tally-count.warn {
+      color: #fbbf24;
+    }
+
+    .input-field input {
+      font-family: var(--font-main);
+      font-size: 14px;
+      color: #ffffff;
+      background: rgba(10, 18, 38, 0.75);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 14px;
+      width: 100%;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .input-field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: rgba(14, 25, 52, 0.95);
+    }
+    .input-field input::placeholder {
+      color: var(--text-dim);
+    }
+    .input-helper {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* QR Result Card */
+    .qr-result-card {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-glow);
+      box-shadow: 0 0 25px var(--primary-glow);
+    }
+    .qr-result-card.active {
+      display: flex;
+      animation: fadeInCard 0.4s ease forwards;
+    }
+    @keyframes fadeInCard {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .qr-frame {
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      line-height: 0;
+    }
+    .qr-frame img, .qr-frame canvas {
+      display: block;
+      border-radius: 6px;
+    }
+
+    .qr-link-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--primary-light);
+      word-break: break-all;
+      text-align: center;
+      max-width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .qr-action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Sheet Bottom Footer Actions */
+    .sheet-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 16px 24px max(16px, env(safe-area-inset-bottom));
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Floating Toast Message */
+    .toast-notification {
+      position: fixed;
+      bottom: max(30px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(50px);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: rgba(10, 20, 45, 0.92);
+      border: 1px solid var(--border-glow);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 25px var(--primary-glow);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 90vw;
+      text-align: center;
+    }
+    .toast-notification.active {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE ADJUSTMENTS
+       ========================================================================== */
+    /* Scrollbar styling for sheet */
+    .sheet-body::-webkit-scrollbar {
+      width: 5px;
+    }
+    .sheet-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .sheet-body::-webkit-scrollbar-thumb {
+      background: var(--border-subtle);
+      border-radius: 999px;
+    }
+    .sheet-body::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    @media (max-width: 640px) {
+      .sheet-card {
+        max-height: 92dvh;
+        border-radius: 20px;
+      }
+      .sheet-body {
+        padding: 16px;
+        gap: 16px;
+      }
+      .dock-actions {
+        width: min(calc(100% - 24px), 380px);
+        justify-content: center;
+        padding: 6px 10px;
+        gap: 6px;
+      }
+      .dock-btn {
+        padding: 8px 12px;
+        font-size: 11.5px;
+        gap: 5px;
+        flex: 1;
+        justify-content: center;
+      }
+      .dock-btn span {
+        display: inline-block;
+      }
+      .dock-btn i {
+        font-size: 14px;
+      }
+      .recipient-name {
+        font-size: clamp(2.4rem, 13vw, 3.6rem);
+      }
+      .side-brand {
+        display: none;
+      }
+      .audio-control-pill {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      .theme-quick-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
-<title>Trái Tim Đếm Ngược</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<style>
-  /* Trang này cố ý chỉ có một tông tối — đây là một màn mở quà lúc đêm,
-     nền sáng sẽ phá hỏng toàn bộ hiệu ứng. Mọi màu đều được tô tường minh. */
-  :root{
-    --void:#04060f;
-    --deep:#0a1430;
-    --rain:#4a7cd4;
-    --rain-hot:#dbe8ff;
-    --ice:#5ec8ff;
-    --ice-soft:#c9f1ff;
-    --paper:#eef5ff;
-    --mute:rgba(186,210,255,.42);
-    --line:rgba(186,210,255,.16);
-  }
+  <!-- Audio Element -->
+  <audio id="bgmAudio" playsinline preload="auto"></audio>
 
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    background:var(--void);
-    color:var(--paper);
-    font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
-    overflow:hidden;
-    overscroll-behavior:none;
-    -webkit-font-smoothing:antialiased;
-  }
+  <!-- Background Animated Rain & Particle Canvas -->
+  <canvas id="rainCanvas" aria-hidden="true"></canvas>
 
-  #rain{position:fixed;inset:0;width:100%;height:100%;display:block}
+  <!-- Atmospheric Nebula Glow -->
+  <div class="ambient-nebula" id="ambientNebula" aria-hidden="true"></div>
 
-  .vignette{
-    position:fixed;inset:0;pointer-events:none;
-    background:
-      radial-gradient(120% 75% at 50% 42%, rgba(4,6,15,0) 38%, rgba(4,6,15,.78) 100%),
-      linear-gradient(180deg, rgba(12,24,56,.5) 0%, rgba(4,6,15,0) 22%);
-  }
+  <!-- Interactive Mouse / Touch Glow Aura -->
+  <div class="cursor-aura" id="cursorAura" aria-hidden="true"></div>
 
-  .stage{
-    position:fixed;inset:0;
-    display:grid;place-items:center;
-    padding:24px;
-    text-align:center;
-    user-select:none;-webkit-user-select:none;
-    pointer-events:none;
-  }
-  .stage > *{grid-area:1/1}
+  <!-- Decorative Side Brand -->
+  <div class="side-brand" id="sideBrandText">EM · ANH THÍCH EM</div>
 
-  /* ---------- màn mở ---------- */
-  .gate{
-    display:flex;flex-direction:column;align-items:center;gap:30px;
-    pointer-events:auto;
-    transition:opacity .6s ease, transform .6s ease;
-  }
-  .gate.gone{opacity:0;transform:translateY(-10px);pointer-events:none}
-
-  .eyebrow{
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:10px;font-weight:400;
-    letter-spacing:.34em;text-transform:uppercase;
-    color:var(--mute);
-  }
-  .to{
-    font-size:clamp(2.2rem,11vw,3.5rem);
-    font-weight:800;letter-spacing:-.02em;line-height:1.06;
-    text-wrap:balance;max-width:16ch;
-    margin:0;
-    text-shadow:0 0 22px rgba(190,222,255,.4),0 0 60px rgba(74,124,212,.35);
-  }
-
-  .gate-cta{display:flex;flex-direction:column;align-items:center;gap:16px}
-
-  .unwrap{
-    position:relative;
-    width:112px;height:112px;border-radius:50%;
-    border:1px solid rgba(110,205,255,.55);
-    background:radial-gradient(circle at 50% 45%, rgba(110,205,255,.36), rgba(110,205,255,.05) 72%);
-    color:var(--paper);
-    font-family:inherit;font-size:26px;
-    display:grid;place-items:center;
-    cursor:pointer;
-    transition:transform .25s ease, box-shadow .25s ease;
-    box-shadow:0 0 34px rgba(110,205,255,.28);
-  }
-  .unwrap:hover,.unwrap:focus-visible{transform:scale(1.06);box-shadow:0 0 52px rgba(110,205,255,.45)}
-  .unwrap:focus-visible{outline:2px solid var(--ice-soft);outline-offset:6px}
-  .unwrap::before{
-    content:"";position:absolute;inset:-1px;border-radius:50%;
-    border:1px solid rgba(110,205,255,.5);
-    animation:ring 2.6s ease-out infinite;
-  }
-  @keyframes ring{
-    0%{transform:scale(1);opacity:.85}
-    100%{transform:scale(1.75);opacity:0}
-  }
-
-  /* Trái tim ở màn mở dùng đúng đường cong với trái tim ở cuối, chỉ khác là
-     nét vẽ thay vì đắp bằng ký tự — mở đầu và kết thúc soi vào nhau. */
-  .gate-heart{
-    width:58px;height:58px;overflow:visible;
-    animation:beat 1.15s 2.2s ease-out infinite;
-  }
-  /* Cùng nhịp hai phách với trái tim ở cuối trang. */
-  @keyframes beat{
-    0%{transform:scale(1)}
-    8%{transform:scale(1.13)}
-    17%{transform:scale(1)}
-    26%{transform:scale(1.07)}
-    36%{transform:scale(1)}
-    100%{transform:scale(1)}
-  }
-  .gate-heart path{
-    fill:none;stroke:var(--ice-soft);
-    stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round;
-    filter:drop-shadow(0 0 5px rgba(110,205,255,.85));
-    stroke-dasharray:var(--len,240);stroke-dashoffset:var(--len,240);
-    animation:drawHeart 1.7s .4s cubic-bezier(.4,0,.2,1) forwards;
-  }
-  @keyframes drawHeart{to{stroke-dashoffset:0}}
-
-  /* ---------- vòng đếm ---------- */
-  .ring{
-    /* Chặn thêm theo chiều cao, nếu không trên màn hình rộng mà thấp thì tim tràn. */
-    width:max(240px, min(78vw, 62vh, 420px));
-    height:max(240px, min(78vw, 62vh, 420px));
-    opacity:0;pointer-events:none;overflow:visible;
-    transition:opacity .7s ease;
-    /* Tách sẵn thành lớp riêng: nhịp đập là phép phóng to, nếu không tách thì mỗi
-       khung trình duyệt phải dựng lại toàn bộ đổ bóng của nét tim. */
-    will-change:transform;
-  }
-  /* Đập đúng một nhịp mỗi giây, khớp với lúc con số đổi. */
-  .ring.on{opacity:1;animation:beatRing 1s ease-out infinite}
-  @keyframes beatRing{
-    0%{transform:scale(1)}
-    7%{transform:scale(1.07)}
-    16%{transform:scale(1)}
-    24%{transform:scale(1.038)}
-    34%{transform:scale(1)}
-    100%{transform:scale(1)}
-  }
-  /* Trái tim đếm ngược vơi dần từ đỉnh, cùng đường cong với trái tim ở nút mở. */
-  .ring path{
-    fill:none;stroke-linecap:round;stroke-linejoin:round;
-  }
-  .ring-track{stroke:rgba(186,210,255,.11);stroke-width:.7}
-  .ring-arc{
-    stroke:var(--ice);stroke-width:1.5;opacity:.78;
-    stroke-dashoffset:0;
-    filter:drop-shadow(0 0 5px rgba(110,205,255,.95));
-  }
-
-  .tap{
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--mute);
-  }
-  .hint{
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:10px;letter-spacing:.1em;color:rgba(186,210,255,.3);
-    margin:0;
-  }
-
-  /* ---------- đếm ngược ---------- */
-  .count{
-    font-size:clamp(5rem,27vw,10.5rem);
-    font-weight:400;line-height:1;
-    letter-spacing:-.02em;
-    opacity:0;
-    font-variant-numeric:tabular-nums;
-    text-shadow:0 0 30px rgba(190,222,255,.55),0 0 90px rgba(110,205,255,.35);
-    transition:opacity .55s ease, transform .55s ease, filter .55s ease;
-  }
-  /* Đếm dài thì số phải đứng yên, mỗi giây nảy một nhịp — hiện/tắt 15 lần sẽ rối mắt. */
-  .count.on{opacity:1}
-  .count.out{opacity:0;transform:scale(.86);filter:blur(6px)}
-  .count.tick{animation:tick .5s cubic-bezier(.2,.9,.3,1)}
-  @keyframes tick{
-    0%{transform:scale(1.24);filter:blur(6px);opacity:.5}
-    100%{transform:scale(1);filter:blur(0);opacity:1}
-  }
-
-  /* ---------- ba câu ----------
-     Chữ được đắp bằng ký tự trên canvas. Thẻ <p> vẫn giữ nội dung nhưng ẩn khỏi
-     mắt, để trình đọc màn hình còn đọc được từng câu. */
-  .line{
-    position:absolute;width:1px;height:1px;
-    margin:-1px;padding:0;overflow:hidden;
-    clip-path:inset(50%);white-space:nowrap;
-  }
-
-  /* ---------- chân trang ---------- */
-  .actions{
-    position:fixed;left:0;right:0;bottom:max(22px,env(safe-area-inset-bottom));
-    display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-    padding:0 20px;
-    opacity:0;pointer-events:none;
-    transition:opacity 1s ease;
-  }
-  .actions.show{opacity:1;pointer-events:auto}
-  .btn{
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--mute);
-    background:rgba(12,24,56,.55);
-    border:1px solid var(--line);
-    border-radius:999px;
-    padding:11px 18px;
-    cursor:pointer;
-    backdrop-filter:blur(8px);
-    transition:color .2s ease,border-color .2s ease,background .2s ease;
-  }
-  .btn:hover,.btn:focus-visible{color:var(--paper);border-color:rgba(110,205,255,.55);background:rgba(110,205,255,.1)}
-  .btn:focus-visible{outline:2px solid var(--ice-soft);outline-offset:3px}
-
-  .sound{
-    position:fixed;top:max(16px,env(safe-area-inset-top));right:16px;
-    width:38px;height:38px;border-radius:50%;
-    display:grid;place-items:center;
-    background:rgba(12,24,56,.5);
-    border:1px solid var(--line);
-    color:var(--mute);
-    cursor:pointer;font-size:15px;line-height:1;
-    backdrop-filter:blur(8px);
-    transition:color .2s ease,border-color .2s ease;
-    z-index:4;
-  }
-  .sound:hover,.sound:focus-visible{color:var(--paper);border-color:rgba(110,205,255,.5)}
-  .sound:focus-visible{outline:2px solid var(--ice-soft);outline-offset:3px}
-
-  .edge{
-    position:fixed;left:10px;top:50%;
-    transform:translateY(-50%) rotate(180deg);
-    writing-mode:vertical-rl;
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;
-    color:rgba(186,210,255,.24);
-    pointer-events:none;
-    max-height:70vh;overflow:hidden;
-  }
-
-  /* ---------- bảng tự tạo ---------- */
-  .sheet{
-    position:fixed;inset:0;z-index:9;
-    background:rgba(4,6,15,.95);
-    backdrop-filter:blur(16px);
-    display:none;flex-direction:column;
-  }
-  .sheet.is-open{display:flex}
-  .sheet-scroll{flex:1;overflow-y:auto;padding:26px 20px 30px;-webkit-overflow-scrolling:touch}
-  .sheet-inner{max-width:30rem;margin:0 auto;display:flex;flex-direction:column;gap:30px}
-  .sheet h2{
-    font-size:1.65rem;font-weight:800;letter-spacing:-.03em;margin:0 0 10px;
-    text-wrap:balance;
-  }
-  .sheet p.lead{
-    font-size:.87rem;line-height:1.65;color:var(--mute);margin:0;max-width:36ch;
-  }
-
-  /* Gom theo từng chặng của màn trình diễn để người điền biết mình đang viết cho đoạn nào. */
-  .group{display:flex;flex-direction:column;gap:16px}
-  .group-title{
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:9.5px;font-weight:400;
-    letter-spacing:.28em;text-transform:uppercase;
-    color:rgba(110,205,255,.75);
-    margin:0;padding-bottom:10px;
-    border-bottom:1px solid var(--line);
-  }
-
-  .field{display:flex;flex-direction:column;gap:7px}
-  .field label{
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--mute);
-  }
-  .field input{
-    font-family:inherit;font-size:1rem;color:var(--paper);
-    background:rgba(12,24,56,.7);
-    border:1px solid var(--line);
-    border-radius:11px;padding:13px 15px;
-    width:100%;
-    transition:border-color .18s ease, box-shadow .18s ease;
-  }
-  .field input:focus{outline:none;border-color:rgba(110,205,255,.65);box-shadow:0 0 0 3px rgba(110,205,255,.14)}
-  .field input::placeholder{color:rgba(186,210,255,.28)}
-  .field small{font-family:"Roboto Mono",ui-monospace,monospace;font-size:9.5px;color:rgba(186,210,255,.34);letter-spacing:.06em}
-  .field small.warn{color:#ffc46b}
-
-  .sheet-x{
-    position:absolute;top:14px;right:14px;z-index:2;
-    width:36px;height:36px;border-radius:50%;
-    background:rgba(12,24,56,.6);border:1px solid var(--line);
-    color:var(--mute);font-size:14px;line-height:1;cursor:pointer;
-    display:grid;place-items:center;
-  }
-  .sheet-x:hover,.sheet-x:focus-visible{color:var(--paper);border-color:rgba(110,205,255,.5)}
-  .sheet-x:focus-visible{outline:2px solid var(--ice-soft);outline-offset:3px}
-
-  /* Nút chính luôn nằm trong tầm ngón tay, không phải cuộn xuống đáy mới thấy. */
-  .sheet-bar{
-    flex-shrink:0;display:flex;gap:10px;justify-content:center;
-    padding:14px 20px max(14px,env(safe-area-inset-bottom));
-    border-top:1px solid var(--line);
-    background:rgba(8,14,32,.94);
-  }
-  .primary{
-    background:linear-gradient(135deg,#5ec8ff,#6f7bff);
-    color:#fff;border:none;
-  }
-  .primary:hover,.primary:focus-visible{color:#fff;background:linear-gradient(135deg,#6fc8ff,#8a92ff)}
-  .qr{
-    display:none;flex-direction:column;align-items:center;gap:12px;
-    padding:18px;border:1px solid var(--line);border-radius:14px;
-    background:rgba(12,24,56,.5);
-  }
-  .qr.show{display:flex}
-  .qr-box{background:#fff;padding:12px;border-radius:10px;line-height:0}
-  .qr-box img,.qr-box canvas{display:block}
-  .link{
-    font-family:"Roboto Mono",ui-monospace,monospace;
-    font-size:10px;color:var(--mute);word-break:break-all;line-height:1.6;
-    text-align:center;max-width:100%;
-  }
-
-  @media (prefers-reduced-motion:reduce){
-    .unwrap::before{animation:none;opacity:0}
-    .ring.on{animation:none}
-    .gate-heart{animation:none}
-    .gate-heart path{animation:none;stroke-dashoffset:0}
-    .count.tick{animation-timing-function:linear}
-  }
-</style>
-
-<canvas id="rain" aria-hidden="true"></canvas>
-<div class="vignette" aria-hidden="true"></div>
-<div class="edge" id="edge"></div>
-
-<main class="stage">
-  <section class="gate" id="gate">
-    <span class="eyebrow" id="eyebrow">Một lời nhắn dành riêng cho</span>
-    <h1 class="to" id="toName">Em</h1>
-    <div class="gate-cta">
-      <button class="unwrap" id="openBtn" aria-label="Mở lời nhắn">
-        <svg class="gate-heart" viewBox="0 0 100 100" aria-hidden="true"><path id="gateHeart"></path></svg>
-      </button>
-      <span class="tap">Chạm để mở</span>
+  <!-- Top Right Audio Equalizer Toggle -->
+  <button class="audio-control-pill" id="soundToggleBtn" aria-label="Bật/Tắt âm thanh" title="Âm thanh">
+    <div class="eq-bars" aria-hidden="true">
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
     </div>
-    <p class="hint">Bật loa để trọn cảm xúc</p>
-  </section>
+    <span id="soundStatusText">Nhạc</span>
+  </button>
 
-  <svg class="ring" id="ring" viewBox="0 0 100 100" aria-hidden="true">
-    <path class="ring-track" id="ringTrack"></path>
-    <path class="ring-arc" id="ringArc"></path>
-  </svg>
-  <div class="count" id="count" aria-hidden="true"></div>
-  <p class="line" id="line" aria-live="polite"></p>
-</main>
+  <!-- Top Left Theme Quick Switcher -->
+  <button class="theme-quick-btn" id="themeQuickBtn" aria-label="Đổi màu sắc giao diện" title="Đổi màu giao diện">
+    🎨
+  </button>
 
-<audio id="bgm" playsinline preload="none"></audio>
-
-<button class="sound" id="soundBtn" aria-label="Tắt nhạc" title="Nhạc nền">♪</button>
-
-<div class="actions" id="actions">
-  <button class="btn" id="replayBtn">Xem lại</button>
-  <button class="btn" id="makeBtn">Tự tạo lời nhắn</button>
-</div>
-
-<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-  <button class="sheet-x" id="closeBtn" aria-label="Đóng bảng">✕</button>
-
-  <div class="sheet-scroll">
-    <div class="sheet-inner">
-      <header>
-        <h2 id="sheetTitle">Tạo lời nhắn của bạn</h2>
-        <p class="lead">Điền vào bên dưới rồi bấm Tạo link. Bạn nhận được một đường dẫn kèm mã QR — gửi cho người ấy, họ mở ra là thấy đúng lời của bạn.</p>
-      </header>
-
-      <section class="group">
-        <h3 class="group-title">Màn mở</h3>
-        <div class="field">
-          <label for="fTo">Gửi tới</label>
-          <input id="fTo" type="text" maxlength="28" placeholder="Tên người ấy">
-        </div>
-        <div class="field">
-          <label for="fBg">Câu nền rơi liên tục</label>
-          <input id="fBg" type="text" maxlength="24" placeholder="Anh thích em">
-          <small class="tally" data-min="2" data-max="5">Câu này tạo nên mưa chữ và các ký tự đắp thành trái tim</small>
-        </div>
-        <div class="field">
-          <label for="fDem">Đếm ngược bao nhiêu giây</label>
-          <input id="fDem" type="number" min="1" max="60" step="1" placeholder="15">
-          <small>Từ 1 đến 60. Càng lâu càng hồi hộp, nhưng đừng quá 20.</small>
-        </div>
-      </section>
-
-      <section class="group">
-        <h3 class="group-title">Ba câu sau khi đếm xong</h3>
-        <div class="field">
-          <label for="f1">Câu 1</label>
-          <input id="f1" type="text" maxlength="30" placeholder="Anh muốn tiến xa hơn">
-          <small class="tally" data-min="3" data-max="5"></small>
-        </div>
-        <div class="field">
-          <label for="f2">Câu 2</label>
-          <input id="f2" type="text" maxlength="30" placeholder="trong mối quan hệ này">
-          <small class="tally" data-min="3" data-max="5"></small>
-        </div>
-        <div class="field">
-          <label for="f3">Câu 3</label>
-          <input id="f3" type="text" maxlength="30" placeholder="Em đồng ý">
-          <small class="tally" data-min="3" data-max="5"></small>
-        </div>
-      </section>
-
-      <section class="group">
-        <h3 class="group-title">Câu thứ tư — lời kết</h3>
-        <div class="field">
-          <label for="fF">Câu 4</label>
-          <input id="fF" type="text" maxlength="60" placeholder="Làm người yêu anh nhé?">
-          <small class="tally" data-min="3" data-max="6"></small>
-        </div>
-      </section>
-
-      <div class="qr" id="qrWrap">
-        <div class="qr-box" id="qrBox"></div>
-        <p class="link" id="linkOut"></p>
-        <button class="btn" id="copyBtn">Sao chép link</button>
+  <!-- Main Center Stage -->
+  <main class="stage" role="main">
+    
+    <!-- 1. Opening Gate Section -->
+    <section class="gate" id="gateSection">
+      <div class="eyebrow-tag">
+        <span class="sparkle-icon">✦</span>
+        <span id="eyebrowText">Một lời nhắn dành riêng cho</span>
       </div>
+
+      <h1 class="recipient-name" id="toRecipientName">Em</h1>
+
+      <div class="gate-action-wrap">
+        <button class="unwrap-btn" id="openGiftBtn" aria-label="Chạm để mở lời nhắn bí mật">
+          <svg class="gate-heart-svg" viewBox="0 0 100 100" aria-hidden="true">
+            <path id="gateHeartPath"></path>
+          </svg>
+        </button>
+        <span class="tap-hint-text">Chạm để mở</span>
+      </div>
+
+      <div class="audio-advice-pill">
+        <span class="headphone-icon">🎧</span>
+        <span>Bật âm lượng để trọn vẹn cảm xúc</span>
+      </div>
+    </section>
+
+    <!-- 2. Countdown Heart SVG Ring -->
+    <svg class="countdown-heart-ring" id="countdownRingSvg" viewBox="0 0 100 100" aria-hidden="true">
+      <defs>
+        <linearGradient id="heartGradStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="var(--heart-stroke-start)"/>
+          <stop offset="50%" stop-color="var(--heart-stroke-mid)"/>
+          <stop offset="100%" stop-color="var(--heart-stroke-end)"/>
+        </linearGradient>
+        <radialGradient id="heartGradCore" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stop-color="var(--heart-stroke-mid)" stop-opacity="0.45"/>
+          <stop offset="60%" stop-color="var(--heart-stroke-end)" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <path class="ring-core-bg" id="ringCorePath"></path>
+      <path class="ring-track-line" id="ringTrackPath"></path>
+      <path class="ring-active-arc" id="ringArcPath"></path>
+      <path class="ring-spark-head" id="ringHeadPath"></path>
+    </svg>
+
+    <!-- 3. Big Countdown Number -->
+    <div class="countdown-number" id="countdownNumber" aria-hidden="true"></div>
+
+    <!-- Screen Reader Accessible Live Region -->
+    <p class="screen-reader-text" id="srMessageLive" aria-live="polite"></p>
+  </main>
+
+  <!-- Bottom Floating Action Dock -->
+  <footer class="dock-actions" id="dockActions">
+    <button class="dock-btn" id="replayActionBtn" title="Xem lại từ đầu">
+      <i>↺</i>
+      <span>Xem lại</span>
+    </button>
+    <button class="dock-btn primary-action" id="createActionBtn" title="Tạo lời nhắn của bạn">
+      <i>✨</i>
+      <span>Tạo lời nhắn</span>
+    </button>
+    <button class="dock-btn" id="shareActionBtn" title="Chia sẻ lời nhắn">
+      <i>💌</i>
+      <span>Chia sẻ</span>
+    </button>
+  </footer>
+
+  <!-- Creator Studio Modal -->
+  <div class="modal-sheet" id="creatorModal" role="dialog" aria-modal="true" aria-labelledby="modalHeading">
+    <div class="sheet-card">
+      
+      <!-- Header -->
+      <div class="sheet-header">
+        <div class="sheet-header-title">
+          <span class="title-icon">💖</span>
+          <h2 id="modalHeading">Tạo lời nhắn của bạn</h2>
+        </div>
+        <button class="sheet-close-btn" id="closeModalBtn" aria-label="Đóng bảng">✕</button>
+      </div>
+
+      <!-- Scrollable Body -->
+      <div class="sheet-body">
+        
+        <!-- Quick Presets -->
+        <div class="presets-container">
+          <span class="presets-label">⚡ Mẫu câu gợi ý (Chạm để điền nhanh):</span>
+          <div class="presets-row">
+            <button class="preset-chip" data-preset="love">💖 Tỏ tình lãng mạn</button>
+            <button class="preset-chip" data-preset="birthday">🎂 Chúc mừng sinh nhật</button>
+            <button class="preset-chip" data-preset="anniversary">🥂 Kỷ niệm ngày yêu</button>
+            <button class="preset-chip" data-preset="sorry">🌸 Xin lỗi ngọt ngào</button>
+          </div>
+        </div>
+
+        <!-- Color Theme Selector -->
+        <div class="theme-selector-wrap">
+          <span class="presets-label">🎨 Chọn tông màu cảm xúc:</span>
+          <div class="theme-swatches" id="themeSwatches">
+            <div class="theme-swatch active" data-theme-name="cyan">
+              <div class="swatch-color" style="background: linear-gradient(135deg, #38bdf8, #2563eb);"></div>
+              <span class="swatch-label">Đêm Sao</span>
+            </div>
+            <div class="theme-swatch" data-theme-name="rose">
+              <div class="swatch-color" style="background: linear-gradient(135deg, #f43f5e, #ec4899);"></div>
+              <span class="swatch-label">Hồng Yêu</span>
+            </div>
+            <div class="theme-swatch" data-theme-name="purple">
+              <div class="swatch-color" style="background: linear-gradient(135deg, #a855f7, #6366f1);"></div>
+              <span class="swatch-label">Tím Mơ</span>
+            </div>
+            <div class="theme-swatch" data-theme-name="amber">
+              <div class="swatch-color" style="background: linear-gradient(135deg, #f59e0b, #ea580c);"></div>
+              <span class="swatch-label">Hoàng Hôn</span>
+            </div>
+            <div class="theme-swatch" data-theme-name="emerald">
+              <div class="swatch-color" style="background: linear-gradient(135deg, #10b981, #0ea5e9);"></div>
+              <span class="swatch-label">Cực Quang</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Section 1: Intro & Background -->
+        <div class="form-group-card">
+          <div class="group-header">
+            <span>01</span>
+            <span>Màn mở đầu & Mưa chữ</span>
+          </div>
+          <div class="input-field">
+            <label for="inputTo">Tên người nhận</label>
+            <input id="inputTo" type="text" maxlength="28" placeholder="Em / Bé yêu / Tên người ấy">
+          </div>
+          <div class="input-field">
+            <label for="inputBg">
+              <span>Câu mưa chữ rơi nền</span>
+              <span class="tally-count" id="tallyBg">nên 2-5 chữ</span>
+            </label>
+            <input id="inputBg" type="text" maxlength="30" placeholder="Anh thích em">
+            <span class="input-helper">Câu này tạo thành màn mưa chữ rơi và đắp nên trái tim</span>
+          </div>
+          <div class="input-field">
+            <label for="inputDem">Thời gian đếm ngược (giây)</label>
+            <input id="inputDem" type="number" min="3" max="60" step="1" placeholder="14">
+            <span class="input-helper">Khuyên dùng 10 - 15 giây để tạo cảm giác hồi hộp</span>
+          </div>
+        </div>
+
+        <!-- Form Section 2: Transitions -->
+        <div class="form-group-card">
+          <div class="group-header">
+            <span>02</span>
+            <span>Ba câu dẫn dắt cảm xúc</span>
+          </div>
+          <div class="input-field">
+            <label for="inputL1">
+              <span>Câu 1</span>
+              <span class="tally-count" id="tallyL1">3-5 chữ</span>
+            </label>
+            <input id="inputL1" type="text" maxlength="35" placeholder="Anh muốn tiến xa hơn">
+          </div>
+          <div class="input-field">
+            <label for="inputL2">
+              <span>Câu 2</span>
+              <span class="tally-count" id="tallyL2">3-5 chữ</span>
+            </label>
+            <input id="inputL2" type="text" maxlength="35" placeholder="trong mối quan hệ này">
+          </div>
+          <div class="input-field">
+            <label for="inputL3">
+              <span>Câu 3</span>
+              <span class="tally-count" id="tallyL3">2-4 chữ</span>
+            </label>
+            <input id="inputL3" type="text" maxlength="35" placeholder="Em đồng ý">
+          </div>
+        </div>
+
+        <!-- Form Section 3: Climax -->
+        <div class="form-group-card">
+          <div class="group-header">
+            <span>03</span>
+            <span>Lời nhắn kết thúc (Cao trào)</span>
+          </div>
+          <div class="input-field">
+            <label for="inputFin">
+              <span>Câu 4 - Lời tỏ tình</span>
+              <span class="tally-count" id="tallyFin">3-6 chữ</span>
+            </label>
+            <input id="inputFin" type="text" maxlength="50" placeholder="Làm người yêu anh nhé?">
+            <span class="input-helper">Câu này sẽ dừng lại trên màn hình kèm hiệu ứng pháo hoa rực rỡ</span>
+          </div>
+        </div>
+
+        <!-- Form Section 4: Music (Optional) -->
+        <div class="form-group-card">
+          <div class="group-header">
+            <span>04</span>
+            <span>Nhạc nền (Tuỳ chọn)</span>
+          </div>
+          <div class="input-field">
+            <label for="inputMp3">Đường dẫn file MP3</label>
+            <input id="inputMp3" type="text" placeholder="nhac.mp3 hoặc link online">
+            <span class="input-helper">Để trống sẽ dùng nhạc mặc định lãng mạn</span>
+          </div>
+        </div>
+
+        <!-- QR Code Result Section -->
+        <div class="qr-result-card" id="qrResultCard">
+          <div class="qr-frame" id="qrCodeContainer"></div>
+          <p class="qr-link-text" id="generatedLinkText"></p>
+          <div class="qr-action-row">
+            <button class="dock-btn primary-action" id="copyGeneratedLinkBtn">📋 Sao chép link</button>
+            <button class="dock-btn" id="shareNativeBtn">📲 Chia sẻ</button>
+            <button class="dock-btn" id="downloadQrBtn">💾 Tải mã QR</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="sheet-footer">
+        <button class="dock-btn" id="previewDirectBtn">🚀 Xem thử ngay</button>
+        <button class="dock-btn primary-action" id="generateLinkBtn">🔗 Tạo link & QR</button>
+      </div>
+
     </div>
   </div>
 
-  <div class="sheet-bar">
-    <button class="btn primary" id="genBtn">Tạo link</button>
-    <button class="btn" id="tryBtn">Xem thử ngay</button>
+  <!-- Floating Toast -->
+  <div class="toast-notification" id="toastMessage">
+    <span>✨</span>
+    <span id="toastContentText">Đã sao chép liên kết thành công!</span>
   </div>
-</div>
 
-<script>
-(() => {
-  "use strict";
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC & ANIMATION ENGINE
+       ========================================================================== */ -->
+  <script>
+  (() => {
+    "use strict";
 
-  const RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const q = new URLSearchParams(location.search);
+    /* ==========================================================================
+       CONFIGURATION & PARAMS
+       ========================================================================== */
+    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const urlParams = new URLSearchParams(location.search);
 
-  const CONFIG = {
-    to:   q.get("to") || "Em",
-    bg:   q.get("bg") || "Anh thích em",
-    l1:   q.get("l1") || "Anh muốn tiến xa hơn",
-    l2:   q.get("l2") || "trong mối quan hệ này",
-    l3:   q.get("l3") || "Em đồng ý",
-    fin:  q.get("f")  || "Làm người yêu anh nhé?",
-    dem:  Math.max(1, Math.min(60, parseInt(q.get("dem"), 10) || 14)),
-    mp3:  q.get("mp3") === null ? "nhac.mp3" : q.get("mp3"),
-    from: parseFloat(q.get("s")) || 0
-  };
+    const THEME_LIST = ["cyan", "rose", "purple", "amber", "emerald"];
 
-  const $ = id => document.getElementById(id);
-  const cv = $("rain"), ctx = cv.getContext("2d");
-
-  /* ============ mưa chữ ============ */
-  let W = 0, H = 0, cell = 16, cols = 0, rows = 0;
-  let drops = [], nextAt = [], pace = [];
-  let colFont = [], colTrail = [], colHead = [], colDim = [];
-  let rainAlpha = 0.34;
-
-  // Ba câu cũng được đắp bằng ký tự như trái tim, nhưng trên lưới mịn hơn
-  // để nét chữ còn đọc được. tcv là lớp vẽ sẵn, mcv dùng để đo hình chữ.
-  const tcv = document.createElement("canvas");
-  const tctx = tcv.getContext("2d");
-  const mcv = document.createElement("canvas");
-  const mctx = mcv.getContext("2d", { willReadFrequently: true });
-  // scv là bản thu nhỏ đúng bằng lưới: mỗi điểm ảnh của nó là độ phủ của một ô
-  const scv = document.createElement("canvas");
-  const sctx = scv.getContext("2d", { willReadFrequently: true });
-  // gcv là bản thu nhỏ của lớp chữ; phóng ngược lên chính là một lớp quầng sáng
-  // rẻ tiền, thay cho shadowBlur trên từng ký tự (thứ đã làm chữ nhoè thành khối).
-  const gcv = document.createElement("canvas");
-  const gctx = gcv.getContext("2d");
-  // rcv giữ sẵn viền tối của cả câu, dựng một lần rồi ghép lại mỗi khung
-  const rcv = document.createElement("canvas");
-  const rctx = rcv.getContext("2d");
-  let tcell = 9, textCells = [], textTone = [], delayIn = [], delayOut = [];
-  // Điểm xuất phát và điểm tan của từng ô, tính sẵn theo px. Hướng toả đều quanh
-  // khối chữ nên chữ hội tụ từ mọi phía rồi cũng tan ra mọi phía.
-  let offInX = [], offInY = [], offOutX = [], offOutY = [];
-  let strInX = [], strInY = [], strOutX = [], strOutY = [];
-  const TONES = ["#ffffff", "#eaf5ff", "#c2ddf5"];
-  let textStart = 0, lastText = 0, lastLit = -1, textLast = false;
-  let curPhrase = "";
-  const PHRASE = 4200;
-
-  function pool(text){
-    const base = (text || "love").replace(/\s+/g, "");
-    const chars = Array.from(base.length ? base : "love");
-    return chars.concat(chars, chars, Array.from("0123456789"));
-  }
-  let GLYPHS = pool(CONFIG.bg);
-  const pick = () => GLYPHS[(Math.random() * GLYPHS.length) | 0];
-
-  function resize(){
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
-    cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr);
-    cv.style.width = W + "px"; cv.style.height = H + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    tcv.width = cv.width; tcv.height = cv.height;
-    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    mcv.width = W; mcv.height = H;
-    gcv.width = Math.max(1, Math.round(W / 4));
-    gcv.height = Math.max(1, Math.round(H / 4));
-    rcv.width = cv.width; rcv.height = cv.height;
-    rctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    cell = Math.max(13, Math.min(22, Math.round(Math.min(W, H) / 26)));
-    cols = Math.ceil(W / cell) + 1;
-    rows = Math.ceil(H / cell) + 1;
-
-    drops = new Array(cols);
-    nextAt = new Array(cols);
-    pace = new Array(cols);
-    colFont = new Array(cols);
-    colTrail = new Array(cols);
-    colHead = new Array(cols);
-    colDim = new Array(cols);
-
-    // Mỗi cột nằm ở một độ sâu riêng: cột gần thì chữ to, sáng, rơi nhanh;
-    // cột xa thì nhỏ, mờ, rơi chậm. Đây là thứ tạo ra chiều sâu cho màn mưa.
-    const TRAIL = ["#2f5390", "#3c68b4", "#4a7cd4"];
-    const HEAD  = ["#7ea3dd", "#b3ccf2", "#eaf3ff"];
-    const now = performance.now();
-    for (let i = 0; i < cols; i++){
-      const d = Math.random();
-      const band = d < 0.34 ? 0 : d < 0.68 ? 1 : 2;
-      drops[i] = -Math.random() * rows;
-      pace[i] = RM ? 260 + Math.random() * 420
-                   : 104 - d * 58 + Math.random() * 26;
-      nextAt[i] = now + Math.random() * 900;
-      colFont[i] = (cell * (0.74 + d * 0.46)).toFixed(1) +
-                   'px "Roboto Mono", ui-monospace, monospace';
-      colTrail[i] = TRAIL[band];
-      colHead[i] = HEAD[band];
-      colDim[i] = 0.44 + d * 0.56;
-    }
-
-    ctx.fillStyle = "#04060f";
-    ctx.fillRect(0, 0, W, H);
-    if (curPhrase) buildText(curPhrase);
-  }
-
-  /* Ngắt dòng sao cho các dòng cân nhau nhất, chứ không nhồi đầy dòng trên rồi
-     bỏ một chữ lẻ xuống dòng dưới. */
-  function splitBalanced(ww, space, k){
-    const n = ww.length;
-    if (k > n) return null;
-    const width = (a, b) => {
-      let sum = 0;
-      for (let i = a; i < b; i++) sum += ww[i];
-      return sum + space * Math.max(0, b - a - 1);
+    const CONFIG = {
+      to:    urlParams.get("to") || "Em",
+      bg:    urlParams.get("bg") || "Anh thích em",
+      l1:    urlParams.get("l1") || "Anh muốn tiến xa hơn",
+      l2:    urlParams.get("l2") || "trong mối quan hệ này",
+      l3:    urlParams.get("l3") || "Em đồng ý",
+      fin:   urlParams.get("f")  || "Làm người yêu anh nhé?",
+      dem:   Math.max(3, Math.min(60, parseInt(urlParams.get("dem"), 10) || 14)),
+      mp3:   urlParams.get("mp3") === null ? "nhac.mp3" : urlParams.get("mp3"),
+      from:  parseFloat(urlParams.get("s")) || 0,
+      theme: THEME_LIST.includes(urlParams.get("theme")) ? urlParams.get("theme") : "cyan"
     };
-    if (k === 1) return { cuts: [0, n], max: width(0, n) };
-    let best = null;
-    if (k === 2){
-      for (let i = 1; i < n; i++){
-        const m = Math.max(width(0, i), width(i, n));
-        if (!best || m < best.max) best = { cuts: [0, i, n], max: m };
+
+    const PRESET_DATA = {
+      love: {
+        to: "Em",
+        bg: "Anh thích em",
+        dem: 14,
+        l1: "Anh muốn tiến xa hơn",
+        l2: "trong mối quan hệ này",
+        l3: "Em đồng ý",
+        fin: "Làm người yêu anh nhé?",
+        theme: "cyan"
+      },
+      birthday: {
+        to: "Công Chúa",
+        bg: "Happy Birthday",
+        dem: 10,
+        l1: "Chúc em tuổi mới",
+        l2: "luôn rạng rỡ và hạnh phúc",
+        l3: "Mãi bên anh nhé",
+        fin: "Yêu em nhiều nhất trần đời! 🎂",
+        theme: "rose"
+      },
+      anniversary: {
+        to: "Tình Yêu Của Anh",
+        bg: "Love You Forever",
+        dem: 12,
+        l1: "Cảm ơn vì đã luôn",
+        l2: "đồng hành cùng anh",
+        l3: "Thêm ngàn năm nữa",
+        fin: "Mình mãi yêu nhau nhé! 🥂",
+        theme: "purple"
+      },
+      sorry: {
+        to: "Bé Cưng",
+        bg: "Anh xin lỗi em",
+        dem: 10,
+        l1: "Anh biết anh sai rồi",
+        l2: "đừng giận anh nữa nhé",
+        l3: "Tha lỗi cho anh nha",
+        fin: "Thương em nhiều lắm! 🌸",
+        theme: "amber"
       }
-    } else {
-      for (let i = 1; i < n - 1; i++){
-        for (let j = i + 1; j < n; j++){
-          const m = Math.max(width(0, i), width(i, j), width(j, n));
-          if (!best || m < best.max) best = { cuts: [0, i, j, n], max: m };
-        }
-      }
-    }
-    return best;
-  }
+    };
 
-  /* Vẽ câu ra canvas đo, rồi quét từng ô lưới xem tâm ô có nằm trong nét chữ
-     không. Ô nào nằm trong thì tí nữa được đắp một ký tự sáng lên. */
-  function buildText(str){
-    textCells = []; lastLit = -1;
-    if (!str) return;
+    const $ = id => document.getElementById(id);
+    const canvas = $("rainCanvas");
+    const ctx = canvas.getContext("2d");
 
-    curPhrase = str;
-    const words = str.split(/\s+/).filter(Boolean);
-    if (!words.length) return;
-
-    const maxW = W * 0.90, maxH = H * 0.46;
-    const FS_MAX = Math.min(W * 0.225, H * 0.26, 210);
-
-    // Đo một lần ở cỡ 100px rồi suy ra cỡ chữ thật, khỏi dò từng bước.
-    mctx.font = '800 100px "Be Vietnam Pro", system-ui, sans-serif';
-    const ww = words.map(x => mctx.measureText(x).width);
-    const space = mctx.measureText(" ").width;
-
-    const opts = [];
-    for (const k of [1, 2, 3]){
-      const sp = splitBalanced(ww, space, k);
-      if (!sp) break;
-      opts.push({ k, sp, fs: Math.min(FS_MAX, maxW / sp.max * 100, maxH / (k * 1.04)) });
-    }
-
-    // Một dòng chỉ dành cho câu thật ngắn. Từ 4 chữ trở lên luôn xuống hai dòng,
-    // vì trải một hàng dài ngang màn hình rộng thì chữ vừa bé vừa khó đọc.
-    let chosen = opts[opts.length - 1];
-    for (const o of opts){
-      if (o.k === 1 && words.length <= 3 && o.fs >= FS_MAX * 0.75){ chosen = o; break; }
-      if (o.k === 2 && o.fs >= FS_MAX * 0.45){ chosen = o; break; }
-    }
-    const fs = chosen.fs;
-    const lines = [];
-    for (let i = 0; i + 1 < chosen.sp.cuts.length; i++){
-      lines.push(words.slice(chosen.sp.cuts[i], chosen.sp.cuts[i + 1]).join(" "));
-    }
-
-    // Ô lưới suy từ cỡ chữ, không từ lưới mưa, nên chữ đọc được như nhau trên mọi
-    // màn hình. Nét chữ đậm dày chừng 0,16em nên mỗi nét vắt qua khoảng ba ô vuông.
-    tcell = Math.max(2, Math.min(8, Math.round(fs * 0.026)));
-
-    mctx.clearRect(0, 0, W, H);
-    mctx.font = '800 ' + fs.toFixed(1) + 'px "Be Vietnam Pro", system-ui, sans-serif';
-    mctx.textAlign = "center";
-    mctx.textBaseline = "middle";
-    mctx.fillStyle = "#fff";
-    const lh = fs * 1.04;
-    const y0 = H * 0.47 - (lines.length - 1) * lh / 2;
-    lines.forEach((l, i) => mctx.fillText(l, W / 2, y0 + i * lh));
-
-    /* Thu ảnh chữ xuống đúng cỡ lưới rồi đọc từng điểm ảnh: mỗi điểm chính là độ
-       phủ thật của một ô. Trước đây tôi nới nét rồi lấy mẫu ở tâm ô, nên vừa mọc
-       ô thừa quanh chữ vừa sót ô ở rìa — chính là chỗ trông lởm chởm. */
-    const tc = Math.ceil(W / tcell), tr = Math.ceil(H / tcell);
-    scv.width = tc; scv.height = tr;
-    sctx.clearRect(0, 0, tc, tr);
-    sctx.imageSmoothingEnabled = true;
-    sctx.imageSmoothingQuality = "high";
-    sctx.drawImage(mcv, 0, 0, W, H, 0, 0, W / tcell, H / tcell);
-    const img = sctx.getImageData(0, 0, tc, tr).data;
-    for (let r = 0; r < tr; r++){
-      for (let c = 0; c < tc; c++){
-        if (img[(r * tc + c) * 4 + 3] > 104) textCells.push({ c, r });
-      }
-    }
-
-    /* Không hạ nền sau lưng câu chữ nữa. Ô vuông trắng đặc đã sáng hơn mưa rất
-       nhiều nên tự nổi; hạ nền chỉ làm tắt mất chính hiệu ứng chữ rơi. */
-    /* Hướng bay của từng ô toả ra từ tâm khối chữ, cộng một chút lệch ngẫu nhiên.
-       Nhờ vậy chữ tụ về từ mọi phía rồi cũng tan ra mọi phía, thay vì chỉ rơi dọc. */
-    let sumC = 0, sumR = 0;
-    for (const p of textCells){ sumC += p.c; sumR += p.r; }
-    const ccx = sumC / textCells.length, ccy = sumR / textCells.length;
-    let maxRad = 1;
-    for (const p of textCells){
-      const d = Math.hypot(p.c - ccx, p.r - ccy);
-      if (d > maxRad) maxRad = d;
-    }
-    // Quãng bay tính theo cỡ chữ. Lần trước tôi lấy theo bán kính khối chữ nên hạt
-    // bay từ tận rìa màn hình, tụ lại thành một đám mây trắng nuốt hết mặt chữ.
-    const spread = fs * 0.30;
-    const span = 1 - WIN;
-    textTone = []; delayIn = []; delayOut = [];
-    offInX = []; offInY = []; offOutX = []; offOutY = [];
-    strInX = []; strInY = []; strOutX = []; strOutY = [];
-    /* Viền tối vẽ sẵn một lần cho cả câu. Trước đây mỗi khung phải vẽ lại từng ô
-       một lần nữa, gấp đôi số hình; giờ chỉ còn một lần ghép ảnh. */
-    rctx.clearRect(0, 0, W, H);
-    rctx.fillStyle = "#03060e";
-    const bs = tcell * 0.8 + tcell * 1.5;
-    for (const p of textCells){
-      rctx.fillRect(p.c * tcell + (tcell - bs) / 2, p.r * tcell + (tcell - bs) / 2, bs, bs);
-    }
-    for (const p of textCells){
-      const q = Math.random();
-      textTone.push(q < 0.62 ? 0 : q < 0.9 ? 1 : 2);
-
-      const vx = p.c - ccx, vy = p.r - ccy;
-      const rad = Math.hypot(vx, vy);
-      const base = rad < 0.001 ? Math.random() * Math.PI * 2 : Math.atan2(vy, vx);
-      const radN = rad / maxRad;
-
-      const aI = base + (Math.random() - 0.5) * 1.1;
-      const dI = spread * (0.5 + Math.random() * 0.85);
-      const ix = Math.cos(aI) * dI, iy = Math.sin(aI) * dI;
-      offInX.push(ix); offInY.push(iy);
-      const mi = Math.hypot(ix, iy) || 1;
-      strInX.push(Math.abs(ix) / mi); strInY.push(Math.abs(iy) / mi);
-
-      const aO = base + (Math.random() - 0.5) * 0.9;
-      const dO = spread * (0.65 + Math.random() * 1);
-      const ox = Math.cos(aO) * dO, oy = Math.sin(aO) * dO;
-      offOutX.push(ox); offOutY.push(oy);
-      const mo = Math.hypot(ox, oy) || 1;
-      strOutX.push(Math.abs(ox) / mo); strOutY.push(Math.abs(oy) / mo);
-
-      // ô ngoài rìa tụ về sau cùng, và cũng là ô rời đi trước tiên
-      delayIn.push((radN * 0.32 + Math.random() * 0.68) * span);
-      delayOut.push(((1 - radN) * 0.30 + Math.random() * 0.70) * span);
-    }
-  }
-
-  const hasRound = typeof tctx.roundRect === "function";
-  const IN = 0.30, OUT = 0.72, WIN = 0.54;   // mốc kết chữ, mốc tan, bề rộng cửa sổ mỗi ô
-
-  function box(x, y, w, h, r){
-    if (hasRound){
-      tctx.beginPath();
-      tctx.roundRect(x, y, w, h, Math.min(r, w / 2, h / 2));
-      tctx.fill();
-    } else {
-      tctx.fillRect(x, y, w, h);
-    }
-  }
-
-  /* Mỗi ô sáng là một ô vuông nhỏ chứ không phải một ký tự — ký tự đều nét luôn
-     chừa khe hở làm chữ rỗ. Ô đang rơi thì kéo dài ra thành giọt và sáng trắng,
-     chạm chỗ thì co lại thành vuông và lắng về sắc độ của nó. t là tiến độ câu. */
-  function renderText(t){
-    tctx.clearRect(0, 0, W, H);
-    const N = textCells.length;
-    const size = tcell * 0.8;
-    const r = size * 0.26;
-    // Ô nhỏ thì bo góc không nhìn ra, mà fillRect nhanh hơn roundRect nhiều lần.
-    const plain = !hasRound || size < 5;
-
-    for (let i = 0; i < N; i++){
-      const p = textCells[i];
-      let dx = 0, dy = 0, a = 1, sc = 1, hot = 0, ux = 0, uy = 0;
-
-      if (t < IN){
-        const u = (t / IN - delayIn[i]) / WIN;
-        if (u <= 0) continue;
-        const g = u >= 1 ? 1 : u;
-        const k = 1 - g;
-        // luỹ thừa năm: bay vào nhanh rồi chững lại rất lâu trước khi khớp chỗ
-        const e = 1 - k * k * k * k * k;
-        dx = offInX[i] * (1 - e);
-        dy = offInY[i] * (1 - e);
-        ux = strInX[i]; uy = strInY[i];
-        hot = k * k;
-        sc = 0.5 + 0.5 * e;
-        a = g < 0.55 ? g / 0.55 : 1;
-      } else if (t > OUT){
-        const u = ((t - OUT) / (1 - OUT) - delayOut[i]) / WIN;
-        if (u >= 1) continue;
-        if (u > 0){
-          const e = u * u;                      // rời đi chậm rồi nhanh dần
-          dx = offOutX[i] * e;
-          dy = offOutY[i] * e;
-          ux = strOutX[i]; uy = strOutY[i];
-          a = 1 - u * u;
-          sc = 1 - u * 0.42;
-          hot = e * 0.85;
-        }
-      } else if (!RM && Math.random() < 0.02){
-        const q = Math.random();
-        textTone[i] = q < 0.75 ? 0 : q < 0.95 ? 1 : 2;
-      }
-
-      // Kéo dài theo đúng phương bay, nên vệt mờ đi theo hướng hạt đang di chuyển.
-      const w = size * sc * (1 + hot * 1.9 * ux);
-      const h = size * sc * (1 + hot * 1.9 * uy);
-      const x = p.c * tcell + (tcell - w) / 2 + dx;
-      const y = p.r * tcell + (tcell - h) / 2 + dy;
-
-      tctx.globalAlpha = a;
-      tctx.fillStyle = hot > 0.35 ? "#ffffff" : TONES[textTone[i]];
-      if (plain) tctx.fillRect(x, y, w, h);
-      else box(x, y, w, h, r);
-    }
-    tctx.globalAlpha = 1;
-
-    // Quầng sáng chỉ còn rất nhẹ, đủ để chữ không khô, không đủ để làm mờ.
-    gctx.clearRect(0, 0, gcv.width, gcv.height);
-    gctx.drawImage(tcv, 0, 0, gcv.width, gcv.height);
-  }
-
-  /* Trái tim vẽ bằng sáu cung Bézier đối xứng: hai vai tròn đầy, khe trên mềm,
-     mũi dưới thon gọn. Công thức tham số sin^3 dùng trước đây cho thân gầy và
-     khe trên nhọn hoắt — đúng về toán nhưng nhìn không ra dáng trái tim.
-     Đường đi bắt đầu từ khe trên nên nét vơi dần theo chiều kim đồng hồ. */
-  const HEART = [
-    [50, 22],
-    [53, 14], [60,  8], [70,  8],
-    [82,  8], [94, 18], [94, 34],
-    [94, 52], [78, 72], [50, 92],
-    [22, 72], [ 6, 52], [ 6, 34],
-    [ 6, 18], [18,  8], [30,  8],
-    [40,  8], [47, 14], [50, 22]
-  ];
-
-  function heartPath(scale){
-    const q = HEART.map(pt =>
-      (50 + (pt[0] - 50) * scale).toFixed(2) + " " + (50 + (pt[1] - 50) * scale).toFixed(2));
-    let d = "M" + q[0];
-    for (let k = 1; k < q.length; k += 3){
-      d += "C" + q[k] + " " + q[k + 1] + " " + q[k + 2];
-    }
-    return d + "Z";
-  }
-
-  function draw(now){
-    ctx.fillStyle = "rgba(4,6,15,0.045)";
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    for (let i = 0; i < cols; i++){
-      if (now < nextAt[i]) continue;
-      nextAt[i] = now + pace[i];
-      const x = i * cell + cell / 2;
-      const y = drops[i] * cell + cell / 2;
-
-      if (drops[i] >= 0 && drops[i] < rows){
-        const dim = colDim[i];
-        ctx.font = colFont[i];
-        ctx.globalAlpha = rainAlpha * dim * 0.7;
-        ctx.fillStyle = colTrail[i];
-        ctx.fillText(pick(), x, y - cell);
-        ctx.globalAlpha = rainAlpha * dim;
-        ctx.fillStyle = colHead[i];
-        ctx.fillText(pick(), x, y);
-        ctx.globalAlpha = 1;
-      }
-
-      drops[i]++;
-      if (drops[i] > rows + Math.random() * 24) drops[i] = -Math.random() * 12;
-    }
-
-    if (textStart && textCells.length){
-      const raw = (now - textStart) / PHRASE;
-      // Câu cuối là cao trào nên nó đứng lại, không tan đi như ba câu trước.
-      const t = textLast ? Math.min(raw, 0.5) : raw;
-      if (t >= 1){
-        textStart = 0; lastLit = -1; curPhrase = "";
-        tctx.clearRect(0, 0, W, H);
-        gctx.clearRect(0, 0, gcv.width, gcv.height);
+    /* ==========================================================================
+       THEME CONTROLLER
+       ========================================================================== */
+    function applyTheme(themeName) {
+      if (!THEME_LIST.includes(themeName)) themeName = "cyan";
+      CONFIG.theme = themeName;
+      if (themeName === "cyan") {
+        document.documentElement.removeAttribute("data-theme");
       } else {
-        // vào nhanh, đứng yên cho đọc, rồi tan dần theo thứ tự ngẫu nhiên
-        // Lúc chữ đứng yên chỉ vẽ lại thưa cho vài ô lấp lánh; lúc rơi mới vẽ dày.
-        const still = t >= IN && t <= OUT;
-        // Lúc chữ đang rơi thì vẽ mỗi khung cho mượt; đứng yên rồi mới thưa lại.
-        if (now - lastText > (still ? 420 : 15)){
-          lastText = now;
-          renderText(t);
-        }
-
-        // Viền tối hiện lên khi chữ đã đáp xuống, tan đi khi chữ rơi tiếp.
-        let rim = 1;
-        if (t < IN){
-          const u = Math.max(0, (t - IN * 0.42) / (IN * 0.58));
-          rim = u * u * (3 - 2 * u);            // lên mượt, không bật đột ngột
-        } else if (t > OUT){
-          const u = Math.min(1, (t - OUT) / (1 - OUT) * 1.4);
-          rim = 1 - u * u * (3 - 2 * u);
-        }
-        if (rim > 0){
-          ctx.globalAlpha = rim * 0.95;
-          ctx.drawImage(rcv, 0, 0, W, H);
-          ctx.globalAlpha = 1;
-        }
-        ctx.globalAlpha = 0.22;
-        ctx.drawImage(gcv, 0, 0, W, H);   // quầng sáng
-        ctx.globalAlpha = 1;
-        ctx.drawImage(tcv, 0, 0, W, H);   // nét chữ sắc
+        document.documentElement.setAttribute("data-theme", themeName);
       }
-    }
 
-    requestAnimationFrame(draw);
-  }
-
-  /* ============ nhạc nền ============ */
-  let audio = null, muted = false, step = 0, tickTimer = null;
-  let bgm = null, useFile = false, musicOn = false;
-  const CHORDS = [
-    [65, 69, 72, 76, 79],
-    [64, 67, 72, 76, 79],
-    [62, 65, 69, 72, 76],
-    [58, 62, 65, 69, 72]
-  ];
-  const PATTERN = [0, 1, 2, 3, 4, 3, 2, 1];
-  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
-
-  /* Ưu tiên file nhạc đặt cạnh trang (mặc định nhac.mp3). Thiếu file, sai định dạng
-     hoặc bị chặn tải thì lặng lẽ quay về bản nhạc tổng hợp bên dưới. */
-  function startMusic(){
-    if (musicOn) return;
-    musicOn = true;
-
-    const src = (CONFIG.mp3 || "").trim();
-    if (!src){ startAudio(); return; }
-
-    bgm = $("bgm");
-    const fallback = () => { if (!useFile && !audio) startAudio(); };
-
-    bgm.addEventListener("error", fallback, { once: true });
-    bgm.addEventListener("loadedmetadata", () => {
-      if (CONFIG.from > 0){ try { bgm.currentTime = CONFIG.from; } catch (e) {} }
-    }, { once: true });
-    bgm.addEventListener("ended", () => {
-      try { bgm.currentTime = CONFIG.from; bgm.play(); } catch (e) {}
-    });
-
-    bgm.src = src;
-    bgm.volume = 0;
-
-    const p = bgm.play();
-    if (p && p.then) p.then(fadeInFile).catch(fallback);
-    else fadeInFile();
-  }
-
-  function fadeInFile(){
-    useFile = true;
-    let v = 0;
-    const id = setInterval(() => {
-      v = Math.min(0.72, v + 0.03);
-      bgm.volume = v;
-      if (v >= 0.72) clearInterval(id);
-    }, 90);
-  }
-
-  function startAudio(){
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    audio = { ctx: new AC() };
-    const a = audio.ctx;
-
-    audio.master = a.createGain();
-    audio.master.gain.setValueAtTime(0.0001, a.currentTime);
-    audio.master.gain.exponentialRampToValueAtTime(0.2, a.currentTime + 3);
-    audio.master.connect(a.destination);
-
-    const delay = a.createDelay(1);
-    delay.delayTime.value = 0.34;
-    const fb = a.createGain(); fb.gain.value = 0.32;
-    const lp = a.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2000;
-    delay.connect(fb); fb.connect(lp); lp.connect(delay); lp.connect(audio.master);
-    audio.send = delay;
-
-    tick();
-  }
-
-  function pluck(midi, when, gain, type){
-    const a = audio.ctx;
-    const o = a.createOscillator();
-    const g = a.createGain();
-    o.type = type || "triangle";
-    o.frequency.value = hz(midi);
-    g.gain.setValueAtTime(0.0001, when);
-    g.gain.exponentialRampToValueAtTime(gain, when + 0.012);
-    g.gain.exponentialRampToValueAtTime(0.0001, when + 1.9);
-    o.connect(g); g.connect(audio.master); g.connect(audio.send);
-    o.start(when); o.stop(when + 2);
-  }
-
-  function tick(){
-    if (!audio) return;
-    const chord = CHORDS[(step >> 3) % CHORDS.length];
-    const idx = PATTERN[step % 8];
-    const t = audio.ctx.currentTime + 0.02;
-    pluck(chord[idx] + 12, t, 0.16);
-    if (step % 8 === 0) pluck(chord[0] - 12, t, 0.1, "sine");
-    if (step % 4 === 2) pluck(chord[(idx + 2) % 5] + 24, t, 0.05);
-    step++;
-    tickTimer = setTimeout(tick, 300);
-  }
-
-  $("soundBtn").addEventListener("click", () => {
-    muted = !muted;
-    if (bgm) bgm.muted = muted;
-    if (audio) audio.master.gain.setTargetAtTime(muted ? 0.0001 : 0.2, audio.ctx.currentTime, 0.2);
-    $("soundBtn").textContent = muted ? "𝄽" : "♪";
-    $("soundBtn").setAttribute("aria-label", muted ? "Bật nhạc" : "Tắt nhạc");
-  });
-
-  /* ============ kịch bản ============ */
-  let timers = [];
-  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
-  const clearAll = () => { timers.forEach(clearTimeout); timers = []; };
-
-  function replay(el, cls){
-    el.classList.remove(cls);
-    void el.offsetWidth;
-    el.classList.add(cls);
-  }
-
-  function run(){
-    clearAll();
-    const cnt = $("count"), ln = $("line");
-    cnt.textContent = ""; ln.textContent = "";
-    cnt.classList.remove("on", "tick", "out");
-    textStart = 0; lastLit = -1; curPhrase = ""; textLast = false;
-    tctx.clearRect(0, 0, W, H);
-    gctx.clearRect(0, 0, gcv.width, gcv.height);
-    $("actions").classList.remove("show");
-
-    const ramp = setInterval(() => {
-      rainAlpha = Math.min(1, rainAlpha + 0.03);
-      if (rainAlpha >= 1) clearInterval(ramp);
-    }, 40);
-
-    const N = CONFIG.dem;
-    const ring = $("ring"), arc = $("ringArc");
-    cnt.classList.remove("out");
-    ring.classList.remove("on");
-    arc.style.transition = "none";
-    arc.style.strokeDashoffset = "0";
-    arc.getBoundingClientRect();          // ép trình duyệt nhận mốc 0 trước khi chạy
-    at(700, () => {
-      ring.classList.add("on");
-      arc.style.transition = "stroke-dashoffset " + N + "s linear";
-      arc.style.strokeDashoffset = RING_LEN;
-    });
-
-    for (let i = 0; i < N; i++){
-      at(700 + i * 1000, () => {
-        cnt.textContent = N - i;
-        cnt.classList.add("on");
-        replay(cnt, "tick");
+      // Update active swatch
+      document.querySelectorAll(".theme-swatch").forEach(sw => {
+        sw.classList.toggle("active", sw.dataset.themeName === themeName);
       });
     }
-    const tEnd = 700 + N * 1000;
-    at(tEnd, () => {
-      cnt.classList.remove("on", "tick");
-      cnt.classList.add("out");
-      ring.classList.remove("on");
+
+    applyTheme(CONFIG.theme);
+
+    $("themeQuickBtn").addEventListener("click", () => {
+      const curIdx = THEME_LIST.indexOf(CONFIG.theme);
+      const nextTheme = THEME_LIST[(curIdx + 1) % THEME_LIST.length];
+      applyTheme(nextTheme);
+      showToast(`Đã chuyển sang giao diện: ${getThemeTitle(nextTheme)}`);
     });
 
-    const tLines = tEnd + 300;
-    const PHRASES = [CONFIG.l1, CONFIG.l2, CONFIG.l3, CONFIG.fin];
-    PHRASES.forEach((txt, i) => at(tLines + i * PHRASE, () => {
-      ln.textContent = txt;
-      textLast = i === PHRASES.length - 1;
-      buildText(txt);
-      textStart = performance.now();
-    }));
+    function getThemeTitle(theme) {
+      switch(theme) {
+        case "rose": return "Hồng Tình Yêu 💖";
+        case "purple": return "Tím Mộng Mơ 🔮";
+        case "amber": return "Hoàng Hôn Ấm Áp 🌅";
+        case "emerald": return "Cực Quang Xanh 🍃";
+        default: return "Đêm Sao Băng 🌌";
+      }
+    }
 
-    at(tLines + 3 * PHRASE + 2600, () => $("actions").classList.add("show"));
-  }
+    /* ==========================================================================
+       CANVAS RAIN, STARFIELD, FIREWORKS & PARTICLE SYSTEM
+       ========================================================================== */
+    let W = 0, H = 0, dpr = 1;
+    let cell = 16, cols = 0, rows = 0;
+    let drops = [], nextAt = [], pace = [];
+    let colFont = [], colTrail = [], colHead = [], colDim = [];
+    let rainAlpha = 0.35;
 
-  /* ============ khởi động ============ */
-  function paint(){
-    $("toName").textContent = CONFIG.to;
-    $("edge").textContent = CONFIG.to ? CONFIG.to + " · " + CONFIG.bg : CONFIG.bg;
-    GLYPHS = pool(CONFIG.bg);
-  }
+    // Stars & Ambient Particles
+    let stars = [];
+    let shootingStars = [];
+    let celebrationParticles = [];
 
-  const gh = $("gateHeart");
-  gh.setAttribute("d", heartPath(0.52));
-  gh.style.setProperty("--len", Math.ceil(gh.getTotalLength()) + "");
+    // Particle Text Engine
+    const textCanvas = document.createElement("canvas");
+    const textCtx = textCanvas.getContext("2d");
+    const measureCanvas = document.createElement("canvas");
+    const measureCtx = measureCanvas.getContext("2d", { willReadFrequently: true });
+    const scaleCanvas = document.createElement("canvas");
+    const scaleCtx = scaleCanvas.getContext("2d", { willReadFrequently: true });
+    const glowCanvas = document.createElement("canvas");
+    const glowCtx = glowCanvas.getContext("2d");
+    const rimCanvas = document.createElement("canvas");
+    const rimCtx = rimCanvas.getContext("2d");
 
-  // Trái tim đếm ngược: cùng công thức, chỉ phóng to cho vừa khung 100x100.
-  const ringD = heartPath(1);
-  $("ringTrack").setAttribute("d", ringD);
-  $("ringArc").setAttribute("d", ringD);
-  const RING_LEN = Math.ceil($("ringArc").getTotalLength());
-  $("ringArc").style.strokeDasharray = RING_LEN;
+    let tcell = 8;
+    let textParticles = [];
+    let textStart = 0;
+    let lastTextRender = 0;
+    let isTextLast = false;
+    let curPhrase = "";
+    const PHRASE_DURATION = 4200;
 
-  paint();
-  resize();
-  requestAnimationFrame(draw);
+    // Mouse / Touch Tracking
+    let mouse = { x: -999, y: -999, active: false, radius: 80 };
 
-  let rt;
-  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(resize, 180); });
+    function getCharPool(text) {
+      const base = (text || "LOVE").replace(/\s+/g, "");
+      const chars = Array.from(base.length ? base : "LOVE");
+      return chars.concat(chars, chars, Array.from("✦0123456789♥★"));
+    }
+    let GLYPH_POOL = getCharPool(CONFIG.bg);
+    const pickGlyph = () => GLYPH_POOL[(Math.random() * GLYPH_POOL.length) | 0];
 
-  function shutGate(){
-    const g = $("gate");
-    g.classList.add("gone");
-    setTimeout(() => { g.style.display = "none"; }, 650);
-  }
+    function initStars() {
+      stars = [];
+      const starCount = Math.floor((W * H) / 4500);
+      for (let i = 0; i < starCount; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          size: Math.random() * 1.8 + 0.5,
+          alpha: Math.random() * 0.7 + 0.3,
+          twinkleSpeed: 0.01 + Math.random() * 0.02,
+          twinklePhase: Math.random() * Math.PI * 2
+        });
+      }
+    }
 
-  $("openBtn").addEventListener("click", () => {
-    shutGate();
-    startMusic();
-    run();
-  });
+    function spawnShootingStar() {
+      if (shootingStars.length < 2 && Math.random() < 0.015) {
+        shootingStars.push({
+          x: Math.random() * W * 0.8,
+          y: Math.random() * H * 0.3,
+          length: Math.random() * 80 + 50,
+          speed: Math.random() * 8 + 6,
+          angle: (Math.PI / 4) + (Math.random() - 0.5) * 0.3,
+          alpha: 1,
+          decay: 0.015 + Math.random() * 0.015
+        });
+      }
+    }
 
-  $("replayBtn").addEventListener("click", run);
+    function createCelebrationBurst(originX = W / 2, originY = H * 0.46) {
+      const count = 90;
+      const styles = getComputedStyle(document.documentElement);
+      const pri = styles.getPropertyValue("--primary").trim() || "#38bdf8";
+      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
+      const colors = ["#ffffff", pri, priLight, "#ffd166", "#ff70a6"];
 
-  /* ============ bảng tự tạo ============ */
-  const sheet = $("sheet");
-  const fields = { to: $("fTo"), bg: $("fBg"), l1: $("f1"), l2: $("f2"), l3: $("f3"), fin: $("fF") };
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 7 + 2;
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (Math.random() * 3 + 1),
+          gravity: 0.07,
+          alpha: 1,
+          decay: 0.007 + Math.random() * 0.009,
+          size: Math.random() * 4 + 2,
+          color: colors[(Math.random() * colors.length) | 0],
+          shape: Math.random() < 0.45 ? "heart" : "circle"
+        });
+      }
+    }
 
-  /* Độ dài câu quyết định trang có cân đối hay không, nên đếm chữ ngay lúc gõ
-     thay vì để người dùng tạo link xong mới phát hiện câu bị tràn. */
-  function wireTally(input, tip){
-    const min = +tip.dataset.min, max = +tip.dataset.max;
-    const base = tip.textContent;
-    const show = () => {
-      const n = input.value.trim().split(/\s+/).filter(Boolean).length;
-      const range = "nên " + min + "–" + max + " chữ";
-      if (!n){ tip.textContent = base || range; tip.classList.remove("warn"); return; }
-      tip.textContent = n + " chữ · " + range;
-      tip.classList.toggle("warn", n < min || n > max);
+    function triggerMultiCelebration() {
+      createCelebrationBurst(W / 2, H * 0.45);
+      setTimeout(() => createCelebrationBurst(W * 0.3, H * 0.4), 250);
+      setTimeout(() => createCelebrationBurst(W * 0.7, H * 0.4), 500);
+      setTimeout(() => createCelebrationBurst(W / 2, H * 0.5), 800);
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      canvas.style.width = W + "px";
+      canvas.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      textCanvas.width = canvas.width;
+      textCanvas.height = canvas.height;
+      textCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      measureCanvas.width = W;
+      measureCanvas.height = H;
+
+      glowCanvas.width = Math.max(1, Math.round(W / 4));
+      glowCanvas.height = Math.max(1, Math.round(H / 4));
+
+      rimCanvas.width = canvas.width;
+      rimCanvas.height = canvas.height;
+      rimCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      cell = Math.max(14, Math.min(22, Math.round(Math.min(W, H) / 28)));
+      cols = Math.ceil(W / cell) + 1;
+      rows = Math.ceil(H / cell) + 1;
+
+      drops = new Array(cols);
+      nextAt = new Array(cols);
+      pace = new Array(cols);
+      colFont = new Array(cols);
+      colTrail = new Array(cols);
+      colHead = new Array(cols);
+      colDim = new Array(cols);
+
+      const styles = getComputedStyle(document.documentElement);
+      const trail1 = styles.getPropertyValue("--rain-trail-1").trim() || "#1e3a8a";
+      const trail2 = styles.getPropertyValue("--rain-trail-2").trim() || "#2563eb";
+      const trail3 = styles.getPropertyValue("--rain-trail-3").trim() || "#38bdf8";
+      const head1  = styles.getPropertyValue("--rain-head-1").trim() || "#60a5fa";
+      const head2  = styles.getPropertyValue("--rain-head-2").trim() || "#93c5fd";
+      const head3  = styles.getPropertyValue("--rain-head-3").trim() || "#ffffff";
+
+      const TRAIL = [trail1, trail2, trail3];
+      const HEAD  = [head1, head2, head3];
+      const now = performance.now();
+
+      for (let i = 0; i < cols; i++) {
+        const depth = Math.random();
+        const band = depth < 0.35 ? 0 : (depth < 0.7 ? 1 : 2);
+        drops[i] = -Math.random() * rows;
+        pace[i] = isReducedMotion ? 300 + Math.random() * 400 : (100 - depth * 55 + Math.random() * 25);
+        nextAt[i] = now + Math.random() * 800;
+        colFont[i] = `${(cell * (0.75 + depth * 0.45)).toFixed(1)}px "JetBrains Mono", monospace`;
+        colTrail[i] = TRAIL[band];
+        colHead[i] = HEAD[band];
+        colDim[i] = 0.45 + depth * 0.55;
+      }
+
+      initStars();
+      ctx.fillStyle = styles.getPropertyValue("--bg-base").trim() || "#030712";
+      ctx.fillRect(0, 0, W, H);
+      if (curPhrase) buildTextParticles(curPhrase);
+    }
+
+    /* Balanced Line Splitter for Multi-line Vietnamese typography */
+    function splitBalancedLines(wordsWidths, spaceWidth, lineCount) {
+      const count = wordsWidths.length;
+      if (lineCount > count) return null;
+      const getWidth = (from, to) => {
+        let sum = 0;
+        for (let i = from; i < to; i++) sum += wordsWidths[i];
+        return sum + spaceWidth * Math.max(0, to - from - 1);
+      };
+      if (lineCount === 1) return { cuts: [0, count], max: getWidth(0, count) };
+      let best = null;
+      if (lineCount === 2) {
+        for (let i = 1; i < count; i++) {
+          const m = Math.max(getWidth(0, i), getWidth(i, count));
+          if (!best || m < best.max) best = { cuts: [0, i, count], max: m };
+        }
+      } else {
+        for (let i = 1; i < count - 1; i++) {
+          for (let j = i + 1; j < count; j++) {
+            const m = Math.max(getWidth(0, i), getWidth(i, j), getWidth(j, count));
+            if (!best || m < best.max) best = { cuts: [0, i, j, count], max: m };
+          }
+        }
+      }
+      return best;
+    }
+
+    /* Build Stardust Particles for Phrases */
+    function buildTextParticles(str) {
+      textParticles = [];
+      if (!str) return;
+      curPhrase = str;
+
+      const words = str.split(/\s+/).filter(Boolean);
+      if (!words.length) return;
+
+      const maxW = W * 0.88, maxH = H * 0.48;
+      const FS_MAX = Math.min(W * 0.22, H * 0.25, 190);
+
+      measureCtx.font = "800 100px \"Be Vietnam Pro\", system-ui, sans-serif";
+      const wordWidths = words.map(w => measureCtx.measureText(w).width);
+      const spaceW = measureCtx.measureText(" ").width;
+
+      const options = [];
+      for (const k of [1, 2, 3]) {
+        const split = splitBalancedLines(wordWidths, spaceW, k);
+        if (!split) break;
+        options.push({ k, split, fs: Math.min(FS_MAX, maxW / split.max * 100, maxH / (k * 1.08)) });
+      }
+
+      let chosen = options[options.length - 1];
+      for (const opt of options) {
+        if (opt.k === 1 && words.length <= 3 && opt.fs >= FS_MAX * 0.72) { chosen = opt; break; }
+        if (opt.k === 2 && opt.fs >= FS_MAX * 0.44) { chosen = opt; break; }
+      }
+
+      const fs = chosen.fs;
+      const lines = [];
+      for (let i = 0; i + 1 < chosen.split.cuts.length; i++) {
+        lines.push(words.slice(chosen.split.cuts[i], chosen.split.cuts[i + 1]).join(" "));
+      }
+
+      tcell = Math.max(3, Math.min(8, Math.round(fs * 0.028)));
+
+      measureCtx.clearRect(0, 0, W, H);
+      measureCtx.font = `800 ${fs.toFixed(1)}px "Be Vietnam Pro", system-ui, sans-serif`;
+      measureCtx.textAlign = "center";
+      measureCtx.textBaseline = "middle";
+      measureCtx.fillStyle = "#ffffff";
+
+      const lineSpacing = fs * 1.08;
+      const startY = H * 0.47 - (lines.length - 1) * lineSpacing / 2;
+      lines.forEach((line, i) => measureCtx.fillText(line, W / 2, startY + i * lineSpacing));
+
+      const tc = Math.ceil(W / tcell);
+      const tr = Math.ceil(H / tcell);
+      scaleCanvas.width = tc;
+      scaleCanvas.height = tr;
+      scaleCtx.clearRect(0, 0, tc, tr);
+      scaleCtx.imageSmoothingEnabled = true;
+      scaleCtx.imageSmoothingQuality = "high";
+      scaleCtx.drawImage(measureCanvas, 0, 0, W, H, 0, 0, W / tcell, H / tcell);
+
+      const imgData = scaleCtx.getImageData(0, 0, tc, tr).data;
+      const rawPoints = [];
+
+      for (let r = 0; r < tr; r++) {
+        for (let c = 0; c < tc; c++) {
+          const alphaVal = imgData[(r * tc + c) * 4 + 3];
+          if (alphaVal > 95) rawPoints.push({ c, r, density: alphaVal / 255 });
+        }
+      }
+
+      if (!rawPoints.length) return;
+
+      let sumC = 0, sumR = 0;
+      for (const p of rawPoints) { sumC += p.c; sumR += p.r; }
+      const centerC = sumC / rawPoints.length;
+      const centerR = sumR / rawPoints.length;
+
+      let maxRadius = 1;
+      for (const p of rawPoints) {
+        const d = Math.hypot(p.c - centerC, p.r - centerR);
+        if (d > maxRadius) maxRadius = d;
+      }
+
+      const spread = fs * 0.35;
+      const span = 1 - 0.52;
+
+      rimCtx.clearRect(0, 0, W, H);
+      rimCtx.fillStyle = "rgba(3, 7, 18, 0.9)";
+      const boxSize = tcell * 0.85 + tcell * 1.6;
+      for (const p of rawPoints) {
+        rimCtx.fillRect(p.c * tcell + (tcell - boxSize) / 2, p.r * tcell + (tcell - boxSize) / 2, boxSize, boxSize);
+      }
+
+      textParticles = rawPoints.map(p => {
+        const vx = p.c - centerC, vy = p.r - centerR;
+        const rad = Math.hypot(vx, vy);
+        const baseAngle = rad < 0.001 ? Math.random() * Math.PI * 2 : Math.atan2(vy, vx);
+        const radNorm = rad / maxRadius;
+
+        const angleIn = baseAngle + (Math.random() - 0.5) * 1.2;
+        const distIn = spread * (0.4 + Math.random() * 0.9);
+        const offInX = Math.cos(angleIn) * distIn;
+        const offInY = Math.sin(angleIn) * distIn;
+
+        const angleOut = baseAngle + (Math.random() - 0.5) * 1.0;
+        const distOut = spread * (0.6 + Math.random() * 1.1);
+        const offOutX = Math.cos(angleOut) * distOut;
+        const offOutY = Math.sin(angleOut) * distOut;
+
+        const delayIn = (radNorm * 0.35 + Math.random() * 0.65) * span;
+        const delayOut = ((1 - radNorm) * 0.35 + Math.random() * 0.65) * span;
+
+        return {
+          c: p.c,
+          r: p.r,
+          targetX: p.c * tcell,
+          targetY: p.r * tcell,
+          curX: p.c * tcell,
+          curY: p.r * tcell,
+          offInX, offInY,
+          offOutX, offOutY,
+          delayIn, delayOut,
+          tone: Math.random() < 0.65 ? 0 : (Math.random() < 0.9 ? 1 : 2),
+          sparkle: Math.random() * Math.PI * 2
+        };
+      });
+    }
+
+    const IN_STEP = 0.30, OUT_STEP = 0.74, WIN_SPAN = 0.52;
+
+    function renderTextParticles(progress) {
+      textCtx.clearRect(0, 0, W, H);
+      const N = textParticles.length;
+      const size = tcell * 0.82;
+      const radius = size * 0.3;
+
+      for (let i = 0; i < N; i++) {
+        const p = textParticles[i];
+        let dx = 0, dy = 0, alpha = 1, scale = 1, isHot = false;
+
+        if (progress < IN_STEP) {
+          const u = (progress / IN_STEP - p.delayIn) / WIN_SPAN;
+          if (u <= 0) continue;
+          const g = u >= 1 ? 1 : u;
+          const k = 1 - g;
+          const ease = 1 - k * k * k * k * k;
+          dx = p.offInX * (1 - ease);
+          dy = p.offInY * (1 - ease);
+          isHot = k > 0.4;
+          scale = 0.5 + 0.5 * ease;
+          alpha = g < 0.5 ? g / 0.5 : 1;
+        } else if (progress > OUT_STEP) {
+          const u = ((progress - OUT_STEP) / (1 - OUT_STEP) - p.delayOut) / WIN_SPAN;
+          if (u >= 1) continue;
+          if (u > 0) {
+            const ease = u * u;
+            dx = p.offOutX * ease;
+            dy = p.offOutY * ease;
+            alpha = 1 - u * u;
+            scale = 1 - u * 0.4;
+            isHot = ease > 0.3;
+          }
+        }
+
+        // Interactive mouse / touch displacement
+        let mx = 0, my = 0;
+        if (mouse.active) {
+          const distToMouse = Math.hypot(p.targetX + dx - mouse.x, p.targetY + dy - mouse.y);
+          if (distToMouse < mouse.radius && distToMouse > 0) {
+            const force = (1 - distToMouse / mouse.radius) * 22;
+            const angle = Math.atan2(p.targetY + dy - mouse.y, p.targetX + dx - mouse.x);
+            mx = Math.cos(angle) * force;
+            my = Math.sin(angle) * force;
+          }
+        }
+
+        const w = size * scale;
+        const h = size * scale;
+        const x = p.targetX + (tcell - w) / 2 + dx + mx;
+        const y = p.targetY + (tcell - h) / 2 + dy + my;
+
+        textCtx.globalAlpha = alpha;
+        textCtx.fillStyle = isHot ? "#ffffff" : (p.tone === 0 ? "#ffffff" : (p.tone === 1 ? "#e0f2fe" : "#bae6fd"));
+
+        textCtx.beginPath();
+        if (typeof textCtx.roundRect === "function" && size > 4) {
+          textCtx.roundRect(x, y, w, h, radius);
+        } else {
+          textCtx.rect(x, y, w, h);
+        }
+        textCtx.fill();
+      }
+      textCtx.globalAlpha = 1;
+
+      // Render Soft Glow Canvas
+      glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
+      glowCtx.drawImage(textCanvas, 0, 0, glowCanvas.width, glowCanvas.height);
+    }
+
+    /* Heart Contour Equation */
+    const HEART_POINTS = [
+      [50, 22],
+      [53, 14], [60,  8], [70,  8],
+      [82,  8], [94, 18], [94, 34],
+      [94, 52], [78, 72], [50, 92],
+      [22, 72], [ 6, 52], [ 6, 34],
+      [ 6, 18], [18,  8], [30,  8],
+      [40,  8], [47, 14], [50, 22]
+    ];
+
+    function generateHeartSvgPath(scale) {
+      const scaled = HEART_POINTS.map(pt =>
+        (50 + (pt[0] - 50) * scale).toFixed(2) + " " + (50 + (pt[1] - 50) * scale).toFixed(2));
+      let d = "M" + scaled[0];
+      for (let k = 1; k < scaled.length; k += 3) {
+        d += "C" + scaled[k] + " " + scaled[k + 1] + " " + scaled[k + 2];
+      }
+      return d + "Z";
+    }
+
+    /* Main Animation Render Loop */
+    function animateFrame(now) {
+      // Semi-transparent background clear for smooth rain trail persistence
+      const styles = getComputedStyle(document.documentElement);
+      const bgBase = styles.getPropertyValue("--bg-base").trim() || "#030712";
+
+      ctx.fillStyle = "rgba(3, 7, 18, 0.08)";
+      ctx.fillRect(0, 0, W, H);
+
+      // 1. Draw Twinkling Stars
+      for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+        star.twinklePhase += star.twinkleSpeed;
+        const currentAlpha = star.alpha * (0.5 + 0.5 * Math.sin(star.twinklePhase));
+        ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha.toFixed(2)})`;
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+      }
+
+      // 2. Draw Shooting Stars
+      spawnShootingStar();
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const ss = shootingStars[i];
+        ss.x += Math.cos(ss.angle) * ss.speed;
+        ss.y += Math.sin(ss.angle) * ss.speed;
+        ss.alpha -= ss.decay;
+
+        if (ss.alpha <= 0 || ss.x > W || ss.y > H) {
+          shootingStars.splice(i, 1);
+          continue;
+        }
+
+        const grad = ctx.createLinearGradient(
+          ss.x, ss.y,
+          ss.x - Math.cos(ss.angle) * ss.length,
+          ss.y - Math.sin(ss.angle) * ss.length
+        );
+        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha})`);
+        grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(ss.x, ss.y);
+        ctx.lineTo(ss.x - Math.cos(ss.angle) * ss.length, ss.y - Math.sin(ss.angle) * ss.length);
+        ctx.stroke();
+      }
+
+      // 3. Draw Romantic Falling Rain
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      for (let i = 0; i < cols; i++) {
+        if (now < nextAt[i]) continue;
+        nextAt[i] = now + pace[i];
+        const x = i * cell + cell / 2;
+        const y = drops[i] * cell + cell / 2;
+
+        if (drops[i] >= 0 && drops[i] < rows) {
+          const dim = colDim[i];
+          ctx.font = colFont[i];
+          ctx.globalAlpha = rainAlpha * dim * 0.65;
+          ctx.fillStyle = colTrail[i];
+          ctx.fillText(pickGlyph(), x, y - cell);
+          ctx.globalAlpha = rainAlpha * dim;
+          ctx.fillStyle = colHead[i];
+          ctx.fillText(pickGlyph(), x, y);
+          ctx.globalAlpha = 1;
+        }
+
+        drops[i]++;
+        if (drops[i] > rows + Math.random() * 20) {
+          drops[i] = -Math.random() * 12;
+        }
+      }
+
+      // 4. Draw Celebration Fireworks Particles
+      for (let i = celebrationParticles.length - 1; i >= 0; i--) {
+        const cp = celebrationParticles[i];
+        cp.x += cp.vx;
+        cp.y += cp.vy;
+        cp.vy += cp.gravity;
+        cp.alpha -= cp.decay;
+
+        if (cp.alpha <= 0) {
+          celebrationParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.globalAlpha = cp.alpha;
+        ctx.fillStyle = cp.color;
+        ctx.beginPath();
+        if (cp.shape === "heart") {
+          const s = cp.size;
+          ctx.arc(cp.x - s / 2, cp.y, s / 2, Math.PI, 0, false);
+          ctx.arc(cp.x + s / 2, cp.y, s / 2, Math.PI, 0, false);
+          ctx.lineTo(cp.x, cp.y + s);
+          ctx.closePath();
+        } else {
+          ctx.arc(cp.x, cp.y, cp.size, 0, Math.PI * 2);
+        }
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // 5. Draw Particle Text Messages
+      if (textStart && textParticles.length) {
+        const rawProgress = (now - textStart) / PHRASE_DURATION;
+        const progress = isTextLast ? Math.min(rawProgress, 0.5) : rawProgress;
+
+        if (progress >= 1) {
+          textStart = 0;
+          curPhrase = "";
+          textCtx.clearRect(0, 0, W, H);
+          glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
+        } else {
+          const isStill = progress >= IN_STEP && progress <= OUT_STEP;
+          if (now - lastTextRender > (isStill ? 350 : 15)) {
+            lastTextRender = now;
+            renderTextParticles(progress);
+          }
+
+          let rimAlpha = 1;
+          if (progress < IN_STEP) {
+            const u = Math.max(0, (progress - IN_STEP * 0.4) / (IN_STEP * 0.6));
+            rimAlpha = u * u * (3 - 2 * u);
+          } else if (progress > OUT_STEP) {
+            const u = Math.min(1, (progress - OUT_STEP) / (1 - OUT_STEP) * 1.3);
+            rimAlpha = 1 - u * u * (3 - 2 * u);
+          }
+
+          if (rimAlpha > 0) {
+            ctx.globalAlpha = rimAlpha * 0.92;
+            ctx.drawImage(rimCanvas, 0, 0, W, H);
+            ctx.globalAlpha = 1;
+          }
+
+          // Draw Glowing Halo and Crisp Text Layers
+          ctx.globalAlpha = 0.28;
+          ctx.drawImage(glowCanvas, 0, 0, W, H);
+          ctx.globalAlpha = 1;
+          ctx.drawImage(textCanvas, 0, 0, W, H);
+        }
+      }
+
+      requestAnimationFrame(animateFrame);
+    }
+
+    /* ==========================================================================
+       WEB AUDIO ENGINE & SOUND EFFECTS
+       ========================================================================== */
+    let audioCtx = null;
+    let audioMaster = null;
+    let isMuted = false;
+    let musicStarted = false;
+    let synthTimer = null;
+    let synthStep = 0;
+    const bgmAudio = $("bgmAudio");
+
+    const CHORDS_POOL = [
+      [65, 69, 72, 76, 79], // Fmaj9
+      [64, 67, 72, 76, 79], // Em7
+      [62, 65, 69, 72, 76], // Dm9
+      [58, 62, 65, 69, 72]  // Bbmaj7
+    ];
+    const ARPEGGIO_PATTERN = [0, 1, 2, 3, 4, 3, 2, 1];
+    const midiToHz = m => 440 * Math.pow(2, (m - 69) / 12);
+
+    function initAudioContext() {
+      if (audioCtx) return;
+      const AudioClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioClass) return;
+      audioCtx = new AudioClass();
+
+      audioMaster = audioCtx.createGain();
+      audioMaster.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+      audioMaster.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime + 2.5);
+      audioMaster.connect(audioCtx.destination);
+    }
+
+    function playSynthArpeggio() {
+      if (!audioCtx || isMuted) return;
+      const chord = CHORDS_POOL[(synthStep >> 3) % CHORDS_POOL.length];
+      const noteIdx = ARPEGGIO_PATTERN[synthStep % 8];
+      const time = audioCtx.currentTime + 0.02;
+
+      // Soft Bell Pluck
+      pluckNote(chord[noteIdx] + 12, time, 0.14, "triangle");
+      if (synthStep % 8 === 0) pluckNote(chord[0] - 12, time, 0.08, "sine");
+      if (synthStep % 4 === 2) pluckNote(chord[(noteIdx + 2) % 5] + 24, time, 0.04, "sine");
+
+      synthStep++;
+      synthTimer = setTimeout(playSynthArpeggio, 320);
+    }
+
+    function pluckNote(midi, when, gainVal, type) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type || "triangle";
+      osc.frequency.value = midiToHz(midi);
+
+      gain.gain.setValueAtTime(0.0001, when);
+      gain.gain.exponentialRampToValueAtTime(gainVal, when + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + 2.0);
+
+      osc.connect(gain);
+      gain.connect(audioMaster);
+      osc.start(when);
+      osc.stop(when + 2.1);
+    }
+
+    // Play subtle tick tone on each countdown second
+    function playTickTone() {
+      if (!audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime + 0.01;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, time);
+        osc.frequency.exponentialRampToValueAtTime(440, time + 0.12);
+
+        gain.gain.setValueAtTime(0.08, time);
+        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.14);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(time);
+        osc.stop(time + 0.15);
+      } catch (e) {}
+    }
+
+    // Play magical burst chime on final message
+    function playCelebrationFanfare() {
+      if (!audioCtx || isMuted) return;
+      try {
+        const notes = [72, 76, 79, 84, 88];
+        notes.forEach((m, idx) => {
+          pluckNote(m, audioCtx.currentTime + idx * 0.12, 0.16, "sine");
+        });
+      } catch (e) {}
+    }
+
+    function startMusicExperience() {
+      if (musicStarted) return;
+      musicStarted = true;
+      initAudioContext();
+
+      const mp3Src = (CONFIG.mp3 || "").trim();
+      if (!mp3Src) {
+        playSynthArpeggio();
+        return;
+      }
+
+      bgmAudio.src = mp3Src;
+      bgmAudio.volume = 0;
+
+      const fallbackToSynth = () => {
+        if (!synthTimer) playSynthArpeggio();
+      };
+
+      bgmAudio.addEventListener("error", fallbackToSynth, { once: true });
+      bgmAudio.addEventListener("loadedmetadata", () => {
+        if (CONFIG.from > 0) {
+          try { bgmAudio.currentTime = CONFIG.from; } catch (e) {}
+        }
+      }, { once: true });
+
+      bgmAudio.addEventListener("ended", () => {
+        try { bgmAudio.currentTime = CONFIG.from; bgmAudio.play(); } catch (e) {}
+      });
+
+      const playPromise = bgmAudio.play();
+      if (playPromise && playPromise.then) {
+        playPromise.then(fadeInAudio).catch(fallbackToSynth);
+      } else {
+        fadeInAudio();
+      }
+    }
+
+    function fadeInAudio() {
+      let vol = 0;
+      const interval = setInterval(() => {
+        vol = Math.min(0.75, vol + 0.04);
+        bgmAudio.volume = vol;
+        if (vol >= 0.75) clearInterval(interval);
+      }, 80);
+    }
+
+    $("soundToggleBtn").addEventListener("click", () => {
+      isMuted = !isMuted;
+      bgmAudio.muted = isMuted;
+      if (audioMaster && audioCtx) {
+        audioMaster.gain.setTargetAtTime(isMuted ? 0.0001 : 0.25, audioCtx.currentTime, 0.15);
+      }
+      $("soundToggleBtn").classList.toggle("muted", isMuted);
+      $("soundStatusText").textContent = isMuted ? "Tắt" : "Nhạc";
+      showToast(isMuted ? "Đã tắt âm thanh" : "Đã bật âm thanh 🎵");
+    });
+
+    /* ==========================================================================
+       COUNTDOWN TIMELINE & ORCHESTRATION
+       ========================================================================== */
+    let timerIds = [];
+    const schedule = (ms, callback) => timerIds.push(setTimeout(callback, ms));
+    const clearSchedule = () => { timerIds.forEach(clearTimeout); timerIds = []; };
+
+    function triggerHaptic(pattern) {
+      if (navigator.vibrate) {
+        try { navigator.vibrate(pattern); } catch (e) {}
+      }
+    }
+
+    function executeScript() {
+      clearSchedule();
+      const countEl = $("countdownNumber");
+      const srEl = $("srMessageLive");
+      const ringSvg = $("countdownRingSvg");
+      const arcPath = $("ringArcPath");
+      const headPath = $("ringHeadPath");
+
+      countEl.textContent = "";
+      srEl.textContent = "";
+      countEl.classList.remove("show", "tick-bounce", "vanish");
+      ringSvg.classList.remove("active");
+
+      textStart = 0;
+      curPhrase = "";
+      isTextLast = false;
+      textCtx.clearRect(0, 0, W, H);
+      glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
+      $("dockActions").classList.remove("visible");
+
+      // Increase rain density during countdown
+      const rainRamp = setInterval(() => {
+        rainAlpha = Math.min(0.9, rainAlpha + 0.04);
+        if (rainAlpha >= 0.9) clearInterval(rainRamp);
+      }, 50);
+
+      const totalSec = CONFIG.dem;
+      arcPath.style.transition = "none";
+      arcPath.style.strokeDashoffset = "0";
+      headPath.style.transition = "none";
+      headPath.style.strokeDashoffset = "0";
+      arcPath.getBoundingClientRect(); // Force Reflow
+
+      // Start Ring Progress Animation
+      schedule(600, () => {
+        ringSvg.classList.add("active");
+        arcPath.style.transition = `stroke-dashoffset ${totalSec}s linear`;
+        arcPath.style.strokeDashoffset = RING_TOTAL_LEN;
+        headPath.style.transition = `stroke-dashoffset ${totalSec}s linear`;
+        headPath.style.strokeDashoffset = RING_TOTAL_LEN;
+      });
+
+      // Countdown Number Ticks
+      for (let i = 0; i < totalSec; i++) {
+        schedule(600 + i * 1000, () => {
+          const remain = totalSec - i;
+          countEl.textContent = remain;
+          countEl.classList.add("show");
+
+          countEl.classList.remove("tick-bounce");
+          void countEl.offsetWidth; // Reflow
+          countEl.classList.add("tick-bounce");
+
+          playTickTone();
+          triggerHaptic(18);
+        });
+      }
+
+      const countdownEndTime = 600 + totalSec * 1000;
+      schedule(countdownEndTime, () => {
+        countEl.classList.remove("show", "tick-bounce");
+        countEl.classList.add("vanish");
+        ringSvg.classList.remove("active");
+      });
+
+      // Display 4 Phrases
+      const phrasesStartTime = countdownEndTime + 350;
+      const PHRASES = [CONFIG.l1, CONFIG.l2, CONFIG.l3, CONFIG.fin];
+
+      PHRASES.forEach((txt, index) => {
+        schedule(phrasesStartTime + index * PHRASE_DURATION, () => {
+          srEl.textContent = txt;
+          isTextLast = index === PHRASES.length - 1;
+          buildTextParticles(txt);
+          textStart = performance.now();
+
+          if (isTextLast) {
+            schedule(400, () => {
+              triggerMultiCelebration();
+              playCelebrationFanfare();
+              triggerHaptic([40, 60, 80]);
+            });
+          }
+        });
+      });
+
+      // Show Action Dock after final message
+      schedule(phrasesStartTime + 3 * PHRASE_DURATION + 2400, () => {
+        $("dockActions").classList.add("visible");
+      });
+    }
+
+    /* ==========================================================================
+       UI SETUP & INTERACTIVITY
+       ========================================================================== */
+    function updateDOMText() {
+      $("toRecipientName").textContent = CONFIG.to;
+      $("sideBrandText").textContent = CONFIG.to ? `${CONFIG.to} · ${CONFIG.bg}` : CONFIG.bg;
+      GLYPH_POOL = getCharPool(CONFIG.bg);
+    }
+
+    // Gate Heart Path Drawing
+    const gateHeart = $("gateHeartPath");
+    gateHeart.setAttribute("d", generateHeartSvgPath(0.56));
+
+    // Countdown Ring Heart Paths
+    const countdownHeartD = generateHeartSvgPath(1);
+    ["ringCorePath", "ringTrackPath", "ringArcPath", "ringHeadPath"].forEach(id => {
+      $(id).setAttribute("d", countdownHeartD);
+    });
+    const RING_TOTAL_LEN = Math.ceil($("ringArcPath").getTotalLength());
+    $("ringArcPath").style.strokeDasharray = RING_TOTAL_LEN;
+    $("ringHeadPath").style.strokeDasharray = `4.5 ${RING_TOTAL_LEN}`;
+
+    updateDOMText();
+    resize();
+    requestAnimationFrame(animateFrame);
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
+    });
+
+    // Mouse & Touch Aura
+    const aura = $("cursorAura");
+    function updateCursor(x, y) {
+      mouse.x = x;
+      mouse.y = y;
+      mouse.active = true;
+      aura.style.left = x + "px";
+      aura.style.top = y + "px";
+      aura.style.opacity = "0.75";
+    }
+
+    window.addEventListener("pointermove", e => updateCursor(e.clientX, e.clientY));
+    window.addEventListener("pointerdown", e => updateCursor(e.clientX, e.clientY));
+    window.addEventListener("pointerleave", () => {
+      mouse.active = false;
+      aura.style.opacity = "0";
+    });
+
+    // Open Gift Button Trigger
+    function closeGate() {
+      const gate = $("gateSection");
+      gate.classList.add("gone");
+      setTimeout(() => { gate.style.display = "none"; }, 700);
+    }
+
+    $("openGiftBtn").addEventListener("click", () => {
+      triggerHaptic([30, 50]);
+      closeGate();
+      startMusicExperience();
+      executeScript();
+    });
+
+    $("replayActionBtn").addEventListener("click", () => {
+      triggerHaptic(20);
+      executeScript();
+    });
+
+    /* ==========================================================================
+       CREATOR STUDIO MODAL LOGIC
+       ========================================================================== */
+    const modal = $("creatorModal");
+    const fields = {
+      to:  $("inputTo"),
+      bg:  $("inputBg"),
+      l1:  $("inputL1"),
+      l2:  $("inputL2"),
+      l3:  $("inputL3"),
+      fin: $("inputFin"),
+      mp3: $("inputMp3")
     };
-    input.addEventListener("input", show);
-    return show;
-  }
-  const tallies = [];
-  document.querySelectorAll(".tally").forEach(tip => {
-    const input = tip.parentElement.querySelector("input");
-    if (input) tallies.push(wireTally(input, tip));
-  });
-  const refreshTallies = () => tallies.forEach(f => f());
 
-  function openSheet(){
-    for (const k in fields) fields[k].value = CONFIG[k];
-    $("fDem").value = CONFIG.dem;
-    refreshTallies();
-    sheet.classList.add("is-open");
-    fields.to.focus();
-  }
-  function readFields(){
-    for (const k in fields){
-      const v = fields[k].value.trim();
-      if (v) CONFIG[k] = v;
+    function wireTallyCounter(input, tallyEl, minWords, maxWords) {
+      const update = () => {
+        const words = input.value.trim().split(/\s+/).filter(Boolean).length;
+        if (!words) {
+          tallyEl.textContent = `nên ${minWords}-${maxWords} chữ`;
+          tallyEl.classList.remove("warn");
+          return;
+        }
+        tallyEl.textContent = `${words} chữ · nên ${minWords}-${maxWords} chữ`;
+        tallyEl.classList.toggle("warn", words < minWords || words > maxWords);
+      };
+      input.addEventListener("input", update);
+      return update;
     }
-    const d = parseInt($("fDem").value, 10);
-    if (d) CONFIG.dem = Math.max(1, Math.min(60, d));
-  }
-  function buildLink(){
-    const p = new URLSearchParams({
-      to: CONFIG.to, bg: CONFIG.bg,
-      l1: CONFIG.l1, l2: CONFIG.l2, l3: CONFIG.l3, f: CONFIG.fin,
-      dem: String(CONFIG.dem)
+
+    const tallyUpdaters = [
+      wireTallyCounter(fields.bg,  $("tallyBg"), 2, 5),
+      wireTallyCounter(fields.l1,  $("tallyL1"), 3, 5),
+      wireTallyCounter(fields.l2,  $("tallyL2"), 3, 5),
+      wireTallyCounter(fields.l3,  $("tallyL3"), 2, 4),
+      wireTallyCounter(fields.fin, $("tallyFin"), 3, 6)
+    ];
+
+    function openCreatorModal() {
+      for (const k in fields) {
+        if (fields[k]) fields[k].value = CONFIG[k] || "";
+      }
+      $("inputDem").value = CONFIG.dem;
+      applyTheme(CONFIG.theme);
+      tallyUpdaters.forEach(f => f());
+      modal.classList.add("open");
+      fields.to.focus();
+    }
+
+    function closeCreatorModal() {
+      modal.classList.remove("open");
+    }
+
+    $("createActionBtn").addEventListener("click", openCreatorModal);
+    $("shareActionBtn").addEventListener("click", () => {
+      openCreatorModal();
+      $("generateLinkBtn").click();
     });
-    return location.origin + location.pathname + "?" + p.toString();
-  }
+    $("closeModalBtn").addEventListener("click", closeCreatorModal);
 
-  $("makeBtn").addEventListener("click", openSheet);
-  $("closeBtn").addEventListener("click", () => sheet.classList.remove("is-open"));
+    // Preset Buttons Click
+    document.querySelectorAll(".preset-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const presetKey = chip.dataset.preset;
+        const data = PRESET_DATA[presetKey];
+        if (!data) return;
 
-  $("tryBtn").addEventListener("click", () => {
-    readFields();
-    paint();
-    sheet.classList.remove("is-open");
-    shutGate();
-    startMusic();
-    run();
-  });
+        fields.to.value = data.to;
+        fields.bg.value = data.bg;
+        fields.l1.value = data.l1;
+        fields.l2.value = data.l2;
+        fields.l3.value = data.l3;
+        fields.fin.value = data.fin;
+        $("inputDem").value = data.dem;
+        applyTheme(data.theme);
+        tallyUpdaters.forEach(f => f());
+        showToast(`Đã áp dụng mẫu: ${chip.textContent}`);
+      });
+    });
 
-  $("genBtn").addEventListener("click", () => {
-    readFields();
-    paint();
-    const url = buildLink();
-    $("linkOut").textContent = url;
-    const box = $("qrBox");
-    box.innerHTML = "";
-    if (window.QRCode){
-      new QRCode(box, { text: url, width: 190, height: 190, correctLevel: QRCode.CorrectLevel.M });
-    } else {
-      box.remove();
+    // Theme Swatch Selector in Modal
+    document.querySelectorAll(".theme-swatch").forEach(sw => {
+      sw.addEventListener("click", () => {
+        applyTheme(sw.dataset.themeName);
+      });
+    });
+
+    function saveFieldsToConfig() {
+      for (const k in fields) {
+        if (fields[k]) {
+          const val = fields[k].value.trim();
+          if (val) CONFIG[k] = val;
+        }
+      }
+      const demVal = parseInt($("inputDem").value, 10);
+      if (demVal) CONFIG.dem = Math.max(3, Math.min(60, demVal));
     }
-    $("qrWrap").classList.add("show");
-  });
 
-  $("copyBtn").addEventListener("click", async () => {
-    const btn = $("copyBtn");
-    try{
-      await navigator.clipboard.writeText($("linkOut").textContent);
-      btn.textContent = "Đã sao chép";
-    }catch(e){
-      btn.textContent = "Hãy chọn và copy thủ công";
+    function buildShareableUrl() {
+      const params = new URLSearchParams({
+        to: CONFIG.to,
+        bg: CONFIG.bg,
+        l1: CONFIG.l1,
+        l2: CONFIG.l2,
+        l3: CONFIG.l3,
+        f:  CONFIG.fin,
+        dem: String(CONFIG.dem),
+        theme: CONFIG.theme
+      });
+      if (CONFIG.mp3 && CONFIG.mp3 !== "nhac.mp3") params.set("mp3", CONFIG.mp3);
+      return location.origin + location.pathname + "?" + params.toString();
     }
-    setTimeout(() => { btn.textContent = "Sao chép link"; }, 2200);
-  });
 
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") sheet.classList.remove("is-open");
-  });
-})();
-</script>
+    // Direct Live Preview
+    $("previewDirectBtn").addEventListener("click", () => {
+      saveFieldsToConfig();
+      updateDOMText();
+      closeCreatorModal();
+      closeGate();
+      startMusicExperience();
+      executeScript();
+    });
 
+    // Generate Link & QR
+    $("generateLinkBtn").addEventListener("click", () => {
+      saveFieldsToConfig();
+      updateDOMText();
+      const fullUrl = buildShareableUrl();
+      $("generatedLinkText").textContent = fullUrl;
+
+      const qrContainer = $("qrCodeContainer");
+      qrContainer.innerHTML = "";
+      if (window.QRCode) {
+        new QRCode(qrContainer, {
+          text: fullUrl,
+          width: 180,
+          height: 180,
+          colorDark: "#030712",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      }
+
+      $("qrResultCard").classList.add("active");
+      qrContainer.scrollIntoView({ behavior: "smooth" });
+    });
+
+    // Copy Link Button
+    $("copyGeneratedLinkBtn").addEventListener("click", async () => {
+      const link = $("generatedLinkText").textContent;
+      try {
+        await navigator.clipboard.writeText(link);
+        showToast("Đã sao chép liên kết thành công! 💖");
+      } catch (e) {
+        showToast("Không thể tự động sao chép. Vui lòng chọn link để copy.");
+      }
+    });
+
+    // Native Web Share API
+    $("shareNativeBtn").addEventListener("click", async () => {
+      const link = $("generatedLinkText").textContent;
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Trái Tim Đếm Ngược ✨ Lời Yêu Thương",
+            text: `Gửi tặng ${CONFIG.to} một điều đặc biệt...`,
+            url: link
+          });
+        } catch (e) {}
+      } else {
+        await navigator.clipboard.writeText(link);
+        showToast("Đã sao chép liên kết để gửi! 💖");
+      }
+    });
+
+    // Download QR Code Image
+    $("downloadQrBtn").addEventListener("click", () => {
+      const qrCanvas = $("qrCodeContainer").querySelector("canvas");
+      const qrImg = $("qrCodeContainer").querySelector("img");
+      let dataUrl = "";
+      if (qrCanvas) {
+        dataUrl = qrCanvas.toDataURL("image/png");
+      } else if (qrImg) {
+        dataUrl = qrImg.src;
+      }
+      if (dataUrl) {
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = `QR_LoiNhan_${CONFIG.to}.png`;
+        a.click();
+        showToast("Đã tải ảnh mã QR về máy!");
+      }
+    });
+
+    // Toast Notification System
+    let toastTimeout;
+    function showToast(msg) {
+      const toast = $("toastMessage");
+      $("toastContentText").textContent = msg;
+      toast.classList.add("active");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("active");
+      }, 2600);
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && modal.classList.contains("open")) {
+        closeCreatorModal();
+      }
+    });
+
+  })();
+  </script>
 </body>
 </html>

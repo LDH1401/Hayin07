@@ -3285,19 +3285,20 @@
       const originX = rect.left + rect.width / 2;
       const originY = rect.top + rect.height / 2;
       createCelebrationBurst(originX, originY);
-      setTimeout(() => createCelebrationBurst(originX, originY), 220);
+      setTimeout(() => createCelebrationBurst(originX, originY), 250);
+      setTimeout(() => createCelebrationBurst(originX, originY), 600);
 
+      // Thông báo xuất hiện chậm hơn một tí để người nhận ngắm trọn vẹn chùm pháo hoa trái tim
       setTimeout(() => {
         const modalEl = $("agreeModal");
         if (modalEl) {
           modalEl.classList.add("open");
           modalEl.setAttribute("aria-hidden", "false");
         }
-      }, 550);
-
-      if (isFirst) {
-        showToast("Yayyy! Lời đồng ý ngọt ngào đã được trao trọn vẹn! 💖✨");
-      }
+        if (isFirst) {
+          showToast("Yayyy! Lời đồng ý ngọt ngào đã được trao trọn vẹn! 💖✨");
+        }
+      }, 1800);
     }
 
     $("agreeHeartBtn").addEventListener("click", handleAgreement);

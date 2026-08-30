@@ -616,6 +616,175 @@
     }
 
     /* ==========================================================================
+       4. CINEMATIC FLOATING ROMANTIC TYPOGRAPHY (CHỈ HIỆN CHỮ - KHÔNG KHUNG / KHÔNG VIỀN)
+       ========================================================================== */
+    .message-display-stage {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      pointer-events: none;
+      z-index: 8;
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .message-display-stage.active {
+      opacity: 1;
+    }
+
+    /* Ambient Nebula Backlight Glow Behind Text */
+    .message-nebula-glow {
+      position: absolute;
+      width: min(85vw, 550px);
+      height: min(60vw, 320px);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, var(--primary-glow) 0%, rgba(56, 189, 248, 0.18) 45%, transparent 70%);
+      filter: blur(45px);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .message-display-stage.active .message-nebula-glow {
+      opacity: 0.85;
+      transform: scale(1);
+      animation: nebulaBreathe 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes nebulaBreathe {
+      0% { transform: scale(0.95); opacity: 0.7; filter: blur(40px); }
+      100% { transform: scale(1.15); opacity: 0.95; filter: blur(55px); }
+    }
+
+    /* Floating Sparkling Particles */
+    .message-sparkles-wrap {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .sparkle-particle {
+      position: absolute;
+      font-size: 18px;
+      color: #ffffff;
+      opacity: 0;
+      filter: drop-shadow(0 0 10px var(--primary-light)) drop-shadow(0 0 20px var(--primary));
+      animation: floatSparkle 3.5s ease-in-out infinite;
+    }
+    .sp-1 { top: 32%; left: 18%; animation-delay: 0s; font-size: 16px; }
+    .sp-2 { top: 28%; right: 20%; animation-delay: 0.8s; font-size: 22px; color: var(--primary-light); }
+    .sp-3 { bottom: 32%; left: 22%; animation-delay: 1.6s; font-size: 20px; color: #ffd166; }
+    .sp-4 { bottom: 30%; right: 18%; animation-delay: 2.4s; font-size: 16px; }
+
+    @keyframes floatSparkle {
+      0%, 100% { opacity: 0; transform: translateY(10px) scale(0.6) rotate(0deg); }
+      50% { opacity: 0.9; transform: translateY(-12px) scale(1.15) rotate(45deg); }
+    }
+
+    /* Pure Floating Typography Wrap (No Border, No Card, No Box) */
+    .message-pure-wrap {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      max-width: min(92vw, 840px);
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.88) translateY(24px);
+      filter: blur(16px);
+      transition:
+        transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.65s ease;
+    }
+
+    .message-pure-wrap.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      filter: blur(0px);
+      animation: gentleDrift 4.5s ease-in-out infinite alternate;
+    }
+
+    .message-pure-wrap.leave {
+      opacity: 0;
+      transform: scale(1.08) translateY(-24px);
+      filter: blur(18px);
+    }
+
+    @keyframes gentleDrift {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-8px) scale(1.015); }
+    }
+
+    /* Pure Glowing Typography */
+    .message-pure-text {
+      margin: 0;
+      font-family: var(--font-main);
+      font-size: clamp(2.2rem, 7.8vw, 4.4rem);
+      font-weight: 900;
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      text-wrap: balance;
+      word-break: break-word;
+      
+      /* Diamond Shimmer Gradient Animation */
+      background: linear-gradient(
+        110deg,
+        #ffffff 0%,
+        var(--primary-light) 25%,
+        #ffffff 50%,
+        var(--primary) 75%,
+        #ffffff 100%
+      );
+      background-size: 250% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmerSweep 4s linear infinite;
+
+      /* Deep Multi-Layer Neon Halo */
+      filter:
+        drop-shadow(0 0 16px var(--primary-light))
+        drop-shadow(0 0 45px var(--primary))
+        drop-shadow(0 0 80px var(--primary-glow))
+        drop-shadow(0 4px 22px rgba(0, 0, 0, 0.98));
+    }
+
+    @keyframes shimmerSweep {
+      0% { background-position: 250% 0; }
+      100% { background-position: -50% 0; }
+    }
+
+    /* Climax Final Confession Style (Siêu Lộng Lẫy & Tỏ Tình) */
+
+    .message-pure-wrap.is-climax .message-pure-text {
+      font-size: clamp(2.5rem, 9.2vw, 5.2rem);
+      font-weight: 900;
+      background: linear-gradient(
+        110deg,
+        #ffffff 0%,
+        #ffeaa7 25%,
+        #ffffff 50%,
+        #ffd166 75%,
+        #ffffff 100%
+      );
+      background-size: 250% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmerSweep 3s linear infinite;
+      
+      filter:
+        drop-shadow(0 0 20px #ffffff)
+        drop-shadow(0 0 55px var(--primary))
+        drop-shadow(0 0 110px var(--primary-glow))
+        drop-shadow(0 0 160px rgba(255, 209, 102, 0.6))
+        drop-shadow(0 6px 26px rgba(0, 0, 0, 1));
+    }
+
+    /* ==========================================================================
        3. FLOATING ACTION BAR DOCK (CHÂN TRANG NỔI)
        ========================================================================== */
     .dock-actions {
@@ -1278,6 +1447,20 @@
 
     <!-- 3. Big Countdown Number -->
     <div class="countdown-number" id="countdownNumber" aria-hidden="true"></div>
+
+    <!-- 4. Cinematic Floating Romantic Typography (Chỉ hiện chữ - Siêu lung linh & Điện ảnh) -->
+    <div class="message-display-stage" id="messageDisplayStage" aria-hidden="true">
+      <div class="message-nebula-glow" id="messageNebulaGlow"></div>
+      <div class="message-sparkles-wrap">
+        <span class="sparkle-particle sp-1">✦</span>
+        <span class="sparkle-particle sp-2">✨</span>
+        <span class="sparkle-particle sp-3">✦</span>
+        <span class="sparkle-particle sp-4">✨</span>
+      </div>
+      <div class="message-pure-wrap" id="messagePureWrap">
+        <h2 class="message-pure-text" id="messageTextContent"></h2>
+      </div>
+    </div>
 
     <!-- Screen Reader Accessible Live Region -->
     <p class="screen-reader-text" id="srMessageLive" aria-live="polite"></p>
@@ -1990,9 +2173,6 @@
     /* Main Animation Render Loop */
     function animateFrame(now) {
       // Semi-transparent background clear for smooth rain trail persistence
-      const styles = getComputedStyle(document.documentElement);
-      const bgBase = styles.getPropertyValue("--bg-base").trim() || "#030712";
-
       ctx.fillStyle = "rgba(3, 7, 18, 0.08)";
       ctx.fillRect(0, 0, W, H);
 
@@ -2091,45 +2271,7 @@
       }
       ctx.globalAlpha = 1;
 
-      // 5. Draw Particle Text Messages
-      if (textStart && textParticles.length) {
-        const rawProgress = (now - textStart) / PHRASE_DURATION;
-        const progress = isTextLast ? Math.min(rawProgress, 0.5) : rawProgress;
 
-        if (progress >= 1) {
-          textStart = 0;
-          curPhrase = "";
-          textCtx.clearRect(0, 0, W, H);
-          glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
-        } else {
-          const isStill = progress >= IN_STEP && progress <= OUT_STEP;
-          if (now - lastTextRender > (isStill ? 350 : 15)) {
-            lastTextRender = now;
-            renderTextParticles(progress);
-          }
-
-          let rimAlpha = 1;
-          if (progress < IN_STEP) {
-            const u = Math.max(0, (progress - IN_STEP * 0.4) / (IN_STEP * 0.6));
-            rimAlpha = u * u * (3 - 2 * u);
-          } else if (progress > OUT_STEP) {
-            const u = Math.min(1, (progress - OUT_STEP) / (1 - OUT_STEP) * 1.3);
-            rimAlpha = 1 - u * u * (3 - 2 * u);
-          }
-
-          if (rimAlpha > 0) {
-            ctx.globalAlpha = rimAlpha * 0.92;
-            ctx.drawImage(rimCanvas, 0, 0, W, H);
-            ctx.globalAlpha = 1;
-          }
-
-          // Draw Glowing Halo and Crisp Text Layers
-          ctx.globalAlpha = 0.42;
-          ctx.drawImage(glowCanvas, 0, 0, W, H);
-          ctx.globalAlpha = 1;
-          ctx.drawImage(textCanvas, 0, 0, W, H);
-        }
-      }
 
       requestAnimationFrame(animateFrame);
     }
@@ -2320,6 +2462,15 @@
       glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
       $("dockActions").classList.remove("visible");
 
+      // Reset Floating Message Stage
+      const msgStage = $("messageDisplayStage");
+      const msgWrap = $("messagePureWrap");
+      const msgContent = $("messageTextContent");
+
+      if (msgStage) msgStage.classList.remove("active");
+      if (msgWrap) msgWrap.classList.remove("show", "leave", "is-climax");
+      if (msgContent) msgContent.textContent = "";
+
       // Increase rain density during countdown
       const rainRamp = setInterval(() => {
         rainAlpha = Math.min(0.9, rainAlpha + 0.04);
@@ -2365,18 +2516,25 @@
         ringSvg.classList.remove("active");
       });
 
-      // Display 4 Phrases
+      // Display 4 Phrases with Pure Floating Glowing Typography (Chỉ hiện chữ - Siêu lung linh)
       const phrasesStartTime = countdownEndTime + 350;
       const PHRASES = [CONFIG.l1, CONFIG.l2, CONFIG.l3, CONFIG.fin];
 
       PHRASES.forEach((txt, index) => {
-        schedule(phrasesStartTime + index * PHRASE_DURATION, () => {
-          srEl.textContent = txt;
-          isTextLast = index === PHRASES.length - 1;
-          buildTextParticles(txt);
-          textStart = performance.now();
+        const isLast = index === PHRASES.length - 1;
+        const startTime = phrasesStartTime + index * PHRASE_DURATION;
 
-          if (isTextLast) {
+        schedule(startTime, () => {
+          srEl.textContent = txt;
+          if (msgContent) msgContent.textContent = txt;
+          if (msgWrap) {
+            msgWrap.classList.toggle("is-climax", isLast);
+            msgWrap.classList.remove("leave");
+            msgWrap.classList.add("show");
+          }
+          if (msgStage) msgStage.classList.add("active");
+
+          if (isLast) {
             schedule(400, () => {
               triggerMultiCelebration();
               playCelebrationFanfare();
@@ -2384,6 +2542,16 @@
             });
           }
         });
+
+        // Smoothly evaporate into stardust before the next message
+        if (!isLast) {
+          schedule(startTime + PHRASE_DURATION - 650, () => {
+            if (msgWrap) {
+              msgWrap.classList.remove("show");
+              msgWrap.classList.add("leave");
+            }
+          });
+        }
       });
 
       // Show Action Dock after final message

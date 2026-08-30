@@ -423,26 +423,26 @@
       width: 66px;
       height: 66px;
       overflow: visible;
-      animation: heartBeating 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-      filter: drop-shadow(0 0 14px var(--primary));
+      animation: heartBeating 1.3s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px var(--primary));
     }
 
     @keyframes heartBeating {
       0% { transform: scale(1); }
-      12% { transform: scale(1.18); }
-      24% { transform: scale(1.02); }
-      36% { transform: scale(1.12); }
-      50% { transform: scale(1); }
+      14% { transform: scale(1.09); }
+      28% { transform: scale(1.015); }
+      42% { transform: scale(1.05); }
+      56% { transform: scale(1); }
       100% { transform: scale(1); }
     }
 
     .gate-heart-svg path {
       fill: var(--primary-glow);
       stroke: #ffffff;
-      stroke-width: 2.8;
+      stroke-width: 1.6;
       stroke-linejoin: round;
       stroke-linecap: round;
-      filter: drop-shadow(0 0 6px #ffffff);
+      filter: drop-shadow(0 0 5px #ffffff);
     }
 
     .tap-hint-text {
@@ -490,20 +490,38 @@
       overflow: visible;
       transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: transform;
-      filter: drop-shadow(0 0 28px var(--primary-glow));
+      filter: drop-shadow(0 0 22px var(--primary-glow));
     }
     .countdown-heart-ring.active {
       opacity: 1;
-      animation: heartRingBeat 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation: heartRingBeat 1.25s ease-in-out infinite;
     }
 
     @keyframes heartRingBeat {
-      0% { transform: scale(1); }
-      10% { transform: scale(1.06); }
-      20% { transform: scale(1.01); }
-      30% { transform: scale(1.035); }
-      45% { transform: scale(1); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 18px var(--primary-glow));
+      }
+      14% {
+        transform: scale(1.025);
+        filter: drop-shadow(0 0 25px var(--primary)) drop-shadow(0 0 40px var(--primary-glow));
+      }
+      28% {
+        transform: scale(1.005);
+        filter: drop-shadow(0 0 18px var(--primary-glow));
+      }
+      42% {
+        transform: scale(1.015);
+        filter: drop-shadow(0 0 22px var(--primary)) drop-shadow(0 0 35px var(--primary-glow));
+      }
+      56% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 18px var(--primary-glow));
+      }
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 18px var(--primary-glow));
+      }
     }
 
     .countdown-heart-ring path {
@@ -515,37 +533,38 @@
     .ring-core-bg {
       fill: url(#heartGradCore);
       stroke: none;
-      opacity: 0.65;
+      opacity: 0.55;
       transition: opacity 0.3s ease;
     }
     .countdown-heart-ring.active .ring-core-bg {
-      animation: coreGlowPulse 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation: coreGlowPulse 1.25s ease-in-out infinite;
     }
 
     @keyframes coreGlowPulse {
-      0%, 100% { opacity: 0.45; }
-      10% { opacity: 0.95; }
-      30% { opacity: 0.75; }
-      45% { opacity: 0.45; }
+      0%, 100% { opacity: 0.35; }
+      14% { opacity: 0.65; }
+      42% { opacity: 0.5; }
+      56% { opacity: 0.35; }
     }
 
     .ring-track-line {
       stroke: var(--border-subtle);
-      stroke-width: 1.5;
+      stroke-width: 1;
+      opacity: 0.5;
     }
 
     .ring-active-arc {
       stroke: url(#heartGradStroke);
-      stroke-width: 3.4;
+      stroke-width: 2.0;
       stroke-dashoffset: 0;
-      filter: drop-shadow(0 0 10px var(--primary)) drop-shadow(0 0 20px var(--primary-glow));
+      filter: drop-shadow(0 0 6px var(--primary)) drop-shadow(0 0 14px var(--primary-glow));
     }
 
     .ring-spark-head {
       stroke: #ffffff;
-      stroke-width: 4.8;
+      stroke-width: 3.2;
       stroke-dashoffset: 0;
-      filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 16px var(--primary-light));
+      filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px var(--primary-light));
     }
 
     /* Big Glowing Countdown Number */
@@ -1819,7 +1838,7 @@
       for (let r = 0; r < tr; r++) {
         for (let c = 0; c < tc; c++) {
           const alphaVal = imgData[(r * tc + c) * 4 + 3];
-          if (alphaVal > 95) rawPoints.push({ c, r, density: alphaVal / 255 });
+          if (alphaVal > 128) rawPoints.push({ c, r, density: alphaVal / 255 });
         }
       }
 
@@ -1841,7 +1860,7 @@
 
       rimCtx.clearRect(0, 0, W, H);
       rimCtx.fillStyle = "rgba(3, 7, 18, 0.9)";
-      const boxSize = tcell * 0.85 + tcell * 1.6;
+      const boxSize = tcell * 0.92 + tcell * 1.6;
       for (const p of rawPoints) {
         rimCtx.fillRect(p.c * tcell + (tcell - boxSize) / 2, p.r * tcell + (tcell - boxSize) / 2, boxSize, boxSize);
       }
@@ -1886,7 +1905,7 @@
     function renderTextParticles(progress) {
       textCtx.clearRect(0, 0, W, H);
       const N = textParticles.length;
-      const size = tcell * 0.82;
+      const size = tcell * 0.92;
       const radius = size * 0.3;
 
       for (let i = 0; i < N; i++) {
@@ -1934,8 +1953,11 @@
         const x = p.targetX + (tcell - w) / 2 + dx + mx;
         const y = p.targetY + (tcell - h) / 2 + dy + my;
 
-        textCtx.globalAlpha = alpha;
-        textCtx.fillStyle = isHot ? "#ffffff" : (p.tone === 0 ? "#ffffff" : (p.tone === 1 ? "#e0f2fe" : "#bae6fd"));
+        /* Ô nằm ở mép nét chữ chỉ bị che một phần. Dùng luôn density đã tính sẵn
+           lúc dựng mặt nạ để mờ chúng đi theo đúng tỉ lệ bị che — mép chữ mượt ra
+           mà thân chữ vẫn đặc. Trước đây density được tính rồi bỏ không. */
+        textCtx.globalAlpha = alpha * (0.5 + 0.5 * p.density);
+        textCtx.fillStyle = isHot ? "#ffffff" : (p.tone === 0 ? "#ffffff" : (p.tone === 1 ? "#f0f9ff" : "#dbeafe"));
 
         textCtx.beginPath();
         if (typeof textCtx.roundRect === "function" && size > 4) {
@@ -2110,7 +2132,7 @@
           }
 
           // Draw Glowing Halo and Crisp Text Layers
-          ctx.globalAlpha = 0.28;
+          ctx.globalAlpha = 0.42;
           ctx.drawImage(glowCanvas, 0, 0, W, H);
           ctx.globalAlpha = 1;
           ctx.drawImage(textCanvas, 0, 0, W, H);
@@ -2398,7 +2420,7 @@
     });
     const RING_TOTAL_LEN = Math.ceil($("ringArcPath").getTotalLength());
     $("ringArcPath").style.strokeDasharray = RING_TOTAL_LEN;
-    $("ringHeadPath").style.strokeDasharray = `4.5 ${RING_TOTAL_LEN}`;
+    $("ringHeadPath").style.strokeDasharray = `3.0 ${RING_TOTAL_LEN}`;
 
     updateDOMText();
     resize();
@@ -2412,6 +2434,16 @@
 
     // Mouse & Touch Aura
     const aura = $("cursorAura");
+    let auraIdleTimer = null;
+
+    function releaseCursor() {
+      mouse.active = false;
+      aura.style.opacity = "0";
+    }
+
+    /* Lực đẩy phải tự tắt khi con trỏ đứng yên. Trước đây chỉ pointerleave mới tắt
+       được, mà chạm màn hình rồi nhấc tay thì không hề sinh sự kiện đó — nên sau khi
+       bấm nút mở (nằm giữa màn hình) là một lỗ bị khoét vĩnh viễn ngay giữa câu chữ. */
     function updateCursor(x, y) {
       mouse.x = x;
       mouse.y = y;
@@ -2419,14 +2451,15 @@
       aura.style.left = x + "px";
       aura.style.top = y + "px";
       aura.style.opacity = "0.75";
+      clearTimeout(auraIdleTimer);
+      auraIdleTimer = setTimeout(releaseCursor, 1100);
     }
 
     window.addEventListener("pointermove", e => updateCursor(e.clientX, e.clientY));
     window.addEventListener("pointerdown", e => updateCursor(e.clientX, e.clientY));
-    window.addEventListener("pointerleave", () => {
-      mouse.active = false;
-      aura.style.opacity = "0";
-    });
+    window.addEventListener("pointerup", e => { if (e.pointerType !== "mouse") releaseCursor(); });
+    window.addEventListener("pointercancel", releaseCursor);
+    window.addEventListener("pointerleave", releaseCursor);
 
     // Open Gift Button Trigger
     function closeGate() {

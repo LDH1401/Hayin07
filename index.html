@@ -1936,22 +1936,10 @@
           }
         }
 
-        // Interactive mouse / touch displacement
-        let mx = 0, my = 0;
-        if (mouse.active) {
-          const distToMouse = Math.hypot(p.targetX + dx - mouse.x, p.targetY + dy - mouse.y);
-          if (distToMouse < mouse.radius && distToMouse > 0) {
-            const force = (1 - distToMouse / mouse.radius) * 22;
-            const angle = Math.atan2(p.targetY + dy - mouse.y, p.targetX + dx - mouse.x);
-            mx = Math.cos(angle) * force;
-            my = Math.sin(angle) * force;
-          }
-        }
-
         const w = size * scale;
         const h = size * scale;
-        const x = p.targetX + (tcell - w) / 2 + dx + mx;
-        const y = p.targetY + (tcell - h) / 2 + dy + my;
+        const x = p.targetX + (tcell - w) / 2 + dx;
+        const y = p.targetY + (tcell - h) / 2 + dy;
 
         /* Ô nằm ở mép nét chữ chỉ bị che một phần. Dùng luôn density đã tính sẵn
            lúc dựng mặt nạ để mờ chúng đi theo đúng tỉ lệ bị che — mép chữ mượt ra

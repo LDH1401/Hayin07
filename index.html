@@ -135,36 +135,34 @@
 
   /* ---------- vòng đếm ---------- */
   .ring{
-    width:clamp(228px,64vw,330px);height:clamp(228px,64vw,330px);
+    /* Chặn thêm theo chiều cao, nếu không trên màn hình rộng mà thấp thì tim tràn. */
+    width:max(240px, min(78vw, 62vh, 420px));
+    height:max(240px, min(78vw, 62vh, 420px));
     opacity:0;pointer-events:none;overflow:visible;
     transition:opacity .7s ease;
+    /* Tách sẵn thành lớp riêng: nhịp đập là phép phóng to, nếu không tách thì mỗi
+       khung trình duyệt phải dựng lại toàn bộ đổ bóng của nét tim. */
+    will-change:transform;
   }
-  .ring.on{opacity:1}
-  .ring circle{
-    fill:none;stroke-linecap:round;
-    transform:rotate(-90deg);transform-origin:50% 50%;
+  /* Đập đúng một nhịp mỗi giây, khớp với lúc con số đổi. */
+  .ring.on{opacity:1;animation:beatRing 1s ease-out infinite}
+  @keyframes beatRing{
+    0%{transform:scale(1)}
+    7%{transform:scale(1.07)}
+    16%{transform:scale(1)}
+    24%{transform:scale(1.038)}
+    34%{transform:scale(1)}
+    100%{transform:scale(1)}
   }
-  .ring-track{stroke:rgba(186,210,255,.08);stroke-width:.55}
+  /* Trái tim đếm ngược vơi dần từ đỉnh, cùng đường cong với trái tim ở nút mở. */
+  .ring path{
+    fill:none;stroke-linecap:round;stroke-linejoin:round;
+  }
+  .ring-track{stroke:rgba(186,210,255,.11);stroke-width:.7}
   .ring-arc{
-    stroke:var(--ice);stroke-width:1;opacity:.55;
-    stroke-dasharray:282.74;stroke-dashoffset:0;
-    filter:drop-shadow(0 0 3px rgba(110,205,255,.9));
-  }
-
-  /* ---------- quầng sáng lúc trái tim khép lại ---------- */
-  .bloom{
-    position:fixed;left:var(--hx,50%);top:var(--hy,50%);
-    width:var(--bw,340px);height:var(--bw,340px);
-    transform:translate(-50%,-50%);
-    border-radius:50%;opacity:0;pointer-events:none;
-    background:radial-gradient(circle,
-      rgba(180,232,255,.5) 0%, rgba(110,205,255,.16) 44%, rgba(110,205,255,0) 70%);
-  }
-  .bloom.pop{animation:bloom 1s cubic-bezier(.2,.7,.3,1)}
-  @keyframes bloom{
-    0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}
-    26%{opacity:1}
-    100%{opacity:0;transform:translate(-50%,-50%) scale(1.3)}
+    stroke:var(--ice);stroke-width:1.5;opacity:.78;
+    stroke-dashoffset:0;
+    filter:drop-shadow(0 0 5px rgba(110,205,255,.95));
   }
 
   .tap{
@@ -180,7 +178,7 @@
 
   /* ---------- đếm ngược ---------- */
   .count{
-    font-size:clamp(4.5rem,24vw,9rem);
+    font-size:clamp(5rem,27vw,10.5rem);
     font-weight:400;line-height:1;
     letter-spacing:-.02em;
     opacity:0;
@@ -205,23 +203,6 @@
     margin:-1px;padding:0;overflow:hidden;
     clip-path:inset(50%);white-space:nowrap;
   }
-
-  /* ---------- lời nhắn trong tim ---------- */
-  .final{
-    position:fixed;
-    left:var(--hx,50%);top:var(--hy,50%);
-    transform:translate(-50%,-50%);
-    width:var(--hw,220px);
-    font-size:var(--hf,15px);
-    font-weight:600;line-height:1.4;letter-spacing:.005em;
-    text-wrap:balance;margin:0;
-    text-align:center;
-    color:#fff;
-    text-shadow:0 0 14px rgba(110,205,255,.9),0 0 34px rgba(110,205,255,.5);
-    opacity:0;
-    transition:opacity 1.3s ease;
-  }
-  .final.show{opacity:1}
 
   /* ---------- chân trang ---------- */
   .actions{
@@ -358,9 +339,9 @@
 
   @media (prefers-reduced-motion:reduce){
     .unwrap::before{animation:none;opacity:0}
+    .ring.on{animation:none}
     .gate-heart{animation:none}
     .gate-heart path{animation:none;stroke-dashoffset:0}
-    .bloom.pop{animation-duration:.01s}
     .count.tick{animation-timing-function:linear}
   }
 </style>
@@ -383,15 +364,12 @@
   </section>
 
   <svg class="ring" id="ring" viewBox="0 0 100 100" aria-hidden="true">
-    <circle class="ring-track" cx="50" cy="50" r="45"></circle>
-    <circle class="ring-arc" id="ringArc" cx="50" cy="50" r="45"></circle>
+    <path class="ring-track" id="ringTrack"></path>
+    <path class="ring-arc" id="ringArc"></path>
   </svg>
   <div class="count" id="count" aria-hidden="true"></div>
   <p class="line" id="line" aria-live="polite"></p>
 </main>
-
-<div class="bloom" id="bloom" aria-hidden="true"></div>
-<p class="final" id="final"></p>
 
 <audio id="bgm" playsinline preload="none"></audio>
 
@@ -450,11 +428,11 @@
       </section>
 
       <section class="group">
-        <h3 class="group-title">Câu cuối trong trái tim</h3>
+        <h3 class="group-title">Câu thứ tư — lời kết</h3>
         <div class="field">
-          <label for="fF">Lời kết</label>
-          <input id="fF" type="text" maxlength="60" placeholder="Làm bạn gái anh nhé">
-          <small class="tally" data-min="5" data-max="8"></small>
+          <label for="fF">Câu 4</label>
+          <input id="fF" type="text" maxlength="60" placeholder="Làm người yêu anh nhé?">
+          <small class="tally" data-min="3" data-max="6"></small>
         </div>
       </section>
 
@@ -485,8 +463,8 @@
     l1:   q.get("l1") || "Anh muốn tiến xa hơn",
     l2:   q.get("l2") || "trong mối quan hệ này",
     l3:   q.get("l3") || "Em đồng ý",
-    fin:  q.get("f")  || "Làm bạn gái anh nhé",
-    dem:  Math.max(1, Math.min(60, parseInt(q.get("dem"), 10) || 15)),
+    fin:  q.get("f")  || "Làm người yêu anh nhé?",
+    dem:  Math.max(1, Math.min(60, parseInt(q.get("dem"), 10) || 14)),
     mp3:  q.get("mp3") === null ? "nhac.mp3" : q.get("mp3"),
     from: parseFloat(q.get("s")) || 0
   };
@@ -498,14 +476,7 @@
   let W = 0, H = 0, cell = 16, cols = 0, rows = 0;
   let drops = [], nextAt = [], pace = [];
   let colFont = [], colTrail = [], colHead = [], colDim = [];
-  let heartCells = [], heartGlyph = [], heartBox = null;
-  let rainAlpha = 0.34, heartReveal = 0, pulse = 0;
-
-  // Lớp trái tim vẽ sẵn ra canvas phụ rồi ghép vào mỗi khung hình:
-  // fillText có shadowBlur rất nặng, làm lại 20 lần/giây là đủ mượt.
-  const hcv = document.createElement("canvas");
-  const hctx = hcv.getContext("2d");
-  let hDpr = 1, lastHeart = 0, lastCount = -1;
+  let rainAlpha = 0.34;
 
   // Ba câu cũng được đắp bằng ký tự như trái tim, nhưng trên lưới mịn hơn
   // để nét chữ còn đọc được. tcv là lớp vẽ sẵn, mcv dùng để đo hình chữ.
@@ -513,15 +484,25 @@
   const tctx = tcv.getContext("2d");
   const mcv = document.createElement("canvas");
   const mctx = mcv.getContext("2d", { willReadFrequently: true });
+  // scv là bản thu nhỏ đúng bằng lưới: mỗi điểm ảnh của nó là độ phủ của một ô
+  const scv = document.createElement("canvas");
+  const sctx = scv.getContext("2d", { willReadFrequently: true });
   // gcv là bản thu nhỏ của lớp chữ; phóng ngược lên chính là một lớp quầng sáng
   // rẻ tiền, thay cho shadowBlur trên từng ký tự (thứ đã làm chữ nhoè thành khối).
   const gcv = document.createElement("canvas");
   const gctx = gcv.getContext("2d");
+  // rcv giữ sẵn viền tối của cả câu, dựng một lần rồi ghép lại mỗi khung
+  const rcv = document.createElement("canvas");
+  const rctx = rcv.getContext("2d");
   let tcell = 9, textCells = [], textTone = [], delayIn = [], delayOut = [];
-  const TONES = ["#ffffff", "#dceeff", "#9dc6ee"];
-  let textStart = 0, lastText = 0, lastLit = -1;
+  // Điểm xuất phát và điểm tan của từng ô, tính sẵn theo px. Hướng toả đều quanh
+  // khối chữ nên chữ hội tụ từ mọi phía rồi cũng tan ra mọi phía.
+  let offInX = [], offInY = [], offOutX = [], offOutY = [];
+  let strInX = [], strInY = [], strOutX = [], strOutY = [];
+  const TONES = ["#ffffff", "#eaf5ff", "#c2ddf5"];
+  let textStart = 0, lastText = 0, lastLit = -1, textLast = false;
   let curPhrase = "";
-  const PHRASE = 2700;
+  const PHRASE = 4200;
 
   function pool(text){
     const base = (text || "love").replace(/\s+/g, "");
@@ -537,13 +518,13 @@
     cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr);
     cv.style.width = W + "px"; cv.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    hcv.width = cv.width; hcv.height = cv.height; hDpr = dpr;
-    hctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     tcv.width = cv.width; tcv.height = cv.height;
     tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     mcv.width = W; mcv.height = H;
     gcv.width = Math.max(1, Math.round(W / 4));
     gcv.height = Math.max(1, Math.round(H / 4));
+    rcv.width = cv.width; rcv.height = cv.height;
+    rctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     cell = Math.max(13, Math.min(22, Math.round(Math.min(W, H) / 26)));
     cols = Math.ceil(W / cell) + 1;
@@ -578,46 +559,7 @@
 
     ctx.fillStyle = "#04060f";
     ctx.fillRect(0, 0, W, H);
-    buildHeart();
     if (curPhrase) buildText(curPhrase);
-  }
-
-  /* Trái tim được dựng từ chính lưới ký tự đang rơi — không phải một hình vẽ
-     đè lên trên. Hai đường viền lồng nhau cho nét dày như trong video. */
-  function buildHeart(){
-    const seen = new Map();
-    const gw = W / cell, gh = H / cell;
-    const cxg = gw / 2;
-    const cyg = gh * 0.47;
-    const scale = Math.min((gw * 0.80) / 32, (gh * 0.52) / 29);
-
-    for (const k of [1, 0.955]){
-      for (let i = 0; i < 1500; i++){
-        const t = (i / 1500) * Math.PI * 2;
-        const x = 16 * Math.pow(Math.sin(t), 3);
-        const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-        const c = Math.round(cxg + x * scale * k);
-        const r = Math.round(cyg - (y + 2.5) * scale * k);
-        if (c < 0 || c >= cols || r < 0 || r >= rows) continue;
-        const key = c + ":" + r;
-        const d = Math.abs(t - Math.PI);
-        const prev = seen.get(key);
-        if (!prev || d < prev.d) seen.set(key, { c, r, d });
-      }
-    }
-    heartCells = [...seen.values()].sort((a, b) => a.d - b.d);
-    heartGlyph = heartCells.map(pick);
-    lastCount = -1;
-
-    const half = 16 * scale * cell;
-    heartBox = { cx: cxg * cell, cy: (cyg + 0.5 * scale) * cell, w: half * 2 };
-
-    const root = document.documentElement.style;
-    root.setProperty("--hx", Math.round(heartBox.cx) + "px");
-    root.setProperty("--hy", Math.round(heartBox.cy) + "px");
-    root.setProperty("--hw", Math.round(heartBox.w * 0.54) + "px");
-    root.setProperty("--hf", Math.max(11, Math.min(20, heartBox.w * 0.072)).toFixed(1) + "px");
-    root.setProperty("--bw", Math.round(heartBox.w * 1.35) + "px");
   }
 
   /* Ngắt dòng sao cho các dòng cân nhau nhất, chứ không nhồi đầy dòng trên rồi
@@ -658,8 +600,8 @@
     const words = str.split(/\s+/).filter(Boolean);
     if (!words.length) return;
 
-    const maxW = W * 0.88, maxH = H * 0.44;
-    const FS_MAX = Math.min(W * 0.20, H * 0.24, 200);
+    const maxW = W * 0.90, maxH = H * 0.46;
+    const FS_MAX = Math.min(W * 0.225, H * 0.26, 210);
 
     // Đo một lần ở cỡ 100px rồi suy ra cỡ chữ thật, khỏi dò từng bước.
     mctx.font = '800 100px "Be Vietnam Pro", system-ui, sans-serif';
@@ -688,66 +630,91 @@
 
     // Ô lưới suy từ cỡ chữ, không từ lưới mưa, nên chữ đọc được như nhau trên mọi
     // màn hình. Nét chữ đậm dày chừng 0,16em nên mỗi nét vắt qua khoảng ba ô vuông.
-    tcell = Math.max(4, Math.min(10, Math.round(fs * 0.055)));
+    tcell = Math.max(2, Math.min(8, Math.round(fs * 0.026)));
 
     mctx.clearRect(0, 0, W, H);
     mctx.font = '800 ' + fs.toFixed(1) + 'px "Be Vietnam Pro", system-ui, sans-serif';
     mctx.textAlign = "center";
     mctx.textBaseline = "middle";
     mctx.fillStyle = "#fff";
-    mctx.strokeStyle = "#fff";
-    mctx.lineJoin = "round";
-    // Nới nét ra nửa ô: chỉ lấy mẫu ở tâm ô thì các ô rìa nét bị bỏ sót, chữ thủng lỗ.
-    mctx.lineWidth = tcell * 0.3;
     const lh = fs * 1.04;
     const y0 = H * 0.47 - (lines.length - 1) * lh / 2;
-    lines.forEach((l, i) => {
-      mctx.fillText(l, W / 2, y0 + i * lh);
-      mctx.strokeText(l, W / 2, y0 + i * lh);
-    });
+    lines.forEach((l, i) => mctx.fillText(l, W / 2, y0 + i * lh));
 
-    const img = mctx.getImageData(0, 0, W, H).data;
+    /* Thu ảnh chữ xuống đúng cỡ lưới rồi đọc từng điểm ảnh: mỗi điểm chính là độ
+       phủ thật của một ô. Trước đây tôi nới nét rồi lấy mẫu ở tâm ô, nên vừa mọc
+       ô thừa quanh chữ vừa sót ô ở rìa — chính là chỗ trông lởm chởm. */
     const tc = Math.ceil(W / tcell), tr = Math.ceil(H / tcell);
-    let x0 = W, x1 = 0, y0b = H, y1b = 0;
+    scv.width = tc; scv.height = tr;
+    sctx.clearRect(0, 0, tc, tr);
+    sctx.imageSmoothingEnabled = true;
+    sctx.imageSmoothingQuality = "high";
+    sctx.drawImage(mcv, 0, 0, W, H, 0, 0, W / tcell, H / tcell);
+    const img = sctx.getImageData(0, 0, tc, tr).data;
     for (let r = 0; r < tr; r++){
-      const py = Math.min(H - 1, Math.round(r * tcell + tcell / 2));
       for (let c = 0; c < tc; c++){
-        const px = Math.min(W - 1, Math.round(c * tcell + tcell / 2));
-        if (img[(py * W + px) * 4 + 3] > 110){
-          textCells.push({ c, r });
-          if (px < x0) x0 = px;
-          if (px > x1) x1 = px;
-          if (py < y0b) y0b = py;
-          if (py > y1b) y1b = py;
-        }
+        if (img[(r * tc + c) * 4 + 3] > 104) textCells.push({ c, r });
       }
     }
 
     /* Không hạ nền sau lưng câu chữ nữa. Ô vuông trắng đặc đã sáng hơn mưa rất
        nhiều nên tự nổi; hạ nền chỉ làm tắt mất chính hiệu ứng chữ rơi. */
-    /* Mỗi ô có độ trễ riêng. Lúc kết chữ, độ trễ chạy từ trái sang phải nên các
-       hạt đáp xuống thành một làn sóng; lúc tan thì trên rơi trước dưới rơi sau. */
-    let cMin = Infinity, cMax = -Infinity, rMin = Infinity, rMax = -Infinity;
+    /* Hướng bay của từng ô toả ra từ tâm khối chữ, cộng một chút lệch ngẫu nhiên.
+       Nhờ vậy chữ tụ về từ mọi phía rồi cũng tan ra mọi phía, thay vì chỉ rơi dọc. */
+    let sumC = 0, sumR = 0;
+    for (const p of textCells){ sumC += p.c; sumR += p.r; }
+    const ccx = sumC / textCells.length, ccy = sumR / textCells.length;
+    let maxRad = 1;
     for (const p of textCells){
-      if (p.c < cMin) cMin = p.c;
-      if (p.c > cMax) cMax = p.c;
-      if (p.r < rMin) rMin = p.r;
-      if (p.r > rMax) rMax = p.r;
+      const d = Math.hypot(p.c - ccx, p.r - ccy);
+      if (d > maxRad) maxRad = d;
     }
+    // Quãng bay tính theo cỡ chữ. Lần trước tôi lấy theo bán kính khối chữ nên hạt
+    // bay từ tận rìa màn hình, tụ lại thành một đám mây trắng nuốt hết mặt chữ.
+    const spread = fs * 0.30;
     const span = 1 - WIN;
     textTone = []; delayIn = []; delayOut = [];
+    offInX = []; offInY = []; offOutX = []; offOutY = [];
+    strInX = []; strInY = []; strOutX = []; strOutY = [];
+    /* Viền tối vẽ sẵn một lần cho cả câu. Trước đây mỗi khung phải vẽ lại từng ô
+       một lần nữa, gấp đôi số hình; giờ chỉ còn một lần ghép ảnh. */
+    rctx.clearRect(0, 0, W, H);
+    rctx.fillStyle = "#03060e";
+    const bs = tcell * 0.8 + tcell * 1.5;
     for (const p of textCells){
-      const t = Math.random();
-      textTone.push(t < 0.62 ? 0 : t < 0.9 ? 1 : 2);
-      const cn = cMax > cMin ? (p.c - cMin) / (cMax - cMin) : 0;
-      const rn = rMax > rMin ? (p.r - rMin) / (rMax - rMin) : 0;
-      delayIn.push((cn * 0.64 + Math.random() * 0.36) * span);
-      delayOut.push((rn * 0.42 + Math.random() * 0.58) * span);
+      rctx.fillRect(p.c * tcell + (tcell - bs) / 2, p.r * tcell + (tcell - bs) / 2, bs, bs);
+    }
+    for (const p of textCells){
+      const q = Math.random();
+      textTone.push(q < 0.62 ? 0 : q < 0.9 ? 1 : 2);
+
+      const vx = p.c - ccx, vy = p.r - ccy;
+      const rad = Math.hypot(vx, vy);
+      const base = rad < 0.001 ? Math.random() * Math.PI * 2 : Math.atan2(vy, vx);
+      const radN = rad / maxRad;
+
+      const aI = base + (Math.random() - 0.5) * 1.1;
+      const dI = spread * (0.5 + Math.random() * 0.85);
+      const ix = Math.cos(aI) * dI, iy = Math.sin(aI) * dI;
+      offInX.push(ix); offInY.push(iy);
+      const mi = Math.hypot(ix, iy) || 1;
+      strInX.push(Math.abs(ix) / mi); strInY.push(Math.abs(iy) / mi);
+
+      const aO = base + (Math.random() - 0.5) * 0.9;
+      const dO = spread * (0.65 + Math.random() * 1);
+      const ox = Math.cos(aO) * dO, oy = Math.sin(aO) * dO;
+      offOutX.push(ox); offOutY.push(oy);
+      const mo = Math.hypot(ox, oy) || 1;
+      strOutX.push(Math.abs(ox) / mo); strOutY.push(Math.abs(oy) / mo);
+
+      // ô ngoài rìa tụ về sau cùng, và cũng là ô rời đi trước tiên
+      delayIn.push((radN * 0.32 + Math.random() * 0.68) * span);
+      delayOut.push(((1 - radN) * 0.30 + Math.random() * 0.70) * span);
     }
   }
 
   const hasRound = typeof tctx.roundRect === "function";
-  const IN = 0.24, OUT = 0.76, WIN = 0.34;   // mốc kết chữ, mốc tan, bề rộng cửa sổ mỗi ô
+  const IN = 0.30, OUT = 0.72, WIN = 0.54;   // mốc kết chữ, mốc tan, bề rộng cửa sổ mỗi ô
 
   function box(x, y, w, h, r){
     if (hasRound){
@@ -765,87 +732,83 @@
   function renderText(t){
     tctx.clearRect(0, 0, W, H);
     const N = textCells.length;
-    const size = tcell * 0.82;
+    const size = tcell * 0.8;
     const r = size * 0.26;
-    const drop = tcell * 10;
-    const hold = t >= IN && t <= OUT;
+    // Ô nhỏ thì bo góc không nhìn ra, mà fillRect nhanh hơn roundRect nhiều lần.
+    const plain = !hasRound || size < 5;
 
     for (let i = 0; i < N; i++){
       const p = textCells[i];
-      let g = 1, dy = 0, a = 1, hot = 0;
+      let dx = 0, dy = 0, a = 1, sc = 1, hot = 0, ux = 0, uy = 0;
 
       if (t < IN){
         const u = (t / IN - delayIn[i]) / WIN;
         if (u <= 0) continue;
-        g = u >= 1 ? 1 : u;
-        const e = (1 - g) * (1 - g);
-        dy = -e * drop;
-        a = Math.min(1, g * 2.4);
-        hot = e;
+        const g = u >= 1 ? 1 : u;
+        const k = 1 - g;
+        // luỹ thừa năm: bay vào nhanh rồi chững lại rất lâu trước khi khớp chỗ
+        const e = 1 - k * k * k * k * k;
+        dx = offInX[i] * (1 - e);
+        dy = offInY[i] * (1 - e);
+        ux = strInX[i]; uy = strInY[i];
+        hot = k * k;
+        sc = 0.5 + 0.5 * e;
+        a = g < 0.55 ? g / 0.55 : 1;
       } else if (t > OUT){
         const u = ((t - OUT) / (1 - OUT) - delayOut[i]) / WIN;
         if (u >= 1) continue;
         if (u > 0){
-          const e = u * u;
-          dy = e * drop * 1.5;
-          a = 1 - u;
-          g = 1 - u * 0.3;
-          hot = e * 0.8;
+          const e = u * u;                      // rời đi chậm rồi nhanh dần
+          dx = offOutX[i] * e;
+          dy = offOutY[i] * e;
+          ux = strOutX[i]; uy = strOutY[i];
+          a = 1 - u * u;
+          sc = 1 - u * 0.42;
+          hot = e * 0.85;
         }
-      } else if (!RM && Math.random() < 0.015){
+      } else if (!RM && Math.random() < 0.02){
         const q = Math.random();
-        textTone[i] = q < 0.62 ? 0 : q < 0.9 ? 1 : 2;
+        textTone[i] = q < 0.75 ? 0 : q < 0.95 ? 1 : 2;
       }
 
-      const st = 1 + hot * 2.6;                 // kéo dài theo phương rơi
-      const h = size * g * st;
-      const w = size * g * (1 - hot * 0.24);
+      // Kéo dài theo đúng phương bay, nên vệt mờ đi theo hướng hạt đang di chuyển.
+      const w = size * sc * (1 + hot * 1.9 * ux);
+      const h = size * sc * (1 + hot * 1.9 * uy);
+      const x = p.c * tcell + (tcell - w) / 2 + dx;
+      const y = p.r * tcell + (tcell - h) / 2 + dy;
+
       tctx.globalAlpha = a;
-      // hạt còn bay thì trắng như đầu vệt mưa, đáp xuống rồi mới về sắc độ riêng
-      tctx.fillStyle = hot > 0.12 ? "#ffffff" : TONES[textTone[i]];
-      box(p.c * tcell + (tcell - w) / 2,
-          p.r * tcell + (tcell - h) / 2 + dy, w, h, r);
+      tctx.fillStyle = hot > 0.35 ? "#ffffff" : TONES[textTone[i]];
+      if (plain) tctx.fillRect(x, y, w, h);
+      else box(x, y, w, h, r);
     }
     tctx.globalAlpha = 1;
 
-    // Thu nhỏ rồi tí nữa phóng ngược lên: đó là lớp quầng sáng.
+    // Quầng sáng chỉ còn rất nhẹ, đủ để chữ không khô, không đủ để làm mờ.
     gctx.clearRect(0, 0, gcv.width, gcv.height);
     gctx.drawImage(tcv, 0, 0, gcv.width, gcv.height);
-    return hold;
   }
 
-  function renderHeart(n){
-    hctx.clearRect(0, 0, W, H);
-    hctx.font = cell + 'px "Roboto Mono", ui-monospace, monospace';
-    hctx.textAlign = "center";
-    hctx.textBaseline = "middle";
-    // Vẽ xong rồi thì tim đập theo nhịp hai phách thật, không phải sóng sin đều đều.
-    let glow = 0.9;
-    if (heartReveal >= 1 && !RM){
-      const t = (performance.now() / 1000 % 1.15) / 1.15;
-      const beat = Math.exp(-Math.pow((t - 0.07) / 0.05, 2)) +
-                   0.55 * Math.exp(-Math.pow((t - 0.26) / 0.055, 2));
-      glow = 0.62 + beat * 0.8;
-    }
-    hctx.shadowColor = "rgba(110,205,255,.95)";
-    hctx.shadowBlur = cell * glow;
-    for (let i = 0; i < n; i++){
-      if (!RM && Math.random() < 0.08) heartGlyph[i] = pick();
-      const p = heartCells[i];
-      hctx.fillStyle = Math.random() < 0.2 ? "#ffffff" : "#5ec8ff";
-      hctx.fillText(heartGlyph[i], p.c * cell + cell / 2, p.r * cell + cell / 2);
-    }
-    hctx.shadowBlur = 0;
-  }
+  /* Trái tim vẽ bằng sáu cung Bézier đối xứng: hai vai tròn đầy, khe trên mềm,
+     mũi dưới thon gọn. Công thức tham số sin^3 dùng trước đây cho thân gầy và
+     khe trên nhọn hoắt — đúng về toán nhưng nhìn không ra dáng trái tim.
+     Đường đi bắt đầu từ khe trên nên nét vơi dần theo chiều kim đồng hồ. */
+  const HEART = [
+    [50, 22],
+    [53, 14], [60,  8], [70,  8],
+    [82,  8], [94, 18], [94, 34],
+    [94, 52], [78, 72], [50, 92],
+    [22, 72], [ 6, 52], [ 6, 34],
+    [ 6, 18], [18,  8], [30,  8],
+    [40,  8], [47, 14], [50, 22]
+  ];
 
-  // Cùng công thức với trái tim đắp bằng ký tự, chỉ xuất ra dạng nét vẽ SVG.
-  function heartPath(k){
-    let d = "";
-    for (let i = 0; i <= 140; i++){
-      const t = i / 140 * Math.PI * 2;
-      const x = 16 * Math.pow(Math.sin(t), 3);
-      const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-      d += (i ? "L" : "M") + (50 + x * k).toFixed(2) + " " + (50 - (y + 2.5) * k).toFixed(2);
+  function heartPath(scale){
+    const q = HEART.map(pt =>
+      (50 + (pt[0] - 50) * scale).toFixed(2) + " " + (50 + (pt[1] - 50) * scale).toFixed(2));
+    let d = "M" + q[0];
+    for (let k = 1; k < q.length; k += 3){
+      d += "C" + q[k] + " " + q[k + 1] + " " + q[k + 2];
     }
     return d + "Z";
   }
@@ -880,31 +843,42 @@
     }
 
     if (textStart && textCells.length){
-      const t = (now - textStart) / PHRASE;
+      const raw = (now - textStart) / PHRASE;
+      // Câu cuối là cao trào nên nó đứng lại, không tan đi như ba câu trước.
+      const t = textLast ? Math.min(raw, 0.5) : raw;
       if (t >= 1){
         textStart = 0; lastLit = -1; curPhrase = "";
         tctx.clearRect(0, 0, W, H);
         gctx.clearRect(0, 0, gcv.width, gcv.height);
       } else {
         // vào nhanh, đứng yên cho đọc, rồi tan dần theo thứ tự ngẫu nhiên
-        if (now - lastText > 24){
+        // Lúc chữ đứng yên chỉ vẽ lại thưa cho vài ô lấp lánh; lúc rơi mới vẽ dày.
+        const still = t >= IN && t <= OUT;
+        // Lúc chữ đang rơi thì vẽ mỗi khung cho mượt; đứng yên rồi mới thưa lại.
+        if (now - lastText > (still ? 420 : 15)){
           lastText = now;
           renderText(t);
         }
-        ctx.globalAlpha = 0.78;
+
+        // Viền tối hiện lên khi chữ đã đáp xuống, tan đi khi chữ rơi tiếp.
+        let rim = 1;
+        if (t < IN){
+          const u = Math.max(0, (t - IN * 0.42) / (IN * 0.58));
+          rim = u * u * (3 - 2 * u);            // lên mượt, không bật đột ngột
+        } else if (t > OUT){
+          const u = Math.min(1, (t - OUT) / (1 - OUT) * 1.4);
+          rim = 1 - u * u * (3 - 2 * u);
+        }
+        if (rim > 0){
+          ctx.globalAlpha = rim * 0.95;
+          ctx.drawImage(rcv, 0, 0, W, H);
+          ctx.globalAlpha = 1;
+        }
+        ctx.globalAlpha = 0.22;
         ctx.drawImage(gcv, 0, 0, W, H);   // quầng sáng
         ctx.globalAlpha = 1;
         ctx.drawImage(tcv, 0, 0, W, H);   // nét chữ sắc
       }
-    }
-
-    if (heartReveal > 0 && heartCells.length){
-      const n = Math.floor(heartCells.length * heartReveal);
-      if (now - lastHeart > 33 || n !== lastCount){
-        lastHeart = now; lastCount = n;
-        renderHeart(n);
-      }
-      ctx.drawImage(hcv, 0, 0, W, H);
     }
 
     requestAnimationFrame(draw);
@@ -1027,17 +1001,13 @@
 
   function run(){
     clearAll();
-    const cnt = $("count"), ln = $("line"), fin = $("final");
+    const cnt = $("count"), ln = $("line");
     cnt.textContent = ""; ln.textContent = "";
     cnt.classList.remove("on", "tick", "out");
-    $("bloom").classList.remove("pop");
-    textStart = 0; lastLit = -1; curPhrase = "";
+    textStart = 0; lastLit = -1; curPhrase = ""; textLast = false;
     tctx.clearRect(0, 0, W, H);
     gctx.clearRect(0, 0, gcv.width, gcv.height);
-    fin.classList.remove("show");
     $("actions").classList.remove("show");
-    heartReveal = 0; lastCount = -1;
-    hctx.clearRect(0, 0, W, H);
 
     const ramp = setInterval(() => {
       rainAlpha = Math.min(1, rainAlpha + 0.03);
@@ -1054,7 +1024,7 @@
     at(700, () => {
       ring.classList.add("on");
       arc.style.transition = "stroke-dashoffset " + N + "s linear";
-      arc.style.strokeDashoffset = "282.74";
+      arc.style.strokeDashoffset = RING_LEN;
     });
 
     for (let i = 0; i < N; i++){
@@ -1072,40 +1042,34 @@
     });
 
     const tLines = tEnd + 300;
-    [CONFIG.l1, CONFIG.l2, CONFIG.l3].forEach((txt, i) => at(tLines + i * PHRASE, () => {
+    const PHRASES = [CONFIG.l1, CONFIG.l2, CONFIG.l3, CONFIG.fin];
+    PHRASES.forEach((txt, i) => at(tLines + i * PHRASE, () => {
       ln.textContent = txt;
+      textLast = i === PHRASES.length - 1;
       buildText(txt);
       textStart = performance.now();
     }));
 
-    const tHeart = tLines + 3 * PHRASE + 100;
-    at(tHeart, () => {
-      const dur = RM ? 900 : 2600;
-      const t0 = performance.now();
-      const grow = () => {
-        const p = Math.min(1, (performance.now() - t0) / dur);
-        heartReveal = 1 - Math.pow(1 - p, 3);
-        if (p < 1) requestAnimationFrame(grow);
-      };
-      grow();
-    });
-
-    at(tHeart + 2650, () => replay($("bloom"), "pop"));
-    at(tHeart + 3000, () => { fin.textContent = CONFIG.fin; fin.classList.add("show"); });
-    at(tHeart + 4800, () => $("actions").classList.add("show"));
+    at(tLines + 3 * PHRASE + 2600, () => $("actions").classList.add("show"));
   }
 
   /* ============ khởi động ============ */
   function paint(){
     $("toName").textContent = CONFIG.to;
-    $("final").textContent = CONFIG.fin;
     $("edge").textContent = CONFIG.to ? CONFIG.to + " · " + CONFIG.bg : CONFIG.bg;
     GLYPHS = pool(CONFIG.bg);
   }
 
   const gh = $("gateHeart");
-  gh.setAttribute("d", heartPath(1.4));
+  gh.setAttribute("d", heartPath(0.52));
   gh.style.setProperty("--len", Math.ceil(gh.getTotalLength()) + "");
+
+  // Trái tim đếm ngược: cùng công thức, chỉ phóng to cho vừa khung 100x100.
+  const ringD = heartPath(1);
+  $("ringTrack").setAttribute("d", ringD);
+  $("ringArc").setAttribute("d", ringD);
+  const RING_LEN = Math.ceil($("ringArc").getTotalLength());
+  $("ringArc").style.strokeDasharray = RING_LEN;
 
   paint();
   resize();
@@ -1184,7 +1148,6 @@
   $("tryBtn").addEventListener("click", () => {
     readFields();
     paint();
-    buildHeart();
     sheet.classList.remove("is-open");
     shutGate();
     startMusic();
@@ -1194,7 +1157,6 @@
   $("genBtn").addEventListener("click", () => {
     readFields();
     paint();
-    buildHeart();
     const url = buildLink();
     $("linkOut").textContent = url;
     const box = $("qrBox");

@@ -2347,6 +2347,7 @@
     // Stars & Ambient Particles
     let stars = [];
     let shootingStars = [];
+    let shootingStarDust = [];
     let celebrationParticles = [];
     let cosmicShockwaves = [];
     let autoHeartInterval = null;
@@ -2404,17 +2405,202 @@
       }
     }
 
+    // ==========================================
+    // OPTIMIZED SHOOTING STARS & BOUNDARY EXPLOSIONS
+    // ==========================================
     function spawnShootingStar() {
-      if (shootingStars.length < 2 && Math.random() < 0.015) {
+      if (shootingStars.length < 3 && Math.random() < 0.024) {
+        const fromLeft = Math.random() < 0.72;
+        const angle = fromLeft
+          ? (Math.PI * 0.22) + (Math.random() - 0.5) * 0.28 // ~35° - 55°
+          : (Math.PI * 0.78) + (Math.random() - 0.5) * 0.28; // ~125° - 145°
+
+        const startX = fromLeft
+          ? Math.random() * (W * 0.75) - 30
+          : Math.random() * (W * 0.75) + W * 0.25;
+        const startY = Math.random() * (H * 0.35) - 30;
+
+        const speed = Math.random() * 8 + 12; // 12 - 20px per frame
+        const length = Math.random() * 80 + 90; // 90 - 170px
+        const priLight = themeInk.priLight || "#bae6fd";
+
         shootingStars.push({
-          x: Math.random() * W * 0.8,
-          y: Math.random() * H * 0.3,
-          length: Math.random() * 80 + 50,
-          speed: Math.random() * 8 + 6,
-          angle: (Math.PI / 4) + (Math.random() - 0.5) * 0.3,
+          x: startX,
+          y: startY,
+          length: length,
+          speed: speed,
+          angle: angle,
           alpha: 1,
-          decay: 0.015 + Math.random() * 0.015
+          decay: 0.007 + Math.random() * 0.007,
+          headRadius: Math.random() * 1.2 + 1.4,
+          colorHue: Math.random() < 0.45 ? "#ffffff" : priLight
         });
+      }
+    }
+
+    function triggerMeteorExplosion(x, y, color, size, edge) {
+      const clampX = Math.max(0, Math.min(W, x));
+      const clampY = Math.max(0, Math.min(H, y));
+
+      const priLight = themeInk.priLight || "#fecdd3";
+      const pri = themeInk.pri || "#f43f5e";
+      const burstColors = ["#ffffff", color, priLight, pri, "#ffd166", "#ff70a6"];
+
+      // 1. Luminous Edge Impact Shockwave
+      cosmicShockwaves.push({
+        x: clampX,
+        y: clampY,
+        radius: 4,
+        maxRadius: Math.min(size * 18, 42),
+        speed: 4.2,
+        lineWidth: 3.5,
+        alpha: 1,
+        color: color || priLight
+      });
+
+      // 2. Exploding Meteor Fireworks Shrapnel (Mini Stars, Hearts & Sparks)
+      const count = Math.floor(Math.random() * 8) + 14;
+      let baseAngle = -Math.PI / 2; // Default upward for bottom edge
+      let angleSpread = Math.PI * 0.75;
+
+      if (edge === "right") {
+        baseAngle = Math.PI; // Inward towards left
+      } else if (edge === "left") {
+        baseAngle = 0; // Inward towards right
+      }
+
+      for (let i = 0; i < count; i++) {
+        const angle = baseAngle + (Math.random() - 0.5) * angleSpread;
+        const speed = Math.random() * 7 + 2.5;
+        celebrationParticles.push({
+          x: clampX,
+          y: clampY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          gravity: edge === "bottom" ? 0.14 : 0.09,
+          alpha: 1,
+          decay: 0.016 + Math.random() * 0.018,
+          size: Math.random() * 3.5 + 1.8,
+          color: burstColors[(Math.random() * burstColors.length) | 0],
+          shape: Math.random() < 0.45 ? "star" : (Math.random() < 0.45 ? "heart" : "circle")
+        });
+      }
+    }
+
+    function drawShootingStars() {
+      spawnShootingStar();
+
+      const pri = themeInk.pri || "#f43f5e";
+
+      // 1. Draw Trailing Stardust Sparkles
+      for (let i = shootingStarDust.length - 1; i >= 0; i--) {
+        const d = shootingStarDust[i];
+        d.x += d.vx;
+        d.y += d.vy;
+        d.alpha -= d.decay;
+        if (d.alpha <= 0) {
+          shootingStarDust.splice(i, 1);
+          continue;
+        }
+        ctx.save();
+        ctx.globalCompositeOperation = "screen";
+        ctx.globalAlpha = d.alpha;
+        ctx.fillStyle = d.color;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 2. Draw & Update Shooting Stars with Edge Collision
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const ss = shootingStars[i];
+        ss.x += Math.cos(ss.angle) * ss.speed;
+        ss.y += Math.sin(ss.angle) * ss.speed;
+        ss.alpha -= ss.decay;
+
+        const tailX = ss.x - Math.cos(ss.angle) * ss.length;
+        const tailY = ss.y - Math.sin(ss.angle) * ss.length;
+
+        // Collision detection with screen edges
+        let hitEdge = null;
+        if (ss.y >= H) {
+          hitEdge = "bottom";
+        } else if (ss.x >= W && ss.y >= 0) {
+          hitEdge = "right";
+        } else if (ss.x <= 0 && ss.y >= 0) {
+          hitEdge = "left";
+        }
+
+        if (hitEdge) {
+          triggerMeteorExplosion(ss.x, ss.y, ss.colorHue, ss.headRadius, hitEdge);
+          shootingStars.splice(i, 1);
+          continue;
+        }
+
+        if (ss.alpha <= 0 || (ss.x > W + 150 && tailX > W + 150) || (ss.y > H + 150 && tailY > H + 150)) {
+          shootingStars.splice(i, 1);
+          continue;
+        }
+
+        // Drop stardust sparkles along trajectory
+        if (Math.random() < 0.28 && shootingStarDust.length < 45) {
+          shootingStarDust.push({
+            x: ss.x - Math.cos(ss.angle) * (Math.random() * (ss.length * 0.45)),
+            y: ss.y - Math.sin(ss.angle) * (Math.random() * (ss.length * 0.45)),
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            size: Math.random() * 1.4 + 0.7,
+            alpha: ss.alpha * 0.9,
+            decay: 0.035 + Math.random() * 0.03,
+            color: ss.colorHue
+          });
+        }
+
+        ctx.save();
+        ctx.globalCompositeOperation = "screen";
+
+        // Luminous Multi-stop Meteor Tail Gradient
+        const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
+        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha.toFixed(2)})`);
+        grad.addColorStop(0.2, ss.colorHue);
+        grad.addColorStop(0.65, pri);
+        grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2.4;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(ss.x, ss.y);
+        ctx.lineTo(tailX, tailY);
+        ctx.stroke();
+
+        // Nucleus Head & Radial Glow Halo
+        ctx.fillStyle = `rgba(255, 255, 255, ${ss.alpha.toFixed(2)})`;
+        ctx.beginPath();
+        ctx.arc(ss.x, ss.y, ss.headRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        const haloGrad = ctx.createRadialGradient(ss.x, ss.y, 0, ss.x, ss.y, ss.headRadius * 4.5);
+        haloGrad.addColorStop(0, `rgba(255, 255, 255, ${(ss.alpha * 0.85).toFixed(2)})`);
+        haloGrad.addColorStop(0.45, ss.colorHue);
+        haloGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = haloGrad;
+        ctx.beginPath();
+        ctx.arc(ss.x, ss.y, ss.headRadius * 4.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Mini Diamond Cross Flare at Nucleus
+        ctx.strokeStyle = `rgba(255, 255, 255, ${(ss.alpha * 0.8).toFixed(2)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ss.x - 5, ss.y);
+        ctx.lineTo(ss.x + 5, ss.y);
+        ctx.moveTo(ss.x, ss.y - 5);
+        ctx.lineTo(ss.x, ss.y + 5);
+        ctx.stroke();
+
+        ctx.restore();
       }
     }
 
@@ -2564,6 +2750,8 @@
       }
 
       initStars();
+      shootingStars = [];
+      shootingStarDust = [];
       ctx.clearRect(0, 0, W, H);
       if (curPhrase) buildTextParticles(curPhrase, isTextFirst);
     }
@@ -2906,34 +3094,8 @@
         ctx.fillRect(star.x, star.y, star.size, star.size);
       }
 
-      // 2. Draw Shooting Stars
-      spawnShootingStar();
-      for (let i = shootingStars.length - 1; i >= 0; i--) {
-        const ss = shootingStars[i];
-        ss.x += Math.cos(ss.angle) * ss.speed;
-        ss.y += Math.sin(ss.angle) * ss.speed;
-        ss.alpha -= ss.decay;
-
-        if (ss.alpha <= 0 || ss.x > W || ss.y > H) {
-          shootingStars.splice(i, 1);
-          continue;
-        }
-
-        const grad = ctx.createLinearGradient(
-          ss.x, ss.y,
-          ss.x - Math.cos(ss.angle) * ss.length,
-          ss.y - Math.sin(ss.angle) * ss.length
-        );
-        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha})`);
-        grad.addColorStop(1, "rgba(255, 255, 255, 0)");
-
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.6;
-        ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(ss.x - Math.cos(ss.angle) * ss.length, ss.y - Math.sin(ss.angle) * ss.length);
-        ctx.stroke();
-      }
+      // 2. Draw Optimized Shooting Stars with Boundary Explosions (Sao băng tối ưu & nổ khi va chạm cạnh)
+      drawShootingStars();
 
       // 3. Draw Romantic Falling Rain
       ctx.textAlign = "center";

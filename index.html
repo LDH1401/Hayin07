@@ -2094,6 +2094,12 @@
     const glowCtx = glowCanvas.getContext("2d");
     const rimCanvas = document.createElement("canvas");
     const rimCtx = rimCanvas.getContext("2d");
+    /* Gộp sẵn viền + quầng + nét chữ vào một canvas. Vòng vẽ chỉ ghép một lần
+       thay vì ba, và chỉ ghép đúng vùng có chữ thay vì cả màn hình. */
+    const mergedCanvas = document.createElement("canvas");
+    const mergedCtx = mergedCanvas.getContext("2d");
+    let textRect = null;              // vùng có chữ, tính theo pixel CSS
+    let themeInk = { pri: "#f43f5e", priLight: "#fecdd3" };
 
     let tcell = 8;
     let textParticles = [];
@@ -2199,6 +2205,10 @@
       rimCanvas.width = canvas.width;
       rimCanvas.height = canvas.height;
       rimCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      mergedCanvas.width = canvas.width;
+      mergedCanvas.height = canvas.height;
+      mergedCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       cell = Math.max(14, Math.min(22, Math.round(Math.min(W, H) / 28)));
       cols = Math.ceil(W / cell) + 1;
@@ -2341,6 +2351,28 @@
 
       if (!rawPoints.length) return;
 
+      // Vùng cần ghép: hộp bao chữ nới ra theo quãng hạt bay và bề dày viền tối.
+      let bMinC = 1e9, bMaxC = -1, bMinR = 1e9, bMaxR = -1;
+      for (const p of rawPoints) {
+        if (p.c < bMinC) bMinC = p.c;
+        if (p.c > bMaxC) bMaxC = p.c;
+        if (p.r < bMinR) bMinR = p.r;
+        if (p.r > bMaxR) bMaxR = p.r;
+      }
+      {
+        const bay = fs * 0.85 * 1.7 + tcell * 4;
+        const x0 = Math.max(0, Math.floor(bMinC * tcell - bay));
+        const y0 = Math.max(0, Math.floor(bMinR * tcell - bay));
+        const x1 = Math.min(W, Math.ceil((bMaxC + 1) * tcell + bay));
+        const y1 = Math.min(H, Math.ceil((bMaxR + 1) * tcell + bay));
+        textRect = { x: x0, y: y0, w: Math.max(1, x1 - x0), h: Math.max(1, y1 - y0) };
+      }
+      {
+        const st = getComputedStyle(document.documentElement);
+        themeInk.pri = st.getPropertyValue("--primary").trim() || "#f43f5e";
+        themeInk.priLight = st.getPropertyValue("--primary-light").trim() || "#fecdd3";
+      }
+
       let sumC = 0, sumR = 0;
       for (const p of rawPoints) { sumC += p.c; sumR += p.r; }
       const centerC = sumC / rawPoints.length;
@@ -2409,15 +2441,17 @@
 
     const IN_STEP = 0.28, OUT_STEP = 0.72, WIN_SPAN = 0.46;
 
-    function renderTextParticles(progress, now = performance.now()) {
-      textCtx.clearRect(0, 0, W, H);
+    function renderTextParticles(progress, now = performance.now(), rimAlpha = 1) {
+      const R = textRect || { x: 0, y: 0, w: W, h: H };
+      textCtx.clearRect(R.x, R.y, R.w, R.h);
       const N = textParticles.length;
       const size = tcell * 0.94;
       const radius = size * 0.42;
 
-      const styles = getComputedStyle(document.documentElement);
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#fecdd3";
-      const pri = styles.getPropertyValue("--primary").trim() || "#f43f5e";
+      // Màu chủ đề đã đọc sẵn lúc dựng câu. Gọi getComputedStyle ở đây nghĩa là
+      // ép trình duyệt tính lại toàn bộ style mỗi khung hình.
+      const priLight = themeInk.priLight;
+      const pri = themeInk.pri;
 
       for (let i = 0; i < N; i++) {
         const p = textParticles[i];
@@ -2498,9 +2532,22 @@
       }
       textCtx.globalAlpha = 1;
 
-      // Render Soft Glow Canvas
-      glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
-      glowCtx.drawImage(textCanvas, 0, 0, glowCanvas.width, glowCanvas.height);
+      // Quầng sáng: thu nhỏ 1/4, cũng chỉ làm trong vùng có chữ
+      const gx = R.x / 4, gy = R.y / 4, gw = Math.max(1, R.w / 4), gh = Math.max(1, R.h / 4);
+      glowCtx.clearRect(gx, gy, gw, gh);
+      glowCtx.drawImage(textCanvas, R.x * dpr, R.y * dpr, R.w * dpr, R.h * dpr, gx, gy, gw, gh);
+
+      /* Gộp ba lớp lại đây một lần. Trước đây vòng vẽ ghép ba lần toàn màn hình
+         mỗi khung; giờ chỉ còn một lần, và chỉ trong vùng có chữ. */
+      mergedCtx.clearRect(R.x, R.y, R.w, R.h);
+      if (rimAlpha > 0) {
+        mergedCtx.globalAlpha = Math.max(0, Math.min(1, rimAlpha * 0.88));
+        mergedCtx.drawImage(rimCanvas, R.x * dpr, R.y * dpr, R.w * dpr, R.h * dpr, R.x, R.y, R.w, R.h);
+      }
+      mergedCtx.globalAlpha = 0.52;
+      mergedCtx.drawImage(glowCanvas, gx, gy, gw, gh, R.x, R.y, R.w, R.h);
+      mergedCtx.globalAlpha = 1;
+      mergedCtx.drawImage(textCanvas, R.x * dpr, R.y * dpr, R.w * dpr, R.h * dpr, R.x, R.y, R.w, R.h);
     }
 
     /* Heart Contour Equation */
@@ -2636,8 +2683,6 @@
           textCtx.clearRect(0, 0, W, H);
           glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
         } else {
-          renderTextParticles(progress, now);
-
           let rimAlpha = 1;
           if (progress < IN_STEP) {
             const u = Math.max(0, (progress - IN_STEP * 0.25) / (IN_STEP * 0.75));
@@ -2647,15 +2692,16 @@
             rimAlpha = 1 - u * u * (3 - 2 * u);
           }
 
-          if (rimAlpha > 0) {
-            ctx.globalAlpha = Math.max(0, Math.min(1, rimAlpha * 0.88));
-            ctx.drawImage(rimCanvas, 0, 0, W, H);
-            ctx.globalAlpha = 1;
+          /* Lúc hạt bay thì vẽ lại mỗi khung cho mượt; lúc chữ đứng yên các ô không
+             di chuyển nên 350ms vẽ lại một lần là đủ cho vài ô lấp lánh. */
+          const isStill = progress >= IN_STEP && progress <= OUT_STEP;
+          if (now - lastTextRender > (isStill ? 350 : 0)) {
+            lastTextRender = now;
+            renderTextParticles(progress, now, rimAlpha);
           }
-          ctx.globalAlpha = 0.52;
-          ctx.drawImage(glowCanvas, 0, 0, W, H);
-          ctx.globalAlpha = 1;
-          ctx.drawImage(textCanvas, 0, 0, W, H);
+
+          const R = textRect || { x: 0, y: 0, w: W, h: H };
+          ctx.drawImage(mergedCanvas, R.x * dpr, R.y * dpr, R.w * dpr, R.h * dpr, R.x, R.y, R.w, R.h);
         }
       }
 

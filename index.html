@@ -2083,7 +2083,7 @@
           </div>
           <div class="input-field">
             <label for="inputMp3">Đường dẫn file MP3</label>
-            <input id="inputMp3" type="text" placeholder="nhac.mp3 hoặc link online">
+            <input id="inputMp3" type="text" placeholder="6073381016773954103.mp4 hoặc link online">
             <span class="input-helper">Để trống sẽ dùng nhạc mặc định lãng mạn</span>
           </div>
         </div>
@@ -2167,7 +2167,7 @@
       l3:    urlParams.get("l3") || "Em đồng ý",
       fin:   urlParams.get("f")  || "Làm người yêu anh nhé?",
       dem:   Math.max(3, Math.min(60, parseInt(urlParams.get("dem"), 10) || 14)),
-      mp3:   urlParams.get("mp3") === null ? "nhac.mp3" : urlParams.get("mp3"),
+      mp3:   urlParams.get("mp3") === null ? "6073381016773954103.mp4" : urlParams.get("mp3"),
       from:  parseFloat(urlParams.get("s")) || 0,
       theme: THEME_LIST.includes(urlParams.get("theme")) ? urlParams.get("theme") : "rose"
     };
@@ -3188,11 +3188,25 @@
       bgmAudio.src = mp3Src;
       bgmAudio.volume = 0;
 
-      const fallbackToSynth = () => {
+      const fallbackList = ["nhac.m4a", "nhac.mp4", "nhac.mp3"];
+      let fallbackIdx = 0;
+
+      const tryFallbackOrSynth = () => {
+        while (fallbackIdx < fallbackList.length) {
+          const nextSrc = fallbackList[fallbackIdx++];
+          if (nextSrc !== mp3Src) {
+            bgmAudio.src = nextSrc;
+            const p = bgmAudio.play();
+            if (p && p.then) {
+              p.then(fadeInAudio).catch(tryFallbackOrSynth);
+            }
+            return;
+          }
+        }
         if (!synthTimer) playSynthArpeggio();
       };
 
-      bgmAudio.addEventListener("error", fallbackToSynth, { once: true });
+      bgmAudio.addEventListener("error", tryFallbackOrSynth, { once: true });
       bgmAudio.addEventListener("loadedmetadata", () => {
         if (CONFIG.from > 0) {
           try { bgmAudio.currentTime = CONFIG.from; } catch (e) {}
@@ -3205,7 +3219,7 @@
 
       const playPromise = bgmAudio.play();
       if (playPromise && playPromise.then) {
-        playPromise.then(fadeInAudio).catch(fallbackToSynth);
+        playPromise.then(fadeInAudio).catch(tryFallbackOrSynth);
       } else {
         fadeInAudio();
       }
@@ -3607,7 +3621,7 @@
         dem: String(CONFIG.dem),
         theme: CONFIG.theme
       });
-      if (CONFIG.mp3 && CONFIG.mp3 !== "nhac.mp3") params.set("mp3", CONFIG.mp3);
+      if (CONFIG.mp3 && CONFIG.mp3 !== "6073381016773954103.mp4") params.set("mp3", CONFIG.mp3);
       return location.origin + location.pathname + "?" + params.toString();
     }
 

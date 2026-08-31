@@ -7,7 +7,7 @@
   <meta name="description" content="Trái Tim Đếm Ngược - Gửi gắm lời yêu thương bất ngờ và lãng mạn nhất">
   <meta property="og:title" content="Có một điều đặc biệt muốn gửi tới bạn...">
   <meta property="og:description" content="Chạm để mở thông điệp bí mật dành riêng cho bạn.">
-  <title>Trái Tim Đếm Ngược ✨ Lời Yêu Thương</title>
+  <title>Hayin.07 ✨ Lời Yêu Thương</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -210,6 +210,40 @@
     /* ==========================================================================
        CANVAS & BACKGROUND ATMOSPHERE
        ========================================================================== */
+    /* Romantic Blurred Background Photo Layer */
+    .bg-photo-layer {
+      position: fixed;
+      inset: -25px;
+      width: calc(100% + 50px);
+      height: calc(100% + 50px);
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-photo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 38%;
+      display: block;
+      filter: blur(8px) brightness(0.72) saturate(1.15);
+      transform: scale(1.05);
+      opacity: 0.88;
+      transition: opacity 1s ease, filter 1s ease;
+    }
+
+    /* Soft Atmospheric Vignette Overlay */
+    .bg-photo-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 36%, rgba(3, 7, 18, 0.05) 0%, rgba(3, 7, 18, 0.4) 65%, rgba(3, 7, 18, 0.8) 100%),
+        linear-gradient(180deg, rgba(3, 7, 18, 0.08) 0%, rgba(3, 7, 18, 0.2) 45%, rgba(3, 7, 18, 0.72) 100%);
+    }
+
     #rainCanvas {
       position: fixed;
       inset: 0;
@@ -226,11 +260,10 @@
       pointer-events: none;
       z-index: 2;
       background:
-        radial-gradient(circle at 50% 38%, var(--primary-glow) 0%, transparent 60%),
-        radial-gradient(circle at 20% 80%, var(--bg-deep) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, var(--bg-deep) 0%, transparent 50%),
-        linear-gradient(180deg, rgba(3, 7, 18, 0.3) 0%, rgba(3, 7, 18, 0.85) 100%);
-      opacity: 0.9;
+        radial-gradient(circle at 50% 35%, var(--primary-glow) 0%, transparent 65%),
+        radial-gradient(circle at 80% 20%, var(--primary-glow) 0%, transparent 55%);
+      opacity: 0.5;
+      mix-blend-mode: screen;
       transition: opacity 1.2s ease, background 1s ease;
     }
 
@@ -1644,6 +1677,12 @@
 </head>
 <body>
 
+  <!-- Atmospheric Blurred Background Photo Layer -->
+  <div class="bg-photo-layer" id="bgPhotoLayer" aria-hidden="true">
+    <img src="emiu.jpg" alt="" class="bg-photo-img" id="bgPhotoImg">
+  </div>
+  <div class="bg-photo-overlay" aria-hidden="true"></div>
+
   <!-- Audio Element -->
   <audio id="bgmAudio" playsinline preload="auto"></audio>
 
@@ -2247,8 +2286,7 @@
       }
 
       initStars();
-      ctx.fillStyle = styles.getPropertyValue("--bg-base").trim() || "#030712";
-      ctx.fillRect(0, 0, W, H);
+      ctx.clearRect(0, 0, W, H);
       if (curPhrase) buildTextParticles(curPhrase);
     }
 
@@ -2573,9 +2611,11 @@
 
     /* Main Animation Render Loop */
     function animateFrame(now) {
-      // Semi-transparent background clear for smooth rain trail persistence
-      ctx.fillStyle = "rgba(3, 7, 18, 0.08)";
+      // Fading canvas clear for smooth rain & shooting star trails while keeping background photo visible
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
       ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = "source-over";
 
       // 1. Draw Twinkling Stars
       for (let i = 0; i < stars.length; i++) {

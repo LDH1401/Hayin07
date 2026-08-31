@@ -2167,7 +2167,7 @@
       l3:    urlParams.get("l3") || "Em đồng ý",
       fin:   urlParams.get("f")  || "Làm người yêu anh nhé?",
       dem:   Math.max(3, Math.min(60, parseInt(urlParams.get("dem"), 10) || 14)),
-      mp3:   urlParams.get("mp3") === null ? "6073381016773954103.mp4" : urlParams.get("mp3"),
+      mp3:   urlParams.get("mp3") === null ? "nhac.m4a" : urlParams.get("mp3"),
       from:  parseFloat(urlParams.get("s")) || 0,
       theme: THEME_LIST.includes(urlParams.get("theme")) ? urlParams.get("theme") : "rose"
     };
@@ -3188,7 +3188,7 @@
       bgmAudio.src = mp3Src;
       bgmAudio.volume = 0;
 
-      const fallbackList = ["nhac.m4a", "nhac.mp4", "nhac.mp3"];
+      const fallbackList = ["nhac.m4a"];
       let fallbackIdx = 0;
 
       const tryFallbackOrSynth = () => {

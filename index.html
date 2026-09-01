@@ -2167,7 +2167,7 @@
           </div>
           <div class="input-field">
             <label for="inputMp3">Đường dẫn file MP3</label>
-            <input id="inputMp3" type="text" placeholder="6073381016773954103.mp4 hoặc link online">
+            <input id="inputMp3" type="text" placeholder="nhac.m4a hoặc link online">
             <span class="input-helper">Để trống sẽ dùng nhạc mặc định lãng mạn</span>
           </div>
         </div>
@@ -3868,7 +3868,7 @@
         dem: String(CONFIG.dem),
         theme: CONFIG.theme
       });
-      if (CONFIG.mp3 && CONFIG.mp3 !== "6073381016773954103.mp4") params.set("mp3", CONFIG.mp3);
+      if (CONFIG.mp3 && CONFIG.mp3 !== "nhac.m4a") params.set("mp3", CONFIG.mp3);
       return location.origin + location.pathname + "?" + params.toString();
     }
 

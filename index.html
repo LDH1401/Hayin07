@@ -3537,7 +3537,8 @@
     function launchAscendingRocket(targetX, targetY, burstType = "random", customStartX = null) {
       const startX = customStartX !== null ? customStartX : (targetX + (Math.random() - 0.5) * 120);
       const startY = H + 15;
-      const duration = 28 + Math.floor(Math.random() * 12);
+      const isMega = burstType === "giant_heart" || burstType === "infinity_blossom";
+      const duration = isMega ? 44 : (28 + Math.floor(Math.random() * 12));
       const vx = (targetX - startX) / duration;
       const vy = (targetY - startY) / duration;
 
@@ -3561,7 +3562,11 @@
         trailHue: Math.random() < 0.35 ? "#ffd700" : rocketColor
       });
 
-      playFireworkLaunchSound(burstType === "giant_heart" || burstType === "infinity_blossom" ? 0.32 : 0.16, startX);
+      if (isMega) {
+        playGiantFireworkWhistleLaunchSound(startX);
+      } else {
+        playFireworkLaunchSound(0.16, startX);
+      }
     }
 
     // Bắn chùm tia pháo hình nan quạt từ dưới đáy màn hình
@@ -4589,7 +4594,11 @@
     // HỆ THỐNG ÂM THANH PHÁO HOA CHUẨN ĐIỆN ẢNH & VẬT LÝ ÂM HỌC THỰC TẾ
     // =========================================================================
 
-    // 1. TIẾNG PHÓNG PHÁO HOA TỪ ĐÁY NÒNG LÊN CAO (Acoustic Mortar Thump & Ascension Rush)
+    // =========================================================================
+    // HỆ THỐNG ÂM THANH PHÁO HOA VẬT LÝ ÂM HỌC THỰC TẾ (100% ACOUSTIC MODELING)
+    // =========================================================================
+
+    // 1A. TIẾNG PHÓNG PHÁO HOA THƯỜNG (Acoustic Soft Mortar Thump & Air Draft)
     function playFireworkLaunchSound(volume = 0.14, posX = null) {
       if (!isGrandShowActive || !audioCtx || isMuted) return;
       try {
@@ -4607,24 +4616,24 @@
           } catch (pe) {}
         }
 
-        // Tầng A: Cú kích nổ đẩy nòng pháo (Mortar Concussive Thump)
+        // Tầng A: Cú đẩy nòng pháo đục trầm êm dịu (Soft Mortar Thump)
         const kickOsc = audioCtx.createOscillator();
         const kickGain = audioCtx.createGain();
         kickOsc.type = "sine";
-        kickOsc.frequency.setValueAtTime(140 + Math.random() * 20, time);
-        kickOsc.frequency.exponentialRampToValueAtTime(32, time + 0.10);
+        kickOsc.frequency.setValueAtTime(115 + Math.random() * 15, time);
+        kickOsc.frequency.exponentialRampToValueAtTime(30, time + 0.09);
 
         kickGain.gain.setValueAtTime(0.0001, time);
-        kickGain.gain.exponentialRampToValueAtTime(volume * 0.90, time + 0.006);
-        kickGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.12);
+        kickGain.gain.exponentialRampToValueAtTime(volume * 0.85, time + 0.006);
+        kickGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.11);
 
         kickOsc.connect(kickGain);
         kickGain.connect(outNode);
         kickOsc.start(time);
-        kickOsc.stop(time + 0.14);
+        kickOsc.stop(time + 0.13);
 
-        // Tầng B: Luồng khí phản lực vút xé gió bay lên (Ascension Air Rush Noise Sweep)
-        const bufLen = Math.floor(audioCtx.sampleRate * 0.42);
+        // Tầng B: Luồng khí phản lực vút xé gió bay lên (Ascension Air Draft Noise Sweep)
+        const bufLen = Math.floor(audioCtx.sampleRate * 0.38);
         const noiseBuf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
         const data = noiseBuf.getChannelData(0);
         let b0 = 0, b1 = 0, b2 = 0;
@@ -4641,21 +4650,123 @@
 
         const hissFilter = audioCtx.createBiquadFilter();
         hissFilter.type = "bandpass";
-        hissFilter.frequency.setValueAtTime(260, time);
-        hissFilter.frequency.exponentialRampToValueAtTime(820, time + 0.38);
-        hissFilter.Q.value = 1.2;
+        hissFilter.frequency.setValueAtTime(240, time);
+        hissFilter.frequency.exponentialRampToValueAtTime(720, time + 0.34);
+        hissFilter.Q.value = 1.1;
 
         const hissGain = audioCtx.createGain();
         hissGain.gain.setValueAtTime(0.0001, time);
-        hissGain.gain.exponentialRampToValueAtTime(volume * 0.50, time + 0.07);
-        hissGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.40);
+        hissGain.gain.exponentialRampToValueAtTime(volume * 0.45, time + 0.06);
+        hissGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.36);
 
         hissSource.connect(hissFilter);
         hissFilter.connect(hissGain);
         hissGain.connect(outNode);
 
         hissSource.start(time);
-        hissSource.stop(time + 0.42);
+        hissSource.stop(time + 0.38);
+      } catch (e) {}
+    }
+
+    // 1B. TIẾNG "CHÍUUUUUU... VÚT" RÍT XÉ GIÓ THẬT CỦA 2 QUẢ SIÊU PHÁO HOA (Pure Acoustic Aerodynamic Whistle - No Synthetic Beeps)
+    function playGiantFireworkWhistleLaunchSound(posX = null) {
+      if (!isGrandShowActive || !audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime;
+        const duration = 0.85;
+
+        // Panner không gian Stereo 3D
+        let outNode = audioMaster || audioCtx.destination;
+        if (audioCtx.createStereoPanner && posX !== null) {
+          try {
+            const panner = audioCtx.createStereoPanner();
+            const panVal = Math.max(-0.85, Math.min(0.85, (posX - W * 0.5) / (W * 0.5)));
+            panner.pan.setValueAtTime(panVal, time);
+            panner.connect(audioMaster || audioCtx.destination);
+            outNode = panner;
+          } catch (pe) {}
+        }
+
+        // TẦNG 1: Cú thốc nòng đại bác siêu trầm uy lực (Deep Heavy Mortar Thump: 115Hz -> 28Hz)
+        const kickOsc = audioCtx.createOscillator();
+        const kickGain = audioCtx.createGain();
+        kickOsc.type = "sine";
+        kickOsc.frequency.setValueAtTime(120, time);
+        kickOsc.frequency.exponentialRampToValueAtTime(28, time + 0.12);
+
+        kickGain.gain.setValueAtTime(0.0001, time);
+        kickGain.gain.exponentialRampToValueAtTime(0.34, time + 0.006);
+        kickGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.16);
+
+        kickOsc.connect(kickGain);
+        kickGain.connect(outNode);
+        kickOsc.start(time);
+        kickOsc.stop(time + 0.18);
+
+        // TẦNG 2: TIẾNG RÍT "CHÍUUUU... VÚT" CỘNG HƯỞNG KHÍ ĐỘNG HỌC THẬT (Dual-Stage Resonant Formant Filter on Pink Noise)
+        const bufLen = Math.floor(audioCtx.sampleRate * duration);
+        const noiseBuf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+        const data = noiseBuf.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufLen; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99 * b0 + white * 0.05;
+          b1 = 0.95 * b1 + white * 0.10;
+          b2 = 0.85 * b2 + white * 0.20;
+          data[i] = (b0 + b1 + b2) * 0.50;
+        }
+
+        const whistleSource = audioCtx.createBufferSource();
+        whistleSource.buffer = noiseBuf;
+
+        // Bộ lọc cộng hưởng kép sắc nét tạo tiếng rít gió tự nhiên (Cascaded High-Q Bandpass)
+        const bp1 = audioCtx.createBiquadFilter();
+        bp1.type = "bandpass";
+        bp1.frequency.setValueAtTime(360, time);
+        bp1.frequency.exponentialRampToValueAtTime(1280, time + duration);
+        bp1.Q.value = 15;
+
+        const bp2 = audioCtx.createBiquadFilter();
+        bp2.type = "bandpass";
+        bp2.frequency.setValueAtTime(360, time);
+        bp2.frequency.exponentialRampToValueAtTime(1280, time + duration);
+        bp2.Q.value = 15;
+
+        const whistleGain = audioCtx.createGain();
+        whistleGain.gain.setValueAtTime(0.0001, time);
+        whistleGain.gain.exponentialRampToValueAtTime(0.35, time + 0.10);
+        whistleGain.gain.linearRampToValueAtTime(0.42, time + duration * 0.72);
+        whistleGain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+        whistleSource.connect(bp1);
+        bp1.connect(bp2);
+        bp2.connect(whistleGain);
+        whistleGain.connect(outNode);
+
+        whistleSource.start(time);
+        whistleSource.stop(time + duration + 0.02);
+
+        // TẦNG 3: Luồng gió phản lực xé rít bọc quanh vệt bay (Turbulent Rocket Jet Wash)
+        const rushSource = audioCtx.createBufferSource();
+        rushSource.buffer = noiseBuf;
+
+        const rushFilter = audioCtx.createBiquadFilter();
+        rushFilter.type = "bandpass";
+        rushFilter.frequency.setValueAtTime(260, time);
+        rushFilter.frequency.exponentialRampToValueAtTime(880, time + duration);
+        rushFilter.Q.value = 1.3;
+
+        const rushGain = audioCtx.createGain();
+        rushGain.gain.setValueAtTime(0.0001, time);
+        rushGain.gain.exponentialRampToValueAtTime(0.20, time + 0.08);
+        rushGain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+        rushSource.connect(rushFilter);
+        rushFilter.connect(rushGain);
+        rushGain.connect(outNode);
+
+        rushSource.start(time);
+        rushSource.stop(time + duration + 0.02);
       } catch (e) {}
     }
 
@@ -4664,7 +4775,7 @@
       if (!isGrandShowActive || !audioCtx || isMuted) return;
       try {
         const time = audioCtx.currentTime;
-        const baseVol = 0.26 + Math.random() * 0.06;
+        const baseVol = 0.28 + Math.random() * 0.05;
 
         // Panner không gian Stereo 3D theo vị trí phát nổ
         let outNode = audioMaster || audioCtx.destination;
@@ -4678,39 +4789,39 @@
           } catch (pe) {}
         }
 
-        // TẦNG 1: Sóng xung kích siêu trầm dội lồng ngực (Chest-Punch Sub-Bass Wavefront: 110Hz -> 26Hz)
+        // TẦNG 1: Sóng xung kích siêu trầm dội lồng ngực (Chest-Punch Sub-Bass Wavefront: 100Hz -> 26Hz)
         const subOsc = audioCtx.createOscillator();
         const subGain = audioCtx.createGain();
         subOsc.type = "sine";
-        const subStartFreq = 105 + Math.random() * 15;
-        const subEndFreq = 26 + Math.random() * 6;
+        const subStartFreq = 95 + Math.random() * 12;
+        const subEndFreq = 26 + Math.random() * 5;
         subOsc.frequency.setValueAtTime(subStartFreq, time);
-        subOsc.frequency.exponentialRampToValueAtTime(subEndFreq, time + 0.42);
+        subOsc.frequency.exponentialRampToValueAtTime(subEndFreq, time + 0.40);
 
         subGain.gain.setValueAtTime(0.0001, time);
         subGain.gain.exponentialRampToValueAtTime(baseVol * 1.15, time + 0.008);
-        subGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.70);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.68);
 
         subOsc.connect(subGain);
         subGain.connect(outNode);
         subOsc.start(time);
-        subOsc.stop(time + 0.75);
+        subOsc.stop(time + 0.72);
 
-        // TẦNG 2: Tiếng nổ đanh giòn xé toạc vỏ pháo (Crisp Shell-Break Concussion Snap)
+        // TẦNG 2: Tiếng nổ bung xé toạc vỏ pháo trầm ấm (Soft Shell Rupture Thump)
         const snapOsc = audioCtx.createOscillator();
         const snapGain = audioCtx.createGain();
         snapOsc.type = "sine";
-        snapOsc.frequency.setValueAtTime(220 + Math.random() * 40, time);
-        snapOsc.frequency.exponentialRampToValueAtTime(45, time + 0.11);
+        snapOsc.frequency.setValueAtTime(150 + Math.random() * 30, time);
+        snapOsc.frequency.exponentialRampToValueAtTime(38, time + 0.12);
 
         snapGain.gain.setValueAtTime(0.0001, time);
-        snapGain.gain.exponentialRampToValueAtTime(baseVol * 0.75, time + 0.005);
-        snapGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.18);
+        snapGain.gain.exponentialRampToValueAtTime(baseVol * 0.70, time + 0.006);
+        snapGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.20);
 
         snapOsc.connect(snapGain);
         snapGain.connect(outNode);
         snapOsc.start(time);
-        snapOsc.stop(time + 0.20);
+        snapOsc.stop(time + 0.22);
 
         // TẦNG 3: Khối âm rền trầm vang vọng chân trời (Atmospheric Horizon Rolling Reverb)
         const rumbleDuration = 1.15;
@@ -4730,8 +4841,8 @@
 
         const rumbleFilter = audioCtx.createBiquadFilter();
         rumbleFilter.type = "lowpass";
-        rumbleFilter.frequency.setValueAtTime(680, time);
-        rumbleFilter.frequency.exponentialRampToValueAtTime(70, time + rumbleDuration);
+        rumbleFilter.frequency.setValueAtTime(620, time);
+        rumbleFilter.frequency.exponentialRampToValueAtTime(65, time + rumbleDuration);
         rumbleFilter.Q.value = 0.85;
 
         const rumbleGain = audioCtx.createGain();
@@ -4746,59 +4857,56 @@
         rumbleSource.start(time);
         rumbleSource.stop(time + rumbleDuration);
 
-        // TẦNG 4: Tiếng hoa lửa nổ rào rào / lách tách giòn tan rõ nét và kéo dài (Extended Crispy Pyrotechnic Star Crackle Cluster)
-        const crackleCount = 16 + Math.floor(Math.random() * 8);
+        // TẦNG 4: Tiếng hoa lửa nổ rào rào / lách tách giòn tan rõ nét và kéo dài (Extended High-Definition Pyrotechnic Star Crackles)
+        const crackleCount = 24 + Math.floor(Math.random() * 10);
         for (let c = 0; c < crackleCount; c++) {
-          const delay = 0.08 + Math.random() * 1.15;
+          const delay = 0.08 + Math.random() * 1.60;
           const popTime = time + delay;
-          const popDuration = 0.038 + Math.random() * 0.024;
-          const popVol = baseVol * (0.24 + Math.random() * 0.16) * Math.max(0.35, 1 - (delay / 1.3));
+          const popDuration = 0.040 + Math.random() * 0.026;
+          const popVol = baseVol * (0.38 + Math.random() * 0.22) * Math.max(0.40, 1 - (delay / 1.85));
 
-          // 1. Cú nổ đanh giòn tách (Micro-chirp snap)
+          // 1. Cú nổ tách đanh giòn của hạt than hoa (Acoustic Ember Transient Snap)
           const pOsc = audioCtx.createOscillator();
           const pGain = audioCtx.createGain();
           pOsc.type = "sine";
-          pOsc.frequency.setValueAtTime(420 + Math.random() * 300, popTime);
-          pOsc.frequency.exponentialRampToValueAtTime(80, popTime + popDuration);
+          pOsc.frequency.setValueAtTime(460 + Math.random() * 320, popTime);
+          pOsc.frequency.exponentialRampToValueAtTime(85, popTime + 0.018);
 
           pGain.gain.setValueAtTime(0.0001, popTime);
-          pGain.gain.exponentialRampToValueAtTime(popVol, popTime + 0.003);
-          pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
+          pGain.gain.exponentialRampToValueAtTime(popVol * 0.55, popTime + 0.002);
+          pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + 0.020);
 
           pOsc.connect(pGain);
           pGain.connect(outNode);
-
           pOsc.start(popTime);
-          pOsc.stop(popTime + popDuration + 0.005);
+          pOsc.stop(popTime + 0.022);
 
-          // 2. Vệt xèo giòn của tàn hoa lửa (Micro-sizzle puff)
-          if (c % 2 === 0) {
-            const sBufSize = Math.floor(audioCtx.sampleRate * 0.030);
-            const sBuf = audioCtx.createBuffer(1, sBufSize, audioCtx.sampleRate);
-            const sData = sBuf.getChannelData(0);
-            for (let i = 0; i < sBufSize; i++) {
-              sData[i] = (Math.random() * 2 - 1) * 0.45;
-            }
-            const sSource = audioCtx.createBufferSource();
-            sSource.buffer = sBuf;
-
-            const sFilter = audioCtx.createBiquadFilter();
-            sFilter.type = "bandpass";
-            sFilter.frequency.value = 750 + Math.random() * 450;
-            sFilter.Q.value = 1.3;
-
-            const sGain = audioCtx.createGain();
-            sGain.gain.setValueAtTime(0.0001, popTime);
-            sGain.gain.exponentialRampToValueAtTime(popVol * 0.65, popTime + 0.004);
-            sGain.gain.exponentialRampToValueAtTime(0.0001, popTime + 0.030);
-
-            sSource.connect(sFilter);
-            sFilter.connect(sGain);
-            sGain.connect(outNode);
-
-            sSource.start(popTime);
-            sSource.stop(popTime + 0.035);
+          // 2. Vệt xèo giòn tan tự nhiên của tàn hoa lửa (Crispy Bandpass Sizzle Puff)
+          const sBufSize = Math.floor(audioCtx.sampleRate * popDuration);
+          const sBuf = audioCtx.createBuffer(1, sBufSize, audioCtx.sampleRate);
+          const sData = sBuf.getChannelData(0);
+          for (let i = 0; i < sBufSize; i++) {
+            sData[i] = (Math.random() * 2 - 1) * 0.55;
           }
+          const sSource = audioCtx.createBufferSource();
+          sSource.buffer = sBuf;
+
+          const sFilter = audioCtx.createBiquadFilter();
+          sFilter.type = "bandpass";
+          sFilter.frequency.value = 780 + Math.random() * 520;
+          sFilter.Q.value = 1.8;
+
+          const sGain = audioCtx.createGain();
+          sGain.gain.setValueAtTime(0.0001, popTime);
+          sGain.gain.exponentialRampToValueAtTime(popVol, popTime + 0.003);
+          sGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
+
+          sSource.connect(sFilter);
+          sFilter.connect(sGain);
+          sGain.connect(outNode);
+
+          sSource.start(popTime);
+          sSource.stop(popTime + popDuration + 0.01);
         }
       } catch (e) {}
     }
@@ -4822,11 +4930,11 @@
           } catch (pe) {}
         }
 
-        // TẦNG 1: Cú nổ đại bác siêu trầm rung chuyển không gian (Heavy Sub-Bass Cannon Impact: 78Hz -> 16Hz)
+        // TẦNG 1: Cú nổ đại bác siêu trầm rung chuyển không gian (Heavy Sub-Bass Cannon Impact: 72Hz -> 16Hz)
         const subOsc1 = audioCtx.createOscillator();
         const subGain1 = audioCtx.createGain();
         subOsc1.type = "sine";
-        subOsc1.frequency.setValueAtTime(78, time);
+        subOsc1.frequency.setValueAtTime(72, time);
         subOsc1.frequency.exponentialRampToValueAtTime(16, time + 0.90);
 
         subGain1.gain.setValueAtTime(0.0001, time);
@@ -4842,8 +4950,8 @@
         const punchOsc = audioCtx.createOscillator();
         const punchGain = audioCtx.createGain();
         punchOsc.type = "sine";
-        punchOsc.frequency.setValueAtTime(160, time);
-        punchOsc.frequency.exponentialRampToValueAtTime(32, time + 0.18);
+        punchOsc.frequency.setValueAtTime(140, time);
+        punchOsc.frequency.exponentialRampToValueAtTime(28, time + 0.18);
 
         punchGain.gain.setValueAtTime(0.0001, time);
         punchGain.gain.exponentialRampToValueAtTime(baseVol * 0.90, time + 0.006);
@@ -4854,7 +4962,7 @@
         punchOsc.start(time);
         punchOsc.stop(time + 0.40);
 
-        // TẦNG 3: Vụ nổ phụ kép sau 200ms khi các tầng cánh hoa sen / trái tim bung nở (Secondary Shell Cluster Burst)
+        // TẦNG 3: Vụ nổ phụ kép sau 190ms khi các tầng cánh hoa sen / trái tim bung nở (Secondary Shell Cluster Burst)
         setTimeout(() => {
           if (!isGrandShowActive || !audioCtx || isMuted) return;
           try {
@@ -4862,8 +4970,8 @@
             const secOsc = audioCtx.createOscillator();
             const secGain = audioCtx.createGain();
             secOsc.type = "sine";
-            secOsc.frequency.setValueAtTime(95, t2);
-            secOsc.frequency.exponentialRampToValueAtTime(24, t2 + 0.55);
+            secOsc.frequency.setValueAtTime(88, t2);
+            secOsc.frequency.exponentialRampToValueAtTime(22, t2 + 0.55);
 
             secGain.gain.setValueAtTime(0.0001, t2);
             secGain.gain.exponentialRampToValueAtTime(baseVol * 0.75, t2 + 0.010);
@@ -4874,10 +4982,10 @@
             secOsc.start(t2);
             secOsc.stop(t2 + 0.80);
           } catch (e) {}
-        }, 200);
+        }, 190);
 
-        // TẦNG 4: Tiếng sấm rền dội ngang chân trời dài 2.2 giây (Epic Horizon Rolling Thunder Reverb)
-        const rumbleDuration = 2.2;
+        // TẦNG 4: Tiếng sấm rền dội ngang chân trời dài 2.0 giây (Epic Horizon Rolling Thunder Reverb)
+        const rumbleDuration = 2.0;
         const rumbleBufSize = Math.floor(audioCtx.sampleRate * rumbleDuration);
         const rumbleBuf = audioCtx.createBuffer(1, rumbleBufSize, audioCtx.sampleRate);
         const rumbleData = rumbleBuf.getChannelData(0);
@@ -4894,8 +5002,8 @@
 
         const rumbleFilter = audioCtx.createBiquadFilter();
         rumbleFilter.type = "lowpass";
-        rumbleFilter.frequency.setValueAtTime(750, time);
-        rumbleFilter.frequency.exponentialRampToValueAtTime(65, time + rumbleDuration);
+        rumbleFilter.frequency.setValueAtTime(700, time);
+        rumbleFilter.frequency.exponentialRampToValueAtTime(60, time + rumbleDuration);
         rumbleFilter.Q.value = 0.90;
 
         const rumbleGain = audioCtx.createGain();
@@ -4910,57 +5018,56 @@
         rumbleSource.start(time);
         rumbleSource.stop(time + rumbleDuration);
 
-        // TẦNG 5: Chùm nổ hoa lửa lách tách rào rào dồn dập, giòn tan và kéo dài ngân vang (Dense Extended Pyrotechnic Star Crackle Cluster)
-        const crackleCount = 32;
+        // TẦNG 5: Chùm nổ hoa lửa lách tách rào rào dồn dập, giòn tan và kéo dài ngân vang (Dense Extended High-Definition Star Crackles)
+        const crackleCount = 44;
         for (let c = 0; c < crackleCount; c++) {
-          const delay = 0.08 + Math.random() * 1.65;
+          const delay = 0.08 + Math.random() * 2.30;
           const popTime = time + delay;
-          const popDuration = 0.040 + Math.random() * 0.026;
-          const popVol = baseVol * (0.26 + Math.random() * 0.18) * Math.max(0.35, 1 - (delay / 1.8));
+          const popDuration = 0.042 + Math.random() * 0.028;
+          const popVol = baseVol * (0.42 + Math.random() * 0.24) * Math.max(0.35, 1 - (delay / 2.5));
 
+          // 1. Cú nổ đanh giòn tách
           const pOsc = audioCtx.createOscillator();
           const pGain = audioCtx.createGain();
           pOsc.type = "sine";
-          pOsc.frequency.setValueAtTime(450 + Math.random() * 350, popTime);
-          pOsc.frequency.exponentialRampToValueAtTime(75, popTime + popDuration);
+          pOsc.frequency.setValueAtTime(480 + Math.random() * 350, popTime);
+          pOsc.frequency.exponentialRampToValueAtTime(80, popTime + 0.020);
 
           pGain.gain.setValueAtTime(0.0001, popTime);
-          pGain.gain.exponentialRampToValueAtTime(popVol, popTime + 0.003);
-          pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
+          pGain.gain.exponentialRampToValueAtTime(popVol * 0.60, popTime + 0.002);
+          pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + 0.022);
 
           pOsc.connect(pGain);
           pGain.connect(outNode);
-
           pOsc.start(popTime);
-          pOsc.stop(popTime + popDuration + 0.005);
+          pOsc.stop(popTime + 0.025);
 
-          if (c % 2 === 0) {
-            const sBufSize = Math.floor(audioCtx.sampleRate * 0.035);
-            const sBuf = audioCtx.createBuffer(1, sBufSize, audioCtx.sampleRate);
-            const sData = sBuf.getChannelData(0);
-            for (let i = 0; i < sBufSize; i++) {
-              sData[i] = (Math.random() * 2 - 1) * 0.50;
-            }
-            const sSource = audioCtx.createBufferSource();
-            sSource.buffer = sBuf;
-
-            const sFilter = audioCtx.createBiquadFilter();
-            sFilter.type = "bandpass";
-            sFilter.frequency.value = 800 + Math.random() * 450;
-            sFilter.Q.value = 1.4;
-
-            const sGain = audioCtx.createGain();
-            sGain.gain.setValueAtTime(0.0001, popTime);
-            sGain.gain.exponentialRampToValueAtTime(popVol * 0.70, popTime + 0.004);
-            sGain.gain.exponentialRampToValueAtTime(0.0001, popTime + 0.035);
-
-            sSource.connect(sFilter);
-            sFilter.connect(sGain);
-            sGain.connect(outNode);
-
-            sSource.start(popTime);
-            sSource.stop(popTime + 0.040);
+          // 2. Vệt xèo giòn tàn hoa lửa
+          const sBufSize = Math.floor(audioCtx.sampleRate * popDuration);
+          const sBuf = audioCtx.createBuffer(1, sBufSize, audioCtx.sampleRate);
+          const sData = sBuf.getChannelData(0);
+          for (let i = 0; i < sBufSize; i++) {
+            sData[i] = (Math.random() * 2 - 1) * 0.55;
           }
+          const sSource = audioCtx.createBufferSource();
+          sSource.buffer = sBuf;
+
+          const sFilter = audioCtx.createBiquadFilter();
+          sFilter.type = "bandpass";
+          sFilter.frequency.value = 820 + Math.random() * 550;
+          sFilter.Q.value = 1.8;
+
+          const sGain = audioCtx.createGain();
+          sGain.gain.setValueAtTime(0.0001, popTime);
+          sGain.gain.exponentialRampToValueAtTime(popVol, popTime + 0.003);
+          sGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
+
+          sSource.connect(sFilter);
+          sFilter.connect(sGain);
+          sGain.connect(outNode);
+
+          sSource.start(popTime);
+          sSource.stop(popTime + popDuration + 0.01);
         }
       } catch (e) {}
     }

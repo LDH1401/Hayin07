@@ -2506,8 +2506,8 @@
       <!-- Action Confirm Button -->
       <div class="agree-modal-actions">
         <button class="agree-confirm-btn" id="closeAgreeModalBtn">
-          <span class="btn-heart-icon">💖</span>
-          <span class="btn-text">Yêu Thương Mãi Mãi ✨</span>
+          <span class="btn-heart-icon">🎆</span>
+          <span class="btn-text">Quay lại để xem pháo hoa nào em yêu ✨</span>
         </button>
       </div>
     </div>
@@ -2655,6 +2655,7 @@
     let shootingStarDust = [];
     let celebrationParticles = [];
     let cosmicShockwaves = [];
+    let ascendingRockets = [];
     let autoHeartInterval = null;
 
     // Particle Text Engine
@@ -2960,6 +2961,154 @@
       }
     }
 
+    // 1. Pháo hoa Vòng Trái Tim Nở Rộ (Parametric Heart Ring)
+    function createHeartRingBurst(originX = W / 2, originY = H * 0.38) {
+      const count = 72;
+      const styles = getComputedStyle(document.documentElement);
+      const pri = styles.getPropertyValue("--primary").trim() || "#f43f5e";
+      const priLight = styles.getPropertyValue("--primary-light").trim() || "#fecdd3";
+      const colors = ["#ffffff", priLight, pri, "#ff758f", "#ffd166"];
+
+      for (let i = 0; i < count; i++) {
+        const t = (Math.PI * 2 * i) / count;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        const speed = Math.random() * 0.22 + 0.36;
+
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: hx * speed,
+          vy: hy * speed,
+          gravity: 0.035,
+          alpha: 1,
+          decay: 0.0065 + Math.random() * 0.005,
+          size: Math.random() * 3.6 + 2.2,
+          color: colors[i % colors.length],
+          shape: "heart"
+        });
+
+        if (i % 2 === 0) {
+          celebrationParticles.push({
+            x: originX,
+            y: originY,
+            vx: hx * speed * 0.52,
+            vy: hy * speed * 0.52,
+            gravity: 0.025,
+            alpha: 1,
+            decay: 0.008 + Math.random() * 0.006,
+            size: Math.random() * 2.5 + 1.4,
+            color: "#ffffff",
+            shape: "spark"
+          });
+        }
+      }
+    }
+
+    // 2. Pháo hoa Liễu Rủ Vàng Kim Thác Nước (Golden Weeping Willow)
+    function createWillowBurst(originX = W / 2, originY = H * 0.35) {
+      const count = 95;
+      const colors = ["#ffffff", "#fef08a", "#fde047", "#eab308", "#ca8a04", "#ffd166", "#fffbeb"];
+
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 6.5 + 2.2;
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.2,
+          gravity: 0.082,
+          alpha: 1,
+          decay: 0.0045 + Math.random() * 0.004,
+          size: Math.random() * 3.2 + 1.6,
+          color: colors[(Math.random() * colors.length) | 0],
+          shape: "spark"
+        });
+      }
+    }
+
+    // 3. Pháo hoa Xoắn Ốc Ngân Hà (Galactic Spiral Whirlwind)
+    function createSpiralGalaxyBurst(originX = W / 2, originY = H * 0.36) {
+      const arms = 4;
+      const perArm = 26;
+      const styles = getComputedStyle(document.documentElement);
+      const pri = styles.getPropertyValue("--primary").trim() || "#38bdf8";
+      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
+      const colors = ["#ffffff", priLight, pri, "#c084fc", "#e879f9", "#38bdf8", "#ffd166"];
+
+      for (let a = 0; a < arms; a++) {
+        const baseAngle = (Math.PI * 2 * a) / arms;
+        for (let i = 0; i < perArm; i++) {
+          const armOffset = (i / perArm) * 1.65;
+          const angle = baseAngle + armOffset;
+          const speed = (i / perArm) * 7.5 + 1.8;
+          celebrationParticles.push({
+            x: originX,
+            y: originY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 0.4,
+            gravity: 0.045,
+            alpha: 1,
+            decay: 0.006 + Math.random() * 0.007,
+            size: Math.random() * 3.8 + 1.8,
+            color: colors[(a * perArm + i) % colors.length],
+            shape: Math.random() < 0.55 ? "star" : "spark"
+          });
+        }
+      }
+    }
+
+    // 4. Pháo hoa Vòng Tròn Hào Quang Sao (Saturn Ring Halo)
+    function createRingHaloBurst(originX = W / 2, originY = H * 0.38) {
+      const count = 64;
+      const styles = getComputedStyle(document.documentElement);
+      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
+      const colors = ["#ffffff", "#ffd166", priLight, "#ffffff"];
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count;
+        const speed = 7.0 + Math.random() * 0.8;
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed * 0.65,
+          gravity: 0.03,
+          alpha: 1,
+          decay: 0.0065 + Math.random() * 0.005,
+          size: Math.random() * 3.4 + 2,
+          color: colors[i % colors.length],
+          shape: "star"
+        });
+      }
+      createSupernovaStarBurst(originX, originY);
+    }
+
+    // 5. Tên lửa vút bay từ chân trời rồi phát nổ
+    function launchAscendingRocket(targetX, targetY, burstType = "random") {
+      const startX = targetX + (Math.random() - 0.5) * 80;
+      const startY = H + 10;
+      const duration = 38 + Math.floor(Math.random() * 10);
+      const vx = (targetX - startX) / duration;
+      const vy = (targetY - startY) / duration;
+
+      const styles = getComputedStyle(document.documentElement);
+      const priLight = styles.getPropertyValue("--primary-light").trim() || "#ffd166";
+
+      ascendingRockets.push({
+        x: startX,
+        y: startY,
+        vx: vx,
+        vy: vy,
+        targetX: targetX,
+        targetY: targetY,
+        life: duration,
+        color: priLight,
+        burstType: burstType
+      });
+    }
+
     function createSentenceSparkleShower(originX = W / 2, originY = H * 0.47) {
       const count = 65;
       const styles = getComputedStyle(document.documentElement);
@@ -2984,19 +3133,19 @@
     }
 
     function triggerMultiCelebration() {
-      createCelebrationBurst(W / 2, H * 0.45, 120);
-      setTimeout(() => createCelebrationBurst(W * 0.28, H * 0.38, 100), 200);
-      setTimeout(() => createCelebrationBurst(W * 0.72, H * 0.38, 100), 400);
-      setTimeout(() => createSupernovaStarBurst(W / 2, H * 0.46), 650);
+      createHeartRingBurst(W / 2, H * 0.42);
+      setTimeout(() => createWillowBurst(W * 0.28, H * 0.38), 200);
+      setTimeout(() => createSpiralGalaxyBurst(W * 0.72, H * 0.38), 400);
+      setTimeout(() => createRingHaloBurst(W / 2, H * 0.44), 650);
       setTimeout(() => createCelebrationBurst(W * 0.38, H * 0.48, 90), 900);
       setTimeout(() => createCelebrationBurst(W * 0.62, H * 0.48, 90), 900);
     }
 
     function triggerClimaxCelebration() {
       // Chuỗi pháo hoa bùng nổ hoành tráng khi xuất hiện câu tỏ tình
-      createSupernovaStarBurst(W / 2, H * 0.42);
-      createCelebrationBurst(W * 0.24, H * 0.38, 120);
-      createCelebrationBurst(W * 0.76, H * 0.38, 120);
+      createHeartRingBurst(W / 2, H * 0.40);
+      createSpiralGalaxyBurst(W * 0.22, H * 0.36);
+      createWillowBurst(W * 0.78, H * 0.36);
       createSentenceSparkleShower(W / 2, H * 0.45);
 
       setTimeout(() => {
@@ -3005,41 +3154,152 @@
       }, 220);
 
       setTimeout(() => {
-        createSupernovaStarBurst(W / 2, H * 0.46);
-        createCelebrationBurst(W * 0.16, H * 0.42, 105);
-        createCelebrationBurst(W * 0.84, H * 0.42, 105);
+        createRingHaloBurst(W / 2, H * 0.44);
+        createHeartRingBurst(W * 0.18, H * 0.40);
+        createHeartRingBurst(W * 0.82, H * 0.40);
       }, 500);
 
       setTimeout(() => {
-        createCelebrationBurst(W * 0.30, H * 0.46, 100);
-        createCelebrationBurst(W * 0.70, H * 0.46, 100);
-        createCelebrationBurst(W / 2, H * 0.32, 120);
+        createWillowBurst(W * 0.30, H * 0.42);
+        createWillowBurst(W * 0.70, H * 0.42);
+        createSupernovaStarBurst(W / 2, H * 0.32);
       }, 820);
 
       setTimeout(() => {
-        createSupernovaStarBurst(W * 0.5, H * 0.40);
-        createCelebrationBurst(W * 0.40, H * 0.50, 95);
-        createCelebrationBurst(W * 0.60, H * 0.50, 95);
+        launchAscendingRocket(W * 0.25, H * 0.32, "heart");
+        launchAscendingRocket(W * 0.50, H * 0.26, "spiral");
+        launchAscendingRocket(W * 0.75, H * 0.32, "willow");
       }, 1150);
     }
 
     function startAutoFireworks() {
       if (autoHeartInterval) return;
       autoHeartInterval = setInterval(() => {
+        const types = ["heart", "willow", "spiral", "ring", "celebration"];
+        const chosen = types[(Math.random() * types.length) | 0];
         const rx = W * 0.16 + Math.random() * (W * 0.68);
-        const ry = H * 0.24 + Math.random() * (H * 0.34);
-        createCelebrationBurst(rx, ry, 95);
+        const ry = H * 0.22 + Math.random() * (H * 0.32);
+
+        if (chosen === "heart") createHeartRingBurst(rx, ry);
+        else if (chosen === "willow") createWillowBurst(rx, ry);
+        else if (chosen === "spiral") createSpiralGalaxyBurst(rx, ry);
+        else if (chosen === "ring") createRingHaloBurst(rx, ry);
+        else createCelebrationBurst(rx, ry, 100);
+
         setTimeout(() => {
           const rx2 = W * 0.16 + Math.random() * (W * 0.68);
-          const ry2 = H * 0.24 + Math.random() * (H * 0.34);
+          const ry2 = H * 0.22 + Math.random() * (H * 0.32);
           createCelebrationBurst(rx2, ry2, 85);
         }, 280);
-        if (Math.random() < 0.55) {
+
+        if (Math.random() < 0.5) {
           setTimeout(() => {
-            createSupernovaStarBurst(W * 0.2 + Math.random() * (W * 0.6), H * 0.25 + Math.random() * (H * 0.3));
-          }, 560);
+            launchAscendingRocket(W * 0.2 + Math.random() * (W * 0.6), H * 0.25 + Math.random() * (H * 0.2), "random");
+          }, 600);
         }
-      }, 2800);
+      }, 2600);
+    }
+
+    function clearTextParticles() {
+      // Biến các hạt chữ thành bụi sao lấp lánh tan biến vào không gian
+      if (textParticles && textParticles.length) {
+        for (let i = 0; i < textParticles.length; i += 2) {
+          const p = textParticles[i];
+          if (!p) continue;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 5 + 1.5;
+          celebrationParticles.push({
+            x: p.fx,
+            y: p.fy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - (Math.random() * 2.5 + 1),
+            gravity: 0.03,
+            alpha: 1,
+            decay: 0.009 + Math.random() * 0.012,
+            size: Math.random() * 3.5 + 1.2,
+            color: themeInk.priLight || "#ffffff",
+            shape: Math.random() < 0.5 ? "star" : (Math.random() < 0.4 ? "heart" : "circle")
+          });
+        }
+      }
+      textParticles = [];
+      textStart = 0;
+      curPhrase = "";
+      isTextLast = false;
+      textCtx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+      glowCtx.clearRect(0, 0, glowCanvas.width, glowCanvas.height);
+      mergedCtx.clearRect(0, 0, mergedCanvas.width, mergedCanvas.height);
+
+      const srEl = $("srMessageLive");
+      if (srEl) srEl.textContent = "";
+      const msgContent = $("messageTextContent");
+      if (msgContent) msgContent.textContent = "";
+      const ambient = $("ambientNebula");
+      if (ambient) ambient.classList.remove("phrase-bloom");
+    }
+
+    function startGrandFireworksShow() {
+      // 1. Xóa dòng chữ câu hỏi cũ thành bụi sao tan biến
+      clearTextParticles();
+
+      // 2. Kích hoạt đợt khai màn đa kiểu pháo hoa rực rỡ
+      createHeartRingBurst(W / 2, H * 0.38);
+      createSpiralGalaxyBurst(W * 0.20, H * 0.35);
+      createWillowBurst(W * 0.80, H * 0.35);
+      playCelebrationFanfare();
+      triggerHaptic([60, 100, 150, 200]);
+
+      setTimeout(() => {
+        createRingHaloBurst(W * 0.35, H * 0.30);
+        createCelebrationBurst(W * 0.65, H * 0.30, 120);
+      }, 400);
+
+      setTimeout(() => {
+        launchAscendingRocket(W * 0.20, H * 0.30, "heart");
+        launchAscendingRocket(W * 0.50, H * 0.25, "spiral");
+        launchAscendingRocket(W * 0.80, H * 0.30, "willow");
+      }, 850);
+
+      // 3. Đại tiệc pháo hoa liên hoàn thay đổi luân phiên các kiểu pháo hoa độc đáo
+      if (autoHeartInterval) {
+        clearInterval(autoHeartInterval);
+        autoHeartInterval = null;
+      }
+
+      const showStyles = ["heart", "willow", "spiral", "ring", "rocket_barrage", "supernova", "celebration"];
+      let showIndex = 0;
+
+      autoHeartInterval = setInterval(() => {
+        const style = showStyles[showIndex % showStyles.length];
+        showIndex++;
+
+        const rx = W * 0.16 + Math.random() * (W * 0.68);
+        const ry = H * 0.18 + Math.random() * (H * 0.32);
+
+        if (style === "rocket_barrage") {
+          launchAscendingRocket(W * 0.22 + Math.random() * 0.1, H * 0.28 + Math.random() * 0.1, "heart");
+          setTimeout(() => launchAscendingRocket(W * 0.50 + (Math.random() - 0.5) * 0.1, H * 0.24, "spiral"), 250);
+          setTimeout(() => launchAscendingRocket(W * 0.78 - Math.random() * 0.1, H * 0.28 + Math.random() * 0.1, "willow"), 500);
+        } else if (style === "heart") {
+          createHeartRingBurst(rx, ry);
+          setTimeout(() => createCelebrationBurst(W * 0.2 + Math.random() * (W * 0.6), H * 0.32, 95), 350);
+        } else if (style === "willow") {
+          createWillowBurst(rx, ry);
+          setTimeout(() => createSupernovaStarBurst(W * 0.3 + Math.random() * (W * 0.4), H * 0.26), 400);
+        } else if (style === "spiral") {
+          createSpiralGalaxyBurst(rx, ry);
+          setTimeout(() => createSentenceSparkleShower(rx, ry), 300);
+        } else if (style === "ring") {
+          createRingHaloBurst(rx, ry);
+          setTimeout(() => createCelebrationBurst(W * 0.2 + Math.random() * (W * 0.6), H * 0.36, 100), 380);
+        } else if (style === "supernova") {
+          createSupernovaStarBurst(rx, ry);
+          setTimeout(() => createHeartRingBurst(W * 0.25 + Math.random() * (W * 0.5), H * 0.34), 450);
+        } else {
+          createCelebrationBurst(rx, ry, 130);
+          setTimeout(() => createWillowBurst(W * 0.2 + Math.random() * (W * 0.6), H * 0.30), 400);
+        }
+      }, 1800);
     }
 
     function resize() {
@@ -3504,6 +3764,52 @@
         ctx.restore();
       }
 
+      // 3.6 Draw & Update Ascending Rockets
+      for (let i = ascendingRockets.length - 1; i >= 0; i--) {
+        const rk = ascendingRockets[i];
+        rk.x += rk.vx;
+        rk.y += rk.vy;
+        rk.life--;
+
+        // Smoke and glowing spark trail behind rocket
+        celebrationParticles.push({
+          x: rk.x + (Math.random() - 0.5) * 4,
+          y: rk.y + (Math.random() - 0.5) * 4,
+          vx: -rk.vx * 0.12 + (Math.random() - 0.5) * 1.2,
+          vy: -rk.vy * 0.12 + Math.random() * 1.6,
+          gravity: 0.02,
+          alpha: 0.95,
+          decay: 0.038,
+          size: Math.random() * 3.2 + 1.6,
+          color: rk.color,
+          shape: "spark"
+        });
+
+        // Glowing rocket head
+        ctx.save();
+        ctx.fillStyle = "#ffffff";
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = rk.color;
+        ctx.beginPath();
+        ctx.arc(rk.x, rk.y, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        if (rk.life <= 0 || rk.y <= rk.targetY) {
+          const tx = rk.targetX;
+          const ty = rk.targetY;
+          const burstStyle = rk.burstType;
+          ascendingRockets.splice(i, 1);
+
+          if (burstStyle === "heart") createHeartRingBurst(tx, ty);
+          else if (burstStyle === "willow") createWillowBurst(tx, ty);
+          else if (burstStyle === "spiral") createSpiralGalaxyBurst(tx, ty);
+          else if (burstStyle === "ring") createRingHaloBurst(tx, ty);
+          else if (burstStyle === "supernova") createSupernovaStarBurst(tx, ty);
+          else createCelebrationBurst(tx, ty, 120);
+        }
+      }
+
       // 4. Draw Celebration Fireworks Particles
       for (let i = celebrationParticles.length - 1; i >= 0; i--) {
         const cp = celebrationParticles[i];
@@ -3517,7 +3823,8 @@
           continue;
         }
 
-        ctx.globalAlpha = cp.alpha;
+        const currentAlpha = cp.flicker && Math.random() < 0.3 ? cp.alpha * 0.4 : cp.alpha;
+        ctx.globalAlpha = Math.max(0, currentAlpha);
         ctx.fillStyle = cp.color;
         ctx.beginPath();
         if (cp.shape === "heart") {
@@ -3526,6 +3833,7 @@
           ctx.arc(cp.x + s / 2, cp.y, s / 2, Math.PI, 0, false);
           ctx.lineTo(cp.x, cp.y + s);
           ctx.closePath();
+          ctx.fill();
         } else if (cp.shape === "star") {
           const s = cp.size * 1.4;
           ctx.moveTo(cp.x, cp.y - s);
@@ -3537,10 +3845,20 @@
           ctx.lineTo(cp.x - s, cp.y);
           ctx.lineTo(cp.x - s * 0.28, cp.y - s * 0.28);
           ctx.closePath();
+          ctx.fill();
+        } else if (cp.shape === "spark") {
+          const s = cp.size * 1.35;
+          ctx.moveTo(cp.x - s, cp.y);
+          ctx.lineTo(cp.x + s, cp.y);
+          ctx.moveTo(cp.x, cp.y - s);
+          ctx.lineTo(cp.x, cp.y + s);
+          ctx.strokeStyle = cp.color;
+          ctx.lineWidth = 1.3;
+          ctx.stroke();
         } else {
           ctx.arc(cp.x, cp.y, cp.size, 0, Math.PI * 2);
+          ctx.fill();
         }
-        ctx.fill();
       }
       ctx.globalAlpha = 1;
 
@@ -3880,6 +4198,8 @@
       const ambient = $("ambientNebula");
       if (ambient) ambient.classList.remove("phrase-bloom");
       cosmicShockwaves = [];
+      celebrationParticles = [];
+      ascendingRockets = [];
 
       textStart = 0;
       curPhrase = "";
@@ -4385,6 +4705,7 @@
       if (modalEl) {
         modalEl.classList.remove("open");
         modalEl.setAttribute("aria-hidden", "true");
+        startGrandFireworksShow();
       }
     }
 

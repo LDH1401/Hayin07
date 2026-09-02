@@ -2658,6 +2658,7 @@
     let autoHeartInterval = null;
     let autoRocketInterval = null;
     let megaHeartInterval = null;
+    let megaBlossomInterval = null;
     let isGrandShowActive = false;
 
     // Particle Text Engine
@@ -2913,13 +2914,31 @@
       }
     }
 
+    // ==========================================
+    // VIBRANT MULTI-COLOR PALETTES & FIREWORKS
+    // ==========================================
+    const VIBRANT_FIREWORK_PALETTES = [
+      // 1. Cầu vồng rực rỡ lăng kính (Prismatic Rainbow)
+      ["#ff0055", "#ff5400", "#ffd700", "#00f5d4", "#00bbf9", "#7209b7", "#f72585", "#ffffff"],
+      // 2. Hoàng hôn Rose Gold & Champagne
+      ["#ff0a54", "#ff477e", "#ff70a6", "#ffd166", "#fef08a", "#fff0f3", "#ffffff"],
+      // 3. Cực quang phương Bắc Emerald & Cyan (Northern Aurora)
+      ["#00f5d4", "#10b981", "#34d399", "#38bdf8", "#818cf8", "#fef08a", "#ffffff"],
+      // 4. Ngân hà Amethyst & Cyber Violet (Cosmic Lavender)
+      ["#c084fc", "#e879f9", "#f43f5e", "#38bdf8", "#a855f7", "#ffd166", "#ffffff"],
+      // 5. San hô nhiệt đới & Ngọc lam (Coral Sunrise & Turquoise)
+      ["#ff5d8f", "#ff85a1", "#06b6d4", "#22d3ee", "#ffd700", "#ff9e00", "#ffffff"],
+      // 6. Băng tuyết dạ quang & Lam ngọc (Electric Ice & Neon Cyan)
+      ["#e0e7ff", "#38bdf8", "#00f5d4", "#67e8f9", "#93c5fd", "#ffffff"]
+    ];
+
+    function getRandomVibrantPalette() {
+      return VIBRANT_FIREWORK_PALETTES[(Math.random() * VIBRANT_FIREWORK_PALETTES.length) | 0];
+    }
+
     function createCelebrationBurst(originX = W / 2, originY = H * 0.46, customCount = 110) {
       const count = customCount;
-      const styles = getComputedStyle(document.documentElement);
-      const pri = styles.getPropertyValue("--primary").trim() || "#38bdf8";
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
-      const accent = styles.getPropertyValue("--accent").trim() || "#818cf8";
-      const colors = ["#ffffff", pri, priLight, "#ffd166", "#ff70a6", accent, "#fffbeb"];
+      const palette = getRandomVibrantPalette();
 
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -2933,18 +2952,16 @@
           alpha: 1,
           decay: 0.006 + Math.random() * 0.008,
           size: Math.random() * 4.2 + 2,
-          color: colors[(Math.random() * colors.length) | 0],
-          shape: Math.random() < 0.5 ? "heart" : (Math.random() < 0.4 ? "star" : "circle")
+          color: palette[i % palette.length],
+          shape: Math.random() < 0.45 ? "heart" : (Math.random() < 0.4 ? "star" : "circle"),
+          flicker: true
         });
       }
     }
 
     function createSupernovaStarBurst(originX = W / 2, originY = H * 0.47) {
-      const count = 140;
-      const styles = getComputedStyle(document.documentElement);
-      const pri = styles.getPropertyValue("--primary").trim() || "#38bdf8";
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
-      const colors = ["#ffffff", "#fffbeb", "#fef08a", priLight, pri, "#ffd166"];
+      const count = 150;
+      const palette = getRandomVibrantPalette();
 
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -2958,8 +2975,9 @@
           alpha: 1,
           decay: 0.007 + Math.random() * 0.010,
           size: Math.random() * 4.8 + 1.8,
-          color: colors[(Math.random() * colors.length) | 0],
-          shape: Math.random() < 0.45 ? "heart" : (Math.random() < 0.5 ? "star" : "circle")
+          color: palette[i % palette.length],
+          shape: Math.random() < 0.5 ? "star" : (Math.random() < 0.35 ? "heart" : "circle"),
+          flicker: true
         });
       }
     }
@@ -2972,92 +2990,90 @@
       const coreCount = 60;
       const wingCount = 45;
 
-      const styles = getComputedStyle(document.documentElement);
-      const pri = styles.getPropertyValue("--primary").trim() || "#f43f5e";
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#fecdd3";
-      const gold = "#ffd700";
-      const goldLight = "#fef08a";
-      const rose = "#ff0054";
-      const outerColors = ["#ffffff", gold, pri, "#ff4d6d", "#ff758f", goldLight, "#fff0f3", "#ff85a1", priLight];
-
+      const rainbowColors = [
+        "#ff0055", "#ff5400", "#ffd700", "#00f5d4", "#00bbf9",
+        "#a855f7", "#ff70a6", "#fef08a", "#fff0f3", "#ffffff"
+      ];
       const scale = Math.min(Math.max(W / 700, 0.85), 1.45);
 
-      // 1. Lớp 1: Vành trái tim khổng lồ tỏa sáng huy hoàng bao trùm bầu trời
+      // 1. Lớp 1: Vành trái tim khổng lồ đa sắc tỏa sáng huy hoàng bao trùm bầu trời (Tan biến chậm, đọng lại lâu)
       for (let i = 0; i < outerCount; i++) {
         const t = (Math.PI * 2 * i) / outerCount;
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        const speed = (Math.random() * 0.22 + 0.88) * scale; // Cực to, bung rộng rực rỡ
+        const speed = (Math.random() * 0.22 + 0.88) * scale;
 
         celebrationParticles.push({
           x: originX,
           y: originY,
           vx: hx * speed,
           vy: hy * speed,
-          gravity: 0.022,
+          gravity: 0.012,
           alpha: 1,
-          decay: 0.0036 + Math.random() * 0.0028, // Tồn tại rất lâu, tỏa sáng bền bỉ
+          decay: 0.0020 + Math.random() * 0.0016, // Đọng lại lâu dài, lấp lánh bền bỉ
           size: Math.random() * 5.2 + 3.2,
-          color: outerColors[i % outerColors.length],
+          color: rainbowColors[i % rainbowColors.length],
           shape: "heart",
           flicker: true
         });
 
-        // 2. Lớp bụi sao vàng kim thác nước rủ xuống từ từng cánh tim (Golden Stardust Waterfall)
+        // 2. Thác bụi sao đa sắc rủ xuống từ từng cánh tim
         celebrationParticles.push({
           x: originX,
           y: originY,
           vx: hx * speed * (0.86 + Math.random() * 0.12),
           vy: hy * speed * (0.86 + Math.random() * 0.12),
-          gravity: 0.018,
+          gravity: 0.010,
           alpha: 1,
-          decay: 0.0045 + Math.random() * 0.0035,
+          decay: 0.0024 + Math.random() * 0.0018,
           size: Math.random() * 3.6 + 2.0,
-          color: i % 2 === 0 ? gold : "#ffffff",
+          color: i % 2 === 0 ? "#ffd700" : (i % 3 === 0 ? "#00f5d4" : "#ffffff"),
           shape: "spark",
           flicker: true
         });
       }
 
-      // 3. Lớp trái tim hào quang lộng lẫy tầng giữa (Middle Ruby Aura Shell)
+      // 3. Lớp trái tim hào quang lộng lẫy tầng giữa (Middle Ruby-Cyan Aura Shell)
       for (let i = 0; i < midCount; i++) {
         const t = (Math.PI * 2 * i) / midCount;
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
         const speed = (Math.random() * 0.16 + 0.56) * scale;
+        const midPalette = ["#ff007f", "#38bdf8", "#ff758f", "#c084fc", "#ffd166", "#ffffff"];
 
         celebrationParticles.push({
           x: originX,
           y: originY,
           vx: hx * speed,
           vy: hy * speed,
-          gravity: 0.020,
+          gravity: 0.011,
           alpha: 1,
-          decay: 0.0042 + Math.random() * 0.0032,
+          decay: 0.0022 + Math.random() * 0.0018,
           size: Math.random() * 4.4 + 2.4,
-          color: i % 2 === 0 ? rose : priLight,
+          color: midPalette[i % midPalette.length],
           shape: "heart",
           flicker: true
         });
       }
 
-      // 4. Lớp trái tim pha lê bên trong (Inner Radiant Crystal Heart)
+      // 4. Lớp trái tim pha lê bên trong (Inner Radiant Crystal Stars)
       for (let i = 0; i < innerCount; i++) {
         const t = (Math.PI * 2 * i) / innerCount;
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
         const speed = (Math.random() * 0.12 + 0.32) * scale;
+        const innerColors = ["#ffffff", "#ffd700", "#00f5d4", "#ff85a1", "#e0e7ff"];
 
         celebrationParticles.push({
           x: originX,
           y: originY,
           vx: hx * speed,
           vy: hy * speed,
-          gravity: 0.016,
+          gravity: 0.009,
           alpha: 1,
-          decay: 0.0048 + Math.random() * 0.0030,
+          decay: 0.0025 + Math.random() * 0.0018,
           size: Math.random() * 4.0 + 2.2,
-          color: i % 2 === 0 ? "#ffffff" : goldLight,
+          color: innerColors[i % innerColors.length],
           shape: "star",
           flicker: true
         });
@@ -3067,16 +3083,17 @@
       for (let i = 0; i < coreCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = (Math.random() * 6.2 + 2.0) * scale;
+        const coreColors = ["#ffffff", "#ffd700", "#00f5d4", "#ff007f", "#38bdf8"];
         celebrationParticles.push({
           x: originX,
           y: originY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed - 1.2,
-          gravity: 0.015,
+          gravity: 0.008,
           alpha: 1,
-          decay: 0.0055 + Math.random() * 0.0045,
+          decay: 0.0028 + Math.random() * 0.0020,
           size: Math.random() * 4.8 + 2.4,
-          color: i % 2 === 0 ? "#ffffff" : gold,
+          color: coreColors[i % coreColors.length],
           shape: Math.random() < 0.5 ? "star" : "spark"
         });
       }
@@ -3090,16 +3107,16 @@
           y: originY - (Math.random() * 40),
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed - 2.0,
-          gravity: -0.012,
+          gravity: -0.007,
           alpha: 1,
-          decay: 0.0048 + Math.random() * 0.0038,
+          decay: 0.0024 + Math.random() * 0.0018,
           size: Math.random() * 3.8 + 1.8,
-          color: "#ffffff",
+          color: i % 2 === 0 ? "#ffffff" : "#00f5d4",
           shape: "star"
         });
       }
 
-      // 7. Sóng hào quang kép cực đại (Dual Grand Cosmic Shockwaves)
+      // 7. Sóng hào quang kép cực đại
       cosmicShockwaves.push({
         x: originX,
         y: originY,
@@ -3107,7 +3124,7 @@
         maxRadius: Math.min(W * 0.75, 580),
         speed: 7.5,
         alpha: 1,
-        color: priLight,
+        color: "#ff007f",
         lineWidth: 4.5
       });
 
@@ -3119,7 +3136,7 @@
           maxRadius: Math.min(W * 0.52, 420),
           speed: 6.0,
           alpha: 0.85,
-          color: gold,
+          color: "#00f5d4",
           lineWidth: 3.0
         });
       }, 140);
@@ -3133,23 +3150,186 @@
         }, 1200);
       }
 
-      playCelebrationFanfare();
       triggerHaptic([80, 120, 170, 240]);
     }
 
-    // 1. Pháo hoa Vòng Trái Tim Nở Rộ (Parametric Heart Ring)
+    // 0.2. SIÊU PHÁO HOA NGHỆ THUẬT HOA SEN THIÊN HÀ VÔ CỰC (Cosmic Infinity Lotus Blossom - Độc Lạ, Khổng Lồ, Lộng Lẫy)
+    function createCosmicInfinityBlossom(originX = W / 2, originY = H * 0.35) {
+      const petals = 8;
+      const pointsPerPetal = 24;
+      const totalPetalPoints = petals * pointsPerPetal;
+      const scale = Math.min(Math.max(W / 700, 0.85), 1.45);
+
+      const celestialPalette = [
+        "#00f5d4", "#7209b7", "#f72585", "#ffd700", "#4cc9f0",
+        "#ff0055", "#b5179e", "#38bdf8", "#ffffff"
+      ];
+
+      // 1. Tầng 1: 8 Cánh hoa sen thiên hà vươn rộng xoay đa giác cực đại (Outer 8-Petal Galactic Blossom)
+      for (let i = 0; i < totalPetalPoints; i++) {
+        const theta = (Math.PI * 2 * i) / totalPetalPoints;
+        const rPetal = (1.0 + 0.65 * Math.cos(petals * theta) + 0.25 * Math.cos(4 * theta)) * 14.5 * scale;
+        const vx = Math.cos(theta) * rPetal * (0.85 + Math.random() * 0.15);
+        const vy = Math.sin(theta) * rPetal * (0.85 + Math.random() * 0.15);
+
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: vx,
+          vy: vy,
+          gravity: 0.010,
+          alpha: 1,
+          decay: 0.0022 + Math.random() * 0.0016, // Đọng lại cực lâu (~6-7.5s)
+          size: Math.random() * 5.0 + 3.0,
+          color: celestialPalette[(Math.floor(i / pointsPerPetal) + i) % celestialPalette.length],
+          shape: i % 2 === 0 ? "star" : "heart",
+          flicker: true
+        });
+
+        // Vệt bụi sao vàng rực bám theo từng gân cánh hoa
+        if (i % 2 === 0) {
+          celebrationParticles.push({
+            x: originX,
+            y: originY,
+            vx: vx * 0.88,
+            vy: vy * 0.88,
+            gravity: 0.008,
+            alpha: 1,
+            decay: 0.0026 + Math.random() * 0.0018,
+            size: Math.random() * 3.5 + 1.8,
+            color: "#ffd700",
+            shape: "spark",
+            flicker: true
+          });
+        }
+      }
+
+      // 2. Tầng 2: Vòng xoáy hào quang vô cực tầng giữa (Mid Celestial Infinity Ring - 100 hạt)
+      const midCount = 100;
+      for (let i = 0; i < midCount; i++) {
+        const theta = (Math.PI * 2 * i) / midCount;
+        const speed = (Math.random() * 2.5 + 5.5) * scale;
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(theta) * speed,
+          vy: Math.sin(theta) * speed,
+          gravity: 0.009,
+          alpha: 1,
+          decay: 0.0024 + Math.random() * 0.0018,
+          size: Math.random() * 4.2 + 2.2,
+          color: i % 2 === 0 ? "#00f5d4" : "#ff007f",
+          shape: "star",
+          flicker: true
+        });
+      }
+
+      // 3. Tầng 3: 8 Vụ nổ tinh tú vệ tinh tại 8 đỉnh cánh hoa (8 Orbiting Satellite Starbursts)
+      for (let p = 0; p < petals; p++) {
+        const pAngle = (Math.PI * 2 * p) / petals;
+        const tipDist = 24.0 * scale;
+        const tipVx = Math.cos(pAngle) * tipDist;
+        const tipVy = Math.sin(pAngle) * tipDist;
+
+        setTimeout(() => {
+          for (let s = 0; s < 14; s++) {
+            const sAngle = Math.random() * Math.PI * 2;
+            const sSpeed = Math.random() * 3.5 + 1.5;
+            celebrationParticles.push({
+              x: originX + tipVx * 18,
+              y: originY + tipVy * 18,
+              vx: Math.cos(sAngle) * sSpeed,
+              vy: Math.sin(sAngle) * sSpeed,
+              gravity: 0.012,
+              alpha: 1,
+              decay: 0.0035 + Math.random() * 0.0025,
+              size: Math.random() * 3.8 + 2.0,
+              color: p % 2 === 0 ? "#ffd700" : "#00f5d4",
+              shape: "star",
+              flicker: true
+            });
+          }
+        }, 320);
+      }
+
+      // 4. Tầng 4: Vụ nổ siêu tân tinh kim cương tại tâm nhụy hoa (Diamond Stamen Core - 70 hạt)
+      for (let i = 0; i < 70; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (Math.random() * 7.5 + 2.5) * scale;
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.0,
+          gravity: 0.008,
+          alpha: 1,
+          decay: 0.0028 + Math.random() * 0.0020,
+          size: Math.random() * 5.0 + 2.5,
+          color: i % 2 === 0 ? "#ffffff" : "#ffd700",
+          shape: Math.random() < 0.5 ? "star" : "spark"
+        });
+      }
+
+      // 5. Ba đợt sóng xung kích hào quang tam sắc (Triple Chromatic Shockwaves)
+      cosmicShockwaves.push({
+        x: originX,
+        y: originY,
+        radius: 14,
+        maxRadius: Math.min(W * 0.80, 620),
+        speed: 8.0,
+        alpha: 1,
+        color: "#00f5d4",
+        lineWidth: 5.0
+      });
+
+      setTimeout(() => {
+        cosmicShockwaves.push({
+          x: originX,
+          y: originY,
+          radius: 10,
+          maxRadius: Math.min(W * 0.60, 480),
+          speed: 6.5,
+          alpha: 0.9,
+          color: "#f72585",
+          lineWidth: 3.5
+        });
+      }, 120);
+
+      setTimeout(() => {
+        cosmicShockwaves.push({
+          x: originX,
+          y: originY,
+          radius: 6,
+          maxRadius: Math.min(W * 0.40, 320),
+          speed: 5.0,
+          alpha: 0.8,
+          color: "#ffd700",
+          lineWidth: 2.5
+        });
+      }, 240);
+
+      // Hiệu ứng ánh sáng nền bừng sáng
+      const ambient = $("ambientNebula");
+      if (ambient) {
+        ambient.classList.add("phrase-bloom");
+        setTimeout(() => {
+          if (ambient) ambient.classList.remove("phrase-bloom");
+        }, 1400);
+      }
+
+      triggerHaptic([90, 140, 190, 260]);
+    }
+
+    // 1. Pháo hoa Vòng Trái Tim Nở Rộ Đa Sắc (Parametric Rainbow Heart Ring)
     function createHeartRingBurst(originX = W / 2, originY = H * 0.38) {
-      const count = 72;
-      const styles = getComputedStyle(document.documentElement);
-      const pri = styles.getPropertyValue("--primary").trim() || "#f43f5e";
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#fecdd3";
-      const colors = ["#ffffff", priLight, pri, "#ff758f", "#ffd166"];
+      const count = 76;
+      const palette = getRandomVibrantPalette();
 
       for (let i = 0; i < count; i++) {
         const t = (Math.PI * 2 * i) / count;
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        const speed = Math.random() * 0.22 + 0.36;
+        const speed = Math.random() * 0.22 + 0.38;
 
         celebrationParticles.push({
           x: originX,
@@ -3159,9 +3339,10 @@
           gravity: 0.035,
           alpha: 1,
           decay: 0.0065 + Math.random() * 0.005,
-          size: Math.random() * 3.6 + 2.2,
-          color: colors[i % colors.length],
-          shape: "heart"
+          size: Math.random() * 3.8 + 2.2,
+          color: palette[i % palette.length],
+          shape: "heart",
+          flicker: true
         });
 
         if (i % 2 === 0) {
@@ -3181,10 +3362,16 @@
       }
     }
 
-    // 2. Pháo hoa Liễu Rủ Vàng Kim Thác Nước (Golden Weeping Willow)
+    // 2. Pháo hoa Liễu Rủ Đa Sắc (Multicolor Weeping Willow Waterfall)
     function createWillowBurst(originX = W / 2, originY = H * 0.35) {
-      const count = 95;
-      const colors = ["#ffffff", "#fef08a", "#fde047", "#eab308", "#ca8a04", "#ffd166", "#fffbeb"];
+      const count = 105;
+      const willowThemes = [
+        ["#ffd700", "#fef08a", "#fde047", "#eab308", "#ffffff"], // 24K Gold
+        ["#00f5d4", "#10b981", "#34d399", "#67e8f9", "#ffffff"], // Emerald Aurora
+        ["#ff007f", "#ff758f", "#f472b6", "#ffd166", "#ffffff"], // Rose Quartz
+        ["#c084fc", "#e879f9", "#38bdf8", "#818cf8", "#ffffff"]  // Cosmic Lavender
+      ];
+      const colors = willowThemes[(Math.random() * willowThemes.length) | 0];
 
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -3197,28 +3384,33 @@
           gravity: 0.082,
           alpha: 1,
           decay: 0.0045 + Math.random() * 0.004,
-          size: Math.random() * 3.2 + 1.6,
-          color: colors[(Math.random() * colors.length) | 0],
-          shape: "spark"
+          size: Math.random() * 3.4 + 1.6,
+          color: colors[i % colors.length],
+          shape: "spark",
+          flicker: true
         });
       }
     }
 
-    // 3. Pháo hoa Xoắn Ốc Ngân Hà (Galactic Spiral Whirlwind)
+    // 3. Pháo hoa Xoắn Ốc Cầu Vồng Ngân Hà (Galactic Rainbow Spiral Whirlwind)
     function createSpiralGalaxyBurst(originX = W / 2, originY = H * 0.36) {
       const arms = 4;
-      const perArm = 26;
-      const styles = getComputedStyle(document.documentElement);
-      const pri = styles.getPropertyValue("--primary").trim() || "#38bdf8";
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
-      const colors = ["#ffffff", priLight, pri, "#c084fc", "#e879f9", "#38bdf8", "#ffd166"];
+      const perArm = 28;
+      // Mỗi cánh tay xoắn mang 1 dải màu rực rỡ riêng biệt
+      const armColorSets = [
+        ["#ff0055", "#ff758f", "#ffa8ba"], // Cánh hồng ngọc
+        ["#00f5d4", "#06b6d4", "#38bdf8"], // Cánh ngọc lam
+        ["#ffd700", "#fbbf24", "#fef08a"], // Cánh vàng kim
+        ["#a855f7", "#c084fc", "#e879f9"]  // Cánh tím ngân hà
+      ];
 
       for (let a = 0; a < arms; a++) {
         const baseAngle = (Math.PI * 2 * a) / arms;
+        const armColors = armColorSets[a % armColorSets.length];
         for (let i = 0; i < perArm; i++) {
           const armOffset = (i / perArm) * 1.65;
           const angle = baseAngle + armOffset;
-          const speed = (i / perArm) * 7.5 + 1.8;
+          const speed = (i / perArm) * 7.8 + 1.8;
           celebrationParticles.push({
             x: originX,
             y: originY,
@@ -3227,24 +3419,23 @@
             gravity: 0.045,
             alpha: 1,
             decay: 0.006 + Math.random() * 0.007,
-            size: Math.random() * 3.8 + 1.8,
-            color: colors[(a * perArm + i) % colors.length],
-            shape: Math.random() < 0.55 ? "star" : "spark"
+            size: Math.random() * 4.0 + 1.8,
+            color: armColors[i % armColors.length],
+            shape: Math.random() < 0.55 ? "star" : "spark",
+            flicker: true
           });
         }
       }
     }
 
-    // 4. Pháo hoa Vòng Tròn Hào Quang Sao (Saturn Ring Halo)
+    // 4. Pháo hoa Vòng Tròn Hào Quang Sao Đa Sắc (Saturn Rainbow Ring Halo)
     function createRingHaloBurst(originX = W / 2, originY = H * 0.38) {
-      const count = 64;
-      const styles = getComputedStyle(document.documentElement);
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
-      const colors = ["#ffffff", "#ffd166", priLight, "#ffffff"];
+      const count = 72;
+      const palette = getRandomVibrantPalette();
 
       for (let i = 0; i < count; i++) {
         const angle = (Math.PI * 2 * i) / count;
-        const speed = 7.0 + Math.random() * 0.8;
+        const speed = 7.2 + Math.random() * 0.8;
         celebrationParticles.push({
           x: originX,
           y: originY,
@@ -3253,15 +3444,16 @@
           gravity: 0.03,
           alpha: 1,
           decay: 0.0065 + Math.random() * 0.005,
-          size: Math.random() * 3.4 + 2,
-          color: colors[i % colors.length],
-          shape: "star"
+          size: Math.random() * 3.6 + 2.0,
+          color: palette[i % palette.length],
+          shape: "star",
+          flicker: true
         });
       }
       createSupernovaStarBurst(originX, originY);
     }
 
-    // 5. Tên lửa vút bay từ chân trời rồi phát nổ
+    // 5. Tên lửa vút bay từ chân trời với màu sắc rực rỡ phong phú
     function launchAscendingRocket(targetX, targetY, burstType = "random", customStartX = null) {
       const startX = customStartX !== null ? customStartX : (targetX + (Math.random() - 0.5) * 120);
       const startY = H + 15;
@@ -3269,11 +3461,12 @@
       const vx = (targetX - startX) / duration;
       const vy = (targetY - startY) / duration;
 
-      const styles = getComputedStyle(document.documentElement);
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#ffd166";
-      const pri = styles.getPropertyValue("--primary").trim() || "#f43f5e";
-      const colors = ["#ffffff", "#ffd166", "#fef08a", priLight, pri, "#c084fc", "#38bdf8", "#ff70a6"];
-      const rocketColor = colors[(Math.random() * colors.length) | 0];
+      const vibrantColors = [
+        "#ffffff", "#ffd700", "#ff0055", "#00f5d4", "#38bdf8",
+        "#a855f7", "#ff70a6", "#10b981", "#ff5400", "#e879f9",
+        "#fef08a", "#06b6d4", "#f43f5e"
+      ];
+      const rocketColor = vibrantColors[(Math.random() * vibrantColors.length) | 0];
 
       ascendingRockets.push({
         x: startX,
@@ -3285,8 +3478,10 @@
         life: duration,
         color: rocketColor,
         burstType: burstType,
-        trailHue: Math.random() < 0.4 ? "#ffd166" : rocketColor
+        trailHue: Math.random() < 0.35 ? "#ffd700" : rocketColor
       });
+
+      playFireworkLaunchSound(burstType === "giant_heart" || burstType === "infinity_blossom" ? 0.32 : 0.16, startX);
     }
 
     // Bắn chùm tia pháo hình nan quạt từ dưới đáy màn hình
@@ -3317,10 +3512,8 @@
     }
 
     function createSentenceSparkleShower(originX = W / 2, originY = H * 0.47) {
-      const count = 65;
-      const styles = getComputedStyle(document.documentElement);
-      const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
-      const colors = ["#ffffff", "#fef08a", priLight, "#ffffff"];
+      const count = 75;
+      const palette = getRandomVibrantPalette();
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
         const dist = Math.random() * Math.min(W * 0.42, 280);
@@ -3332,9 +3525,10 @@
           gravity: -0.015,
           alpha: 0.9,
           decay: 0.006 + Math.random() * 0.006,
-          size: Math.random() * 3 + 1.2,
-          color: colors[(Math.random() * colors.length) | 0],
-          shape: Math.random() < 0.6 ? "star" : "circle"
+          size: Math.random() * 3.2 + 1.4,
+          color: palette[i % palette.length],
+          shape: Math.random() < 0.6 ? "star" : "circle",
+          flicker: true
         });
       }
     }
@@ -3439,7 +3633,16 @@
     }
 
     function startGrandFireworksShow() {
-      // 1. Kích hoạt cờ màn trình diễn, xóa sao băng và dòng chữ câu hỏi cũ
+      // 1. Chuyển nhạc nền sang âm lượng nhỏ êm dịu, du dương hòa quyện cùng tiếng pháo hoa
+      setSoftBackgroundMusicForGrandShow();
+
+      // Khởi tạo và kích hoạt âm thanh Web Audio cho pháo hoa
+      initAudioContext();
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+
+      // 2. Kích hoạt cờ màn trình diễn, xóa sao băng và dòng chữ câu hỏi cũ
       isGrandShowActive = true;
       shootingStars = [];
       shootingStarDust = [];
@@ -3471,6 +3674,10 @@
         clearInterval(megaHeartInterval);
         megaHeartInterval = null;
       }
+      if (megaBlossomInterval) {
+        clearInterval(megaBlossomInterval);
+        megaBlossomInterval = null;
+      }
 
       // Kênh 0: SIÊU PHÁO HOA NGHỆ THUẬT TRÁI TIM KHỔNG LỒ ĐỊNH KỲ 9 GIÂY 1 LẦN
       setTimeout(() => {
@@ -3482,6 +3689,17 @@
         const targetY = H * 0.30 + (Math.random() - 0.5) * (H * 0.08);
         launchAscendingRocket(targetX, targetY, "giant_heart", targetX);
       }, 9000);
+
+      // Kênh 0.2: SIÊU PHÁO HOA NGHỆ THUẬT HOA SEN THIÊN HÀ VÔ CỰC ĐỊNH KỲ 12 GIÂY 1 LẦN
+      setTimeout(() => {
+        launchAscendingRocket(W * 0.50, H * 0.34, "infinity_blossom", W * 0.50);
+      }, 6000);
+
+      megaBlossomInterval = setInterval(() => {
+        const targetX = W * 0.50 + (Math.random() - 0.5) * (W * 0.18);
+        const targetY = H * 0.33 + (Math.random() - 0.5) * (H * 0.08);
+        launchAscendingRocket(targetX, targetY, "infinity_blossom", targetX);
+      }, 12000);
 
       // Kênh 1: Thỉnh thoảng phóng một chùm tia pháo đan chéo / nan quạt / đơn (mỗi ~3.0s)
       autoRocketInterval = setInterval(() => {
@@ -3983,7 +4201,7 @@
         rk.y += rk.vy;
         rk.life--;
 
-        const isMega = rk.burstType === "giant_heart";
+        const isMega = rk.burstType === "giant_heart" || rk.burstType === "infinity_blossom";
         const sparkCount = isMega ? 3 : 1;
         for (let s = 0; s < sparkCount; s++) {
           celebrationParticles.push({
@@ -3995,7 +4213,7 @@
             alpha: 0.98,
             decay: isMega ? 0.022 : 0.038,
             size: Math.random() * (isMega ? 4.5 : 3.2) + 1.8,
-            color: isMega ? (Math.random() < 0.5 ? "#ffd700" : "#ffffff") : rk.color,
+            color: isMega ? (Math.random() < 0.5 ? "#00f5d4" : "#ffd700") : rk.color,
             shape: isMega && Math.random() < 0.35 ? "star" : "spark"
           });
         }
@@ -4004,13 +4222,13 @@
         ctx.save();
         ctx.fillStyle = "#ffffff";
         ctx.shadowBlur = isMega ? 26 : 16;
-        ctx.shadowColor = isMega ? "#ffd700" : rk.color;
+        ctx.shadowColor = isMega ? (rk.burstType === "infinity_blossom" ? "#00f5d4" : "#ffd700") : rk.color;
         ctx.beginPath();
         ctx.arc(rk.x, rk.y, isMega ? 4.8 : 3.2, 0, Math.PI * 2);
         ctx.fill();
 
         if (isMega) {
-          ctx.strokeStyle = "#ffd700";
+          ctx.strokeStyle = rk.burstType === "infinity_blossom" ? "#00f5d4" : "#ffd700";
           ctx.lineWidth = 2.0;
           ctx.beginPath();
           ctx.moveTo(rk.x - 10, rk.y);
@@ -4027,7 +4245,14 @@
           const burstStyle = rk.burstType;
           ascendingRockets.splice(i, 1);
 
-          if (burstStyle === "giant_heart") createMasterpieceGiantHeart(tx, ty);
+          if (isMega) {
+            playSuperMegaFireworkBlast(tx);
+          } else {
+            playFireworkExplosionSound(false, tx);
+          }
+
+          if (burstStyle === "infinity_blossom") createCosmicInfinityBlossom(tx, ty);
+          else if (burstStyle === "giant_heart") createMasterpieceGiantHeart(tx, ty);
           else if (burstStyle === "heart") createHeartRingBurst(tx, ty);
           else if (burstStyle === "willow") createWillowBurst(tx, ty);
           else if (burstStyle === "spiral") createSpiralGalaxyBurst(tx, ty);
@@ -4145,16 +4370,36 @@
     const ARPEGGIO_PATTERN = [0, 1, 2, 3, 4, 3, 2, 1];
     const midiToHz = m => 440 * Math.pow(2, (m - 69) / 12);
 
+    let audioCompressor = null;
+    let masterWarmthFilter = null;
+
     function initAudioContext() {
       if (audioCtx) return;
       const AudioClass = window.AudioContext || window.webkitAudioContext;
       if (!AudioClass) return;
       audioCtx = new AudioClass();
 
+      // Bộ lọc làm mềm và ấm âm thanh (Warmth Lowpass Filter - Cắt bỏ dải tần cao gắt, giữ âm trầm ấm êm dịu)
+      masterWarmthFilter = audioCtx.createBiquadFilter();
+      masterWarmthFilter.type = "lowpass";
+      masterWarmthFilter.frequency.setValueAtTime(2400, audioCtx.currentTime);
+      masterWarmthFilter.Q.setValueAtTime(0.65, audioCtx.currentTime);
+
+      // Bộ nén âm thanh chuyên nghiệp (Dynamics Compressor) giúp âm trầm uy lực, tròn trịa, không bị gắt
+      audioCompressor = audioCtx.createDynamicsCompressor();
+      audioCompressor.threshold.setValueAtTime(-16, audioCtx.currentTime);
+      audioCompressor.knee.setValueAtTime(12, audioCtx.currentTime);
+      audioCompressor.ratio.setValueAtTime(4.5, audioCtx.currentTime);
+      audioCompressor.attack.setValueAtTime(0.005, audioCtx.currentTime);
+      audioCompressor.release.setValueAtTime(0.22, audioCtx.currentTime);
+
       audioMaster = audioCtx.createGain();
       audioMaster.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-      audioMaster.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime + 2.5);
-      audioMaster.connect(audioCtx.destination);
+      audioMaster.gain.exponentialRampToValueAtTime(0.34, audioCtx.currentTime + 1.5);
+
+      audioMaster.connect(masterWarmthFilter);
+      masterWarmthFilter.connect(audioCompressor);
+      audioCompressor.connect(audioCtx.destination);
     }
 
     function playSynthArpeggio() {
@@ -4272,6 +4517,331 @@
       } catch (e) {}
     }
 
+    // 1. TIẾNG BẮN PHÁO HOA TỪ DƯỚI LÊN ÊM DỊU, TRẦM ẤM (Warm Velvety Launch Impulse & Soft Air Draft)
+    function playFireworkLaunchSound(volume = 0.12, posX = null) {
+      if (!isGrandShowActive || !audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime;
+
+        // Node Panner stereo
+        let outNode = audioMaster || audioCtx.destination;
+        if (audioCtx.createStereoPanner && posX !== null) {
+          try {
+            const panner = audioCtx.createStereoPanner();
+            const panVal = Math.max(-0.85, Math.min(0.85, (posX - W * 0.5) / (W * 0.5)));
+            panner.pan.setValueAtTime(panVal, time);
+            panner.connect(audioMaster || audioCtx.destination);
+            outNode = panner;
+          } catch (pe) {}
+        }
+
+        // A. Cú đẩy nòng pháo trầm ấm êm tai (Warm Mortar Thump)
+        const kickOsc = audioCtx.createOscillator();
+        const kickGain = audioCtx.createGain();
+        kickOsc.type = "sine";
+        kickOsc.frequency.setValueAtTime(125 + Math.random() * 20, time);
+        kickOsc.frequency.exponentialRampToValueAtTime(32, time + 0.10);
+
+        kickGain.gain.setValueAtTime(0.0001, time);
+        kickGain.gain.exponentialRampToValueAtTime(volume * 0.85, time + 0.010);
+        kickGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.13);
+
+        kickOsc.connect(kickGain);
+        kickGain.connect(outNode);
+        kickOsc.start(time);
+        kickOsc.stop(time + 0.15);
+
+        // B. Luồng gió vút bay êm dịu, không chói rít (Soft Air Draft Noise Sweep)
+        const bufLen = Math.floor(audioCtx.sampleRate * 0.38);
+        const noiseBuf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+        const data = noiseBuf.getChannelData(0);
+        for (let i = 0; i < bufLen; i++) {
+          data[i] = (Math.random() * 2 - 1) * 0.45;
+        }
+
+        const hissSource = audioCtx.createBufferSource();
+        hissSource.buffer = noiseBuf;
+
+        const hissFilter = audioCtx.createBiquadFilter();
+        hissFilter.type = "bandpass";
+        hissFilter.frequency.setValueAtTime(280, time);
+        hissFilter.frequency.linearRampToValueAtTime(680, time + 0.36);
+        hissFilter.Q.value = 0.95;
+
+        const hissGain = audioCtx.createGain();
+        hissGain.gain.setValueAtTime(0.0001, time);
+        hissGain.gain.exponentialRampToValueAtTime(volume * 0.45, time + 0.08);
+        hissGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.38);
+
+        hissSource.connect(hissFilter);
+        hissFilter.connect(hissGain);
+        hissGain.connect(outNode);
+
+        hissSource.start(time);
+        hissSource.stop(time + 0.40);
+      } catch (e) {}
+    }
+
+    // 2. TIẾNG NỔ PHÁO HOA THƯỜNG TRẦM ẤM, DÀY DẶN (Warm Organic Standard Firework Burst)
+    function playFireworkExplosionSound(isMega = false, posX = null) {
+      if (!isGrandShowActive || !audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime;
+        const baseVol = 0.22 + Math.random() * 0.06;
+
+        // Node Panner stereo
+        let outNode = audioMaster || audioCtx.destination;
+        if (audioCtx.createStereoPanner && posX !== null) {
+          try {
+            const panner = audioCtx.createStereoPanner();
+            const panVal = Math.max(-0.85, Math.min(0.85, (posX - W * 0.5) / (W * 0.5)));
+            panner.pan.setValueAtTime(panVal, time);
+            panner.connect(audioMaster || audioCtx.destination);
+            outNode = panner;
+          } catch (pe) {}
+        }
+
+        // TẦNG 1: Tiếng ĐÙNG siêu trầm mềm mại (Smooth Warm Sub-Bass Boom)
+        const subOsc = audioCtx.createOscillator();
+        const subGain = audioCtx.createGain();
+        subOsc.type = "sine";
+        const subStartFreq = 95 + Math.random() * 15;
+        const subEndFreq = 28 + Math.random() * 6;
+        subOsc.frequency.setValueAtTime(subStartFreq, time);
+        subOsc.frequency.exponentialRampToValueAtTime(subEndFreq, time + 0.45);
+
+        subGain.gain.setValueAtTime(0.0001, time);
+        subGain.gain.exponentialRampToValueAtTime(baseVol * 1.05, time + 0.015);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.75);
+
+        subOsc.connect(subGain);
+        subGain.connect(outNode);
+        subOsc.start(time);
+        subOsc.stop(time + 0.80);
+
+        // TẦNG 2: Tiếng nổ bung vỏ pháo mềm mại (Soft Shell-Break Thump)
+        const snapOsc = audioCtx.createOscillator();
+        const snapGain = audioCtx.createGain();
+        snapOsc.type = "sine";
+        snapOsc.frequency.setValueAtTime(140 + Math.random() * 30, time);
+        snapOsc.frequency.exponentialRampToValueAtTime(42, time + 0.12);
+
+        snapGain.gain.setValueAtTime(0.0001, time);
+        snapGain.gain.exponentialRampToValueAtTime(baseVol * 0.65, time + 0.010);
+        snapGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.22);
+
+        snapOsc.connect(snapGain);
+        snapGain.connect(outNode);
+        snapOsc.start(time);
+        snapOsc.stop(time + 0.25);
+
+        // TẦNG 3: Khối âm rền trầm ấm chân trời (Warm Horizon Rumble)
+        const rumbleDuration = 0.85;
+        const rumbleBufSize = Math.floor(audioCtx.sampleRate * rumbleDuration);
+        const rumbleBuf = audioCtx.createBuffer(1, rumbleBufSize, audioCtx.sampleRate);
+        const rumbleData = rumbleBuf.getChannelData(0);
+        for (let i = 0; i < rumbleBufSize; i++) {
+          rumbleData[i] = (Math.random() * 2 - 1) * 0.55;
+        }
+
+        const rumbleSource = audioCtx.createBufferSource();
+        rumbleSource.buffer = rumbleBuf;
+
+        const rumbleFilter = audioCtx.createBiquadFilter();
+        rumbleFilter.type = "lowpass";
+        rumbleFilter.frequency.setValueAtTime(550, time);
+        rumbleFilter.frequency.exponentialRampToValueAtTime(85, time + rumbleDuration);
+        rumbleFilter.Q.value = 0.70;
+
+        const rumbleGain = audioCtx.createGain();
+        rumbleGain.gain.setValueAtTime(0.0001, time);
+        rumbleGain.gain.exponentialRampToValueAtTime(baseVol * 0.55, time + 0.035);
+        rumbleGain.gain.exponentialRampToValueAtTime(0.0001, time + rumbleDuration);
+
+        rumbleSource.connect(rumbleFilter);
+        rumbleFilter.connect(rumbleGain);
+        rumbleGain.connect(outNode);
+
+        rumbleSource.start(time);
+        rumbleSource.stop(time + rumbleDuration);
+
+        // TẦNG 4: Tiếng xèo nhẹ tự nhiên của tàn hoa lửa (Soft Organic Embers Sizzle)
+        const crackleCount = 5 + Math.floor(Math.random() * 4);
+        for (let c = 0; c < crackleCount; c++) {
+          const delay = 0.08 + Math.random() * 0.38;
+          const popTime = time + delay;
+          const popDuration = 0.040 + Math.random() * 0.025;
+
+          const pBufSize = Math.floor(audioCtx.sampleRate * popDuration);
+          const pBuf = audioCtx.createBuffer(1, pBufSize, audioCtx.sampleRate);
+          const pData = pBuf.getChannelData(0);
+          for (let i = 0; i < pBufSize; i++) {
+            pData[i] = (Math.random() * 2 - 1) * 0.35;
+          }
+
+          const pSource = audioCtx.createBufferSource();
+          pSource.buffer = pBuf;
+
+          const pFilter = audioCtx.createBiquadFilter();
+          pFilter.type = "bandpass";
+          pFilter.frequency.value = 450 + Math.random() * 350;
+          pFilter.Q.value = 0.90;
+
+          const pGain = audioCtx.createGain();
+          pGain.gain.setValueAtTime(0.0001, popTime);
+          pGain.gain.exponentialRampToValueAtTime(baseVol * (0.10 + Math.random() * 0.08), popTime + 0.008);
+          pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
+
+          pSource.connect(pFilter);
+          pFilter.connect(pGain);
+          pGain.connect(outNode);
+
+          pSource.start(popTime);
+          pSource.stop(popTime + popDuration + 0.01);
+        }
+      } catch (e) {}
+    }
+
+    // 3. TIẾNG NỔ SIÊU PHÁO HOA CỰC TRẦM UY LỰC, ÊM TAI (Deep Velvety Super-Mega Cannon Impact - No Harshness)
+    function playSuperMegaFireworkBlast(posX = null) {
+      if (!isGrandShowActive || !audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime;
+        const baseVol = 0.38;
+
+        // Node Panner stereo
+        let outNode = audioMaster || audioCtx.destination;
+        if (audioCtx.createStereoPanner && posX !== null) {
+          try {
+            const panner = audioCtx.createStereoPanner();
+            const panVal = Math.max(-0.85, Math.min(0.85, (posX - W * 0.5) / (W * 0.5)));
+            panner.pan.setValueAtTime(panVal, time);
+            panner.connect(audioMaster || audioCtx.destination);
+            outNode = panner;
+          } catch (pe) {}
+        }
+
+        // TẦNG 1: Cú nổ đại bác siêu trầm, đầy đặn, không chói (Velvety Deep Sub-Bass: 68Hz -> 18Hz)
+        const subOsc1 = audioCtx.createOscillator();
+        const subGain1 = audioCtx.createGain();
+        subOsc1.type = "sine";
+        subOsc1.frequency.setValueAtTime(68, time);
+        subOsc1.frequency.exponentialRampToValueAtTime(18, time + 0.85);
+
+        subGain1.gain.setValueAtTime(0.0001, time);
+        subGain1.gain.exponentialRampToValueAtTime(baseVol * 1.25, time + 0.018);
+        subGain1.gain.exponentialRampToValueAtTime(0.0001, time + 1.4);
+
+        subOsc1.connect(subGain1);
+        subGain1.connect(outNode);
+        subOsc1.start(time);
+        subOsc1.stop(time + 1.5);
+
+        // TẦNG 2: Tiếng nén áp suất trầm ấm (Warm Resonant Body Punch)
+        const punchOsc = audioCtx.createOscillator();
+        const punchGain = audioCtx.createGain();
+        punchOsc.type = "sine";
+        punchOsc.frequency.setValueAtTime(130, time);
+        punchOsc.frequency.exponentialRampToValueAtTime(28, time + 0.20);
+
+        punchGain.gain.setValueAtTime(0.0001, time);
+        punchGain.gain.exponentialRampToValueAtTime(baseVol * 0.85, time + 0.010);
+        punchGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.40);
+
+        punchOsc.connect(punchGain);
+        punchGain.connect(outNode);
+        punchOsc.start(time);
+        punchOsc.stop(time + 0.45);
+
+        // TẦNG 3: Vụ nổ phụ liên hoàn kép sau 200ms trầm ấm (Secondary Shell Echo)
+        setTimeout(() => {
+          if (!audioCtx || isMuted) return;
+          try {
+            const t2 = audioCtx.currentTime;
+            const secOsc = audioCtx.createOscillator();
+            const secGain = audioCtx.createGain();
+            secOsc.type = "sine";
+            secOsc.frequency.setValueAtTime(78, t2);
+            secOsc.frequency.exponentialRampToValueAtTime(22, t2 + 0.55);
+
+            secGain.gain.setValueAtTime(0.0001, t2);
+            secGain.gain.exponentialRampToValueAtTime(baseVol * 0.70, t2 + 0.015);
+            secGain.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.75);
+
+            secOsc.connect(secGain);
+            secGain.connect(outNode);
+            secOsc.start(t2);
+            secOsc.stop(t2 + 0.8);
+          } catch (e) {}
+        }, 200);
+
+        // TẦNG 4: Tiếng sấm rền dội ngang chân trời êm dịu kéo dài 1.8 giây (Horizon Rolling Thunder Reverb)
+        const rumbleDuration = 1.8;
+        const rumbleBufSize = Math.floor(audioCtx.sampleRate * rumbleDuration);
+        const rumbleBuf = audioCtx.createBuffer(1, rumbleBufSize, audioCtx.sampleRate);
+        const rumbleData = rumbleBuf.getChannelData(0);
+        for (let i = 0; i < rumbleBufSize; i++) {
+          rumbleData[i] = (Math.random() * 2 - 1) * 0.6;
+        }
+
+        const rumbleSource = audioCtx.createBufferSource();
+        rumbleSource.buffer = rumbleBuf;
+
+        const rumbleFilter = audioCtx.createBiquadFilter();
+        rumbleFilter.type = "lowpass";
+        rumbleFilter.frequency.setValueAtTime(650, time);
+        rumbleFilter.frequency.exponentialRampToValueAtTime(75, time + rumbleDuration);
+        rumbleFilter.Q.value = 0.75;
+
+        const rumbleGain = audioCtx.createGain();
+        rumbleGain.gain.setValueAtTime(0.0001, time);
+        rumbleGain.gain.exponentialRampToValueAtTime(baseVol * 0.65, time + 0.04);
+        rumbleGain.gain.exponentialRampToValueAtTime(0.0001, time + rumbleDuration);
+
+        rumbleSource.connect(rumbleFilter);
+        rumbleFilter.connect(rumbleGain);
+        rumbleGain.connect(outNode);
+
+        rumbleSource.start(time);
+        rumbleSource.stop(time + rumbleDuration);
+
+        // TẦNG 5: Chùm nổ xèo nhẹ tự nhiên của hàng trăm tia pháo (Soft Pyrotechnic Embers Crackle)
+        const crackleCount = 14;
+        for (let c = 0; c < crackleCount; c++) {
+          const delay = 0.08 + Math.random() * 0.65;
+          const popTime = time + delay;
+          const popDuration = 0.045 + Math.random() * 0.03;
+
+          const pBufSize = Math.floor(audioCtx.sampleRate * popDuration);
+          const pBuf = audioCtx.createBuffer(1, pBufSize, audioCtx.sampleRate);
+          const pData = pBuf.getChannelData(0);
+          for (let i = 0; i < pBufSize; i++) {
+            pData[i] = (Math.random() * 2 - 1) * 0.4;
+          }
+
+          const pSource = audioCtx.createBufferSource();
+          pSource.buffer = pBuf;
+
+          const pFilter = audioCtx.createBiquadFilter();
+          pFilter.type = "bandpass";
+          pFilter.frequency.value = 400 + Math.random() * 350;
+          pFilter.Q.value = 1.0;
+
+          const pGain = audioCtx.createGain();
+          pGain.gain.setValueAtTime(0.0001, popTime);
+          pGain.gain.exponentialRampToValueAtTime(baseVol * (0.12 + Math.random() * 0.09), popTime + 0.006);
+          pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
+
+          pSource.connect(pFilter);
+          pFilter.connect(pGain);
+          pGain.connect(outNode);
+
+          pSource.start(popTime);
+          pSource.stop(popTime + popDuration + 0.01);
+        }
+      } catch (e) {}
+    }
+
     function triggerSupernovaTransition() {
       // 1. Cosmic Shockwaves on canvas
       const styles = getComputedStyle(document.documentElement);
@@ -4380,6 +4950,74 @@
       }, 80);
     }
 
+    function setSoftBackgroundMusicForGrandShow() {
+      const targetVol = 0.22; // Âm lượng nhạc nền êm dịu, du dương lãng mạn
+      if (bgmAudio) {
+        try {
+          if (bgmAudio.paused) {
+            bgmAudio.volume = 0;
+            const p = bgmAudio.play();
+            if (p && p.then) {
+              p.then(() => {
+                let cur = 0;
+                const fi = setInterval(() => {
+                  cur = Math.min(targetVol, cur + 0.02);
+                  bgmAudio.volume = cur;
+                  if (cur >= targetVol) clearInterval(fi);
+                }, 60);
+              }).catch(() => {
+                if (!synthTimer) playSynthArpeggio();
+              });
+            }
+          } else {
+            // Hạ âm lượng mượt mà xuống mức nhỏ êm ái
+            let curVol = bgmAudio.volume;
+            const fade = setInterval(() => {
+              if (curVol > targetVol) {
+                curVol = Math.max(targetVol, curVol - 0.03);
+              } else {
+                curVol = Math.min(targetVol, curVol + 0.02);
+              }
+              bgmAudio.volume = curVol;
+              if (Math.abs(curVol - targetVol) < 0.01) {
+                bgmAudio.volume = targetVol;
+                clearInterval(fade);
+              }
+            }, 60);
+          }
+        } catch (e) {}
+      }
+
+      // Giảm âm lượng Web Audio synth nếu dùng synth
+      if (audioCtx && audioMaster) {
+        try {
+          const now = audioCtx.currentTime;
+          audioMaster.gain.setValueAtTime(audioMaster.gain.value, now);
+          audioMaster.gain.exponentialRampToValueAtTime(0.20, now + 1.2);
+        } catch (e) {}
+      }
+    }
+
+    function stopBackgroundMusic() {
+      if (bgmAudio) {
+        try {
+          let curVol = bgmAudio.volume;
+          const fade = setInterval(() => {
+            curVol = Math.max(0, curVol - 0.12);
+            bgmAudio.volume = curVol;
+            if (curVol <= 0) {
+              clearInterval(fade);
+              bgmAudio.pause();
+            }
+          }, 40);
+        } catch (e) {}
+      }
+      if (synthTimer) {
+        clearTimeout(synthTimer);
+        synthTimer = null;
+      }
+    }
+
     $("soundToggleBtn").addEventListener("click", () => {
       isMuted = !isMuted;
       bgmAudio.muted = isMuted;
@@ -4458,6 +5096,10 @@
       if (megaHeartInterval) {
         clearInterval(megaHeartInterval);
         megaHeartInterval = null;
+      }
+      if (megaBlossomInterval) {
+        clearInterval(megaBlossomInterval);
+        megaBlossomInterval = null;
       }
       const agreeWrap = $("agreeContainer");
       if (agreeWrap) {

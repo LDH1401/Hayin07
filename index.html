@@ -1332,6 +1332,9 @@
     /* ==========================================================================
        ROMANTIC AGREEMENT POPUP / MODAL (SIÊU LỘNG LẪY & LÃNG MẠN)
        ========================================================================== */
+    /* ==========================================================================
+       AGREE MODAL (Siêu Lộng Lẫy, Thơ Mộng, Lung Linh & Lãng Mạn Tuyệt Sắc)
+       ========================================================================== */
     .agree-modal {
       position: fixed;
       inset: 0;
@@ -1350,34 +1353,34 @@
     .agree-modal-backdrop {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 40%, rgba(3, 7, 18, 0.78) 0%, rgba(3, 7, 18, 0.94) 100%);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
+      background: radial-gradient(circle at 50% 35%, rgba(15, 3, 20, 0.82) 0%, rgba(3, 1, 8, 0.96) 100%);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
       transition: opacity 0.5s ease;
     }
 
     .agree-modal-card {
       position: relative;
       width: 100%;
-      max-width: 460px;
+      max-width: 480px;
       background:
-        radial-gradient(130% 120% at 50% 0%, var(--bg-surface-hover) 0%, var(--bg-surface) 60%, rgba(8, 2, 12, 0.96) 100%);
-      border: 1.5px solid var(--border-glow);
-      border-radius: 34px;
+        radial-gradient(130% 120% at 50% 0%, rgba(255, 105, 180, 0.16) 0%, rgba(25, 4, 30, 0.94) 55%, rgba(10, 1, 14, 0.98) 100%);
+      border: 1.5px solid rgba(255, 182, 193, 0.35);
+      border-radius: 36px;
       box-shadow:
-        0 0 60px var(--primary-glow),
-        0 30px 85px rgba(0, 0, 0, 0.85),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 0 35px rgba(255, 255, 255, 0.05);
-      padding: 34px 26px 28px;
+        0 0 70px rgba(255, 0, 128, 0.45),
+        0 35px 95px rgba(0, 0, 0, 0.90),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 0 40px rgba(255, 105, 180, 0.12);
+      padding: 36px 28px 30px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 17px;
       overflow: hidden;
-      transform: scale(0.86) translateY(28px);
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+      transform: scale(0.85) translateY(30px);
+      transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease;
       z-index: 2;
     }
     .agree-modal.open .agree-modal-card {
@@ -1387,24 +1390,43 @@
     /* Ambient Glowing Halo Behind Card */
     .agree-card-halo {
       position: absolute;
-      width: 320px;
-      height: 320px;
+      width: 380px;
+      height: 380px;
       border-radius: 50%;
-      top: -60px;
+      top: -80px;
       left: 50%;
       transform: translateX(-50%);
-      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-      filter: blur(40px);
-      opacity: 0.65;
+      background: radial-gradient(circle, rgba(255, 0, 128, 0.55) 0%, rgba(255, 105, 180, 0.2) 40%, transparent 70%);
+      filter: blur(50px);
+      opacity: 0.75;
       pointer-events: none;
-      animation: auraBreathe 4s ease-in-out infinite alternate;
+      animation: auraBreathe 4.5s ease-in-out infinite alternate;
     }
     @keyframes auraBreathe {
-      0% { opacity: 0.45; transform: translateX(-50%) scale(0.9); }
-      100% { opacity: 0.85; transform: translateX(-50%) scale(1.15); }
+      0% { opacity: 0.50; transform: translateX(-50%) scale(0.88); }
+      100% { opacity: 0.90; transform: translateX(-50%) scale(1.20); }
     }
 
-    /* Floating Orbiting Sparkles & Hearts */
+    /* Animated Shimmer Border */
+    .agree-shimmer-border {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.5px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,105,180,0.6), rgba(255,0,128,0.2), rgba(255,215,0,0.5), rgba(255,255,255,0.8));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.65;
+      animation: borderSweep 6s linear infinite;
+    }
+    @keyframes borderSweep {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    /* Floating Orbiting Sparkles & Petals */
     .agree-modal-sparkles {
       position: absolute;
       inset: 0;
@@ -1414,108 +1436,128 @@
     }
     .agree-modal-sparkles span {
       position: absolute;
-      font-size: 16px;
-      filter: drop-shadow(0 0 8px var(--primary-light));
-      animation: floatSparkleModal 4s ease-in-out infinite;
+      font-size: 17px;
+      filter: drop-shadow(0 0 10px #ff69b4);
+      animation: floatSparkleModal 4.5s ease-in-out infinite;
     }
-    .agree-modal-sparkles .sp-1 { top: 10%; left: 8%; animation-delay: 0s; font-size: 19px; }
-    .agree-modal-sparkles .sp-2 { top: 12%; right: 9%; animation-delay: 0.8s; font-size: 21px; }
-    .agree-modal-sparkles .sp-3 { top: 46%; left: 5%; animation-delay: 1.6s; font-size: 14px; }
-    .agree-modal-sparkles .sp-4 { top: 48%; right: 6%; animation-delay: 2.4s; font-size: 18px; }
-    .agree-modal-sparkles .sp-5 { bottom: 18%; left: 9%; animation-delay: 1.2s; font-size: 17px; }
-    .agree-modal-sparkles .sp-6 { bottom: 16%; right: 8%; animation-delay: 2.8s; font-size: 19px; }
-    .agree-modal-sparkles .sp-7 { top: 2%; left: 48%; animation-delay: 0.4s; font-size: 15px; }
-    .agree-modal-sparkles .sp-8 { bottom: 6%; left: 47%; animation-delay: 2s; font-size: 16px; }
+    .agree-modal-sparkles .sp-1 { top: 9%; left: 7%; animation-delay: 0s; font-size: 20px; }
+    .agree-modal-sparkles .sp-2 { top: 11%; right: 8%; animation-delay: 0.7s; font-size: 22px; }
+    .agree-modal-sparkles .sp-3 { top: 44%; left: 4%; animation-delay: 1.4s; font-size: 15px; }
+    .agree-modal-sparkles .sp-4 { top: 45%; right: 5%; animation-delay: 2.1s; font-size: 19px; }
+    .agree-modal-sparkles .sp-5 { bottom: 19%; left: 8%; animation-delay: 1.1s; font-size: 18px; }
+    .agree-modal-sparkles .sp-6 { bottom: 17%; right: 7%; animation-delay: 2.6s; font-size: 20px; }
+    .agree-modal-sparkles .sp-7 { top: 2%; left: 48%; animation-delay: 0.3s; font-size: 16px; }
+    .agree-modal-sparkles .sp-8 { bottom: 6%; left: 47%; animation-delay: 1.9s; font-size: 18px; }
+    .agree-modal-sparkles .sp-9 { top: 26%; left: 10%; animation-delay: 3.2s; font-size: 14px; }
+    .agree-modal-sparkles .sp-10 { top: 28%; right: 10%; animation-delay: 3.7s; font-size: 16px; }
 
     @keyframes floatSparkleModal {
-      0%, 100% { transform: translateY(0) scale(0.9) rotate(0deg); opacity: 0.55; }
-      50% { transform: translateY(-8px) scale(1.25) rotate(18deg); opacity: 1; filter: drop-shadow(0 0 14px #ffffff); }
+      0%, 100% { transform: translateY(0) scale(0.92) rotate(0deg); opacity: 0.60; }
+      50% { transform: translateY(-10px) scale(1.28) rotate(16deg); opacity: 1; filter: drop-shadow(0 0 16px #ffffff) drop-shadow(0 0 24px #ff1493); }
     }
 
     /* Top Romantic Eyebrow Tag */
     .agree-eyebrow-pill {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 6px 16px;
+      gap: 8px;
+      padding: 7px 18px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border-subtle);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.08);
+      background: rgba(255, 105, 180, 0.12);
+      border: 1px solid rgba(255, 182, 193, 0.45);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 0 12px rgba(255, 255, 255, 0.15);
       font-family: var(--font-mono);
-      font-size: 10.5px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--primary-light);
-      text-shadow: 0 0 8px var(--primary-glow);
+      color: #ffccd5;
+      text-shadow: 0 0 10px rgba(255, 0, 128, 0.7);
     }
     .agree-eyebrow-pill .sparkle-star {
-      font-size: 11px;
-      color: #ffd166;
+      font-size: 12px;
+      color: #ffd700;
       animation: pulseSparkle 2s ease-in-out infinite;
     }
 
     /* 3D Luminous Beating Heart Avatar */
     .agree-modal-heart-wrap {
       position: relative;
-      width: 86px;
-      height: 86px;
+      width: 96px;
+      height: 96px;
       display: grid;
       place-items: center;
-      margin: 2px 0 4px;
+      margin: 2px 0 6px;
     }
 
     .agree-modal-heart-rings {
       position: absolute;
-      inset: -6px;
+      inset: -10px;
       pointer-events: none;
     }
     .agree-modal-heart-rings .ring {
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      border: 1.5px solid var(--primary);
+      border: 1.5px solid #ff007f;
     }
     .agree-modal-heart-rings .r-1 {
-      animation: heartRingSonar 2.6s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+      animation: heartRingSonar 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
     }
     .agree-modal-heart-rings .r-2 {
-      animation: heartRingSonar 2.6s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 1.3s;
+      animation: heartRingSonar 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 0.9s;
+    }
+    .agree-modal-heart-rings .r-3 {
+      animation: heartRingSonar 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 1.8s;
     }
     @keyframes heartRingSonar {
-      0% { transform: scale(0.9); opacity: 0.9; border-color: #ffffff; }
-      50% { opacity: 0.5; border-color: var(--primary-light); }
-      100% { transform: scale(2.1); opacity: 0; border-color: var(--primary); }
+      0% { transform: scale(0.85); opacity: 0.95; border-color: #ffffff; box-shadow: 0 0 12px #ff69b4; }
+      50% { opacity: 0.55; border-color: #ff758f; }
+      100% { transform: scale(2.2); opacity: 0; border-color: #ff007f; }
     }
 
     .agree-modal-heart-icon {
-      width: 78px;
-      height: 78px;
+      width: 86px;
+      height: 86px;
       border-radius: 50%;
-      background: radial-gradient(circle at 38% 32%, var(--bg-surface-hover) 0%, var(--bg-surface) 60%, rgba(3, 7, 18, 0.95) 100%);
-      border: 2px solid rgba(255, 255, 255, 0.5);
+      background: radial-gradient(circle at 35% 30%, rgba(255, 105, 180, 0.35) 0%, rgba(40, 5, 45, 0.95) 60%, rgba(10, 1, 15, 0.98) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.65);
       display: grid;
       place-items: center;
       box-shadow:
-        0 0 40px var(--primary-glow),
-        0 10px 30px rgba(0, 0, 0, 0.6),
-        inset 0 0 20px rgba(255, 255, 255, 0.35);
+        0 0 50px rgba(255, 0, 128, 0.75),
+        0 12px 35px rgba(0, 0, 0, 0.7),
+        inset 0 0 25px rgba(255, 255, 255, 0.45);
       position: relative;
       z-index: 2;
     }
     .agree-modal-heart-icon svg {
-      width: 52px;
-      height: 52px;
+      width: 58px;
+      height: 58px;
       animation: heartBeating 1.25s ease-in-out infinite;
-      filter: drop-shadow(0 0 16px var(--primary)) drop-shadow(0 0 28px var(--primary-glow));
+      filter: drop-shadow(0 0 18px #ff007f) drop-shadow(0 0 32px rgba(255, 0, 128, 0.8));
     }
     .agree-modal-heart-path {
-      fill: var(--primary);
       stroke: #ffffff;
-      stroke-width: 1.6;
-      filter: drop-shadow(0 0 6px #ffffff);
+      stroke-width: 1.8;
+      filter: drop-shadow(0 0 8px #ffffff);
+    }
+    .heart-center-glint {
+      position: absolute;
+      top: 22%;
+      left: 28%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      filter: blur(1px) drop-shadow(0 0 6px #ffffff);
+      pointer-events: none;
+      animation: glintPulse 2s ease-in-out infinite;
+    }
+    @keyframes glintPulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.6; }
+      50% { transform: scale(1.4); opacity: 1; }
     }
 
     /* Title & Recipient Tag */
@@ -1523,103 +1565,107 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
     .agree-modal-title {
       font-family: var(--font-main);
-      font-size: clamp(1.55rem, 5.5vw, 2.05rem);
+      font-size: clamp(1.65rem, 5.8vw, 2.2rem);
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.25;
       letter-spacing: -0.02em;
       margin: 0;
-      background: linear-gradient(135deg, #ffffff 15%, var(--primary-light) 60%, var(--primary) 100%);
+      background: linear-gradient(135deg, #ffffff 10%, #ffccd5 40%, #ff758f 70%, #ff007f 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 22px var(--primary-glow)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.8));
+      filter: drop-shadow(0 0 26px rgba(255, 0, 128, 0.85)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.85));
     }
     .agree-subtitle-names {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--primary-light);
-      opacity: 0.9;
-      text-shadow: 0 0 8px var(--primary-glow);
+      font-family: var(--font-main);
+      font-size: 13.5px;
+      font-weight: 500;
+      font-style: italic;
+      color: #ffb3c6;
+      opacity: 0.95;
+      text-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
     }
 
     /* Elegant Romantic Love Letter Quote Box */
     .agree-quote-box {
       position: relative;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-subtle);
-      border-radius: 22px;
-      padding: 20px 22px 18px;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.03), 0 6px 20px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 105, 180, 0.04) 100%);
+      border: 1.5px solid rgba(255, 182, 193, 0.3);
+      border-radius: 24px;
+      padding: 22px 24px 20px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow:
+        inset 0 0 25px rgba(255, 255, 255, 0.05),
+        0 8px 25px rgba(0, 0, 0, 0.35);
       width: 100%;
     }
     .agree-quote-box .quote-decor {
       position: absolute;
       font-family: var(--font-serif);
-      font-size: 44px;
+      font-size: 48px;
       line-height: 1;
-      color: var(--primary-light);
-      opacity: 0.35;
+      color: #ff758f;
+      opacity: 0.45;
       user-select: none;
       pointer-events: none;
     }
     .agree-quote-box .quote-decor.top-left {
-      top: 6px;
-      left: 12px;
+      top: 8px;
+      left: 14px;
     }
     .agree-quote-box .quote-decor.bottom-right {
-      bottom: -6px;
-      right: 12px;
+      bottom: -8px;
+      right: 14px;
     }
 
     .agree-modal-desc {
       font-family: var(--font-main);
-      font-size: 14.5px;
-      line-height: 1.7;
+      font-size: 15px;
+      line-height: 1.75;
       font-weight: 400;
-      color: rgba(248, 250, 252, 0.94);
+      color: rgba(255, 245, 248, 0.96);
       margin: 0;
       text-wrap: pretty;
       position: relative;
       z-index: 1;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
 
     /* Milestone Memory Tag */
     .agree-milestone-bar {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
-      padding: 7px 18px;
+      gap: 10px;
+      padding: 8px 20px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-subtle);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 182, 193, 0.35);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     .agree-milestone-bar .pulse-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 10px var(--primary), 0 0 18px var(--primary-glow);
+      background: #ff007f;
+      box-shadow: 0 0 12px #ff007f, 0 0 22px #ff1493;
       animation: pulseDot 1.8s ease-in-out infinite;
     }
     @keyframes pulseDot {
-      0%, 100% { transform: scale(0.9); opacity: 0.8; }
-      50% { transform: scale(1.4); opacity: 1; }
+      0%, 100% { transform: scale(0.9); opacity: 0.85; }
+      50% { transform: scale(1.45); opacity: 1; }
     }
     .agree-milestone-bar .milestone-text {
-      font-family: var(--font-main);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      letter-spacing: 0.02em;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #ffccd5;
+      text-transform: uppercase;
     }
 
     /* Action Confirm Button */
@@ -1627,37 +1673,56 @@
       display: flex;
       align-items: center;
       width: 100%;
-      margin-top: 4px;
+      margin-top: 6px;
     }
     .agree-confirm-btn {
       width: 100%;
-      height: 50px;
+      height: 52px;
       border-radius: 999px;
-      background: var(--btn-grad);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: linear-gradient(135deg, #ff007f 0%, #ff1493 50%, #f72585 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.5);
       color: #ffffff;
       font-family: var(--font-main);
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
+      gap: 10px;
       cursor: pointer;
       box-shadow:
-        0 0 35px var(--primary-glow),
-        0 10px 30px rgba(0, 0, 0, 0.65),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        0 0 40px rgba(255, 0, 128, 0.65),
+        0 12px 35px rgba(0, 0, 0, 0.70),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
       overflow: hidden;
     }
+    .agree-confirm-btn .btn-shine {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transform: skewX(-20deg);
+      animation: btnShineSweep 3.2s infinite ease-in-out;
+    }
+    @keyframes btnShineSweep {
+      0% { left: -100%; }
+      30%, 100% { left: 200%; }
+    }
     .agree-confirm-btn:hover {
       transform: translateY(-2px) scale(1.03);
       box-shadow:
-        0 0 55px var(--primary),
-        0 14px 40px rgba(0, 0, 0, 0.75),
+        0 0 65px #ff007f,
+        0 16px 45px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 #ffffff;
+    }
+    .agree-confirm-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
       background: var(--btn-grad-hover);
     }
@@ -2443,56 +2508,69 @@
     </div>
   </div>
 
-  <!-- Romantic Agreement Modal / Dialog (Siêu Lộng Lẫy & Lãng Mạn) -->
+  <!-- Romantic Agreement Modal / Dialog (Siêu Lộng Lẫy, Thơ Mộng, Lung Linh & Lãng Mạn Tuyệt Sắc) -->
   <div class="agree-modal" id="agreeModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="agree-modal-backdrop"></div>
     <div class="agree-modal-card">
-      <!-- Animated Ambient Halo Behind Card -->
+      <!-- Animated Shimmer Border & Ambient Halo -->
       <div class="agree-card-halo"></div>
+      <div class="agree-shimmer-border"></div>
 
-      <!-- Orbiting Floating Sparkles & Hearts -->
+      <!-- Orbiting Floating Sparkles, Petals & Hearts -->
       <div class="agree-modal-sparkles">
         <span class="sp-1">✨</span>
         <span class="sp-2">💖</span>
         <span class="sp-3">✦</span>
-        <span class="sp-4">🎉</span>
-        <span class="sp-5">🌸</span>
+        <span class="sp-4">🌸</span>
+        <span class="sp-5">💕</span>
         <span class="sp-6">💫</span>
         <span class="sp-7">✨</span>
-        <span class="sp-8">💕</span>
+        <span class="sp-8">🌹</span>
+        <span class="sp-9">✨</span>
+        <span class="sp-10">💖</span>
       </div>
 
       <!-- Top Romantic Eyebrow Tag -->
       <div class="agree-eyebrow-pill">
         <span class="sparkle-star">✨</span>
-        <span>Khoảnh Khắc Kỷ Niệm Tình Yêu</span>
+        <span>Khoảnh Khắc Đẹp Nhất Thế Gian</span>
         <span class="sparkle-star">✨</span>
       </div>
 
-      <!-- 3D Luminous Beating Heart Avatar -->
+      <!-- 3D Luminous Beating Heart Avatar with Stardust Rings -->
       <div class="agree-modal-heart-wrap">
         <div class="agree-modal-heart-rings">
           <div class="ring r-1"></div>
           <div class="ring r-2"></div>
+          <div class="ring r-3"></div>
         </div>
         <div class="agree-modal-heart-icon">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <path class="agree-modal-heart-path" id="agreeModalHeartPath"></path>
+            <defs>
+              <linearGradient id="modalHeartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="35%" stop-color="#ff69b4"/>
+                <stop offset="70%" stop-color="#ff007f"/>
+                <stop offset="100%" stop-color="#f72585"/>
+              </linearGradient>
+            </defs>
+            <path class="agree-modal-heart-path" id="agreeModalHeartPath" fill="url(#modalHeartGrad)"></path>
           </svg>
+          <div class="heart-center-glint"></div>
         </div>
       </div>
 
       <!-- Title & Recipient Subtitle -->
       <div class="agree-title-wrap">
         <h3 class="agree-modal-title">Em Đã Đồng Ý Rồi Nha!💖</h3>
-        <div class="agree-subtitle-names" id="agreeRecipientTag">Gửi trọn tình yêu đến em 💖</div>
+        <div class="agree-subtitle-names" id="agreeRecipientTag">Kể từ hôm nay, anh đã có em bên đời ✨</div>
       </div>
 
       <!-- Elegant Romantic Love Letter Quote Box -->
       <div class="agree-quote-box">
         <div class="quote-decor top-left">“</div>
         <p class="agree-modal-desc" id="agreeModalDesc">
-          Khoảnh khắc này thật ngọt ngào và kỳ diệu! Cảm ơn em vì đã gật đầu đồng ý, từ hôm nay hãy để anh được đồng hành, quan tâm và yêu thương em nhiều hơn mỗi ngày. Chúc cho tình yêu của chúng mình mãi luôn đong đầy hạnh phúc và bền lâu! 💖✨
+          Khoảnh khắc em mỉm cười gật đầu, cả dải ngân hà trong mắt anh như bừng sáng rực rỡ! Cảm ơn em vì đã đến, đã trao cho anh niềm hạnh phúc vô giá này. Từ hôm nay, hãy để anh được yêu thương, chở che và đồng hành cùng em qua muôn vàn tháng năm ngọt ngào phía trước nhé! 💖✨
         </p>
         <div class="quote-decor bottom-right">”</div>
       </div>
@@ -2500,13 +2578,14 @@
       <!-- Milestone Memory Tag -->
       <div class="agree-milestone-bar">
         <span class="pulse-dot"></span>
-        <span class="milestone-text">Từ hôm nay, mình là của nhau nhé ❤️</span>
+        <span class="milestone-text">✦ CHÍNH THỨC BẮT ĐẦU MỘT CHUYỆN TÌNH TUYỆT ĐẸP ✦</span>
       </div>
 
       <!-- Action Confirm Button -->
       <div class="agree-modal-actions">
         <button class="agree-confirm-btn" id="closeAgreeModalBtn">
-          <span class="btn-text">Quay lại để xem màn trình diễn pháo hoa nào em yêu ✨</span>
+          <span class="btn-shine"></span>
+          <span class="btn-text">Quay lại màn trình diễn pháo hoa nào bé yêu ✨</span>
         </button>
       </div>
     </div>
@@ -4506,13 +4585,17 @@
       } catch (e) {}
     }
 
-    // 1. TIẾNG BẮN PHÁO HOA TỪ DƯỚI LÊN ÊM DỊU, TRẦM ẤM (Warm Velvety Launch Impulse & Soft Air Draft)
-    function playFireworkLaunchSound(volume = 0.12, posX = null) {
+    // =========================================================================
+    // HỆ THỐNG ÂM THANH PHÁO HOA CHUẨN ĐIỆN ẢNH & VẬT LÝ ÂM HỌC THỰC TẾ
+    // =========================================================================
+
+    // 1. TIẾNG PHÓNG PHÁO HOA TỪ ĐÁY NÒNG LÊN CAO (Acoustic Mortar Thump & Ascension Rush)
+    function playFireworkLaunchSound(volume = 0.14, posX = null) {
       if (!isGrandShowActive || !audioCtx || isMuted) return;
       try {
         const time = audioCtx.currentTime;
 
-        // Node Panner stereo
+        // Panner không gian Stereo 3D theo vị trí phóng
         let outNode = audioMaster || audioCtx.destination;
         if (audioCtx.createStereoPanner && posX !== null) {
           try {
@@ -4524,28 +4607,33 @@
           } catch (pe) {}
         }
 
-        // A. Cú đẩy nòng pháo trầm ấm êm tai (Warm Mortar Thump)
+        // Tầng A: Cú kích nổ đẩy nòng pháo (Mortar Concussive Thump)
         const kickOsc = audioCtx.createOscillator();
         const kickGain = audioCtx.createGain();
         kickOsc.type = "sine";
-        kickOsc.frequency.setValueAtTime(125 + Math.random() * 20, time);
+        kickOsc.frequency.setValueAtTime(140 + Math.random() * 20, time);
         kickOsc.frequency.exponentialRampToValueAtTime(32, time + 0.10);
 
         kickGain.gain.setValueAtTime(0.0001, time);
-        kickGain.gain.exponentialRampToValueAtTime(volume * 0.85, time + 0.010);
-        kickGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.13);
+        kickGain.gain.exponentialRampToValueAtTime(volume * 0.90, time + 0.006);
+        kickGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.12);
 
         kickOsc.connect(kickGain);
         kickGain.connect(outNode);
         kickOsc.start(time);
-        kickOsc.stop(time + 0.15);
+        kickOsc.stop(time + 0.14);
 
-        // B. Luồng gió vút bay êm dịu, không chói rít (Soft Air Draft Noise Sweep)
-        const bufLen = Math.floor(audioCtx.sampleRate * 0.38);
+        // Tầng B: Luồng khí phản lực vút xé gió bay lên (Ascension Air Rush Noise Sweep)
+        const bufLen = Math.floor(audioCtx.sampleRate * 0.42);
         const noiseBuf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
         const data = noiseBuf.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
         for (let i = 0; i < bufLen; i++) {
-          data[i] = (Math.random() * 2 - 1) * 0.45;
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99 * b0 + white * 0.05;
+          b1 = 0.95 * b1 + white * 0.10;
+          b2 = 0.85 * b2 + white * 0.20;
+          data[i] = (b0 + b1 + b2) * 0.45;
         }
 
         const hissSource = audioCtx.createBufferSource();
@@ -4553,32 +4641,32 @@
 
         const hissFilter = audioCtx.createBiquadFilter();
         hissFilter.type = "bandpass";
-        hissFilter.frequency.setValueAtTime(280, time);
-        hissFilter.frequency.linearRampToValueAtTime(680, time + 0.36);
-        hissFilter.Q.value = 0.95;
+        hissFilter.frequency.setValueAtTime(260, time);
+        hissFilter.frequency.exponentialRampToValueAtTime(820, time + 0.38);
+        hissFilter.Q.value = 1.2;
 
         const hissGain = audioCtx.createGain();
         hissGain.gain.setValueAtTime(0.0001, time);
-        hissGain.gain.exponentialRampToValueAtTime(volume * 0.45, time + 0.08);
-        hissGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.38);
+        hissGain.gain.exponentialRampToValueAtTime(volume * 0.50, time + 0.07);
+        hissGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.40);
 
         hissSource.connect(hissFilter);
         hissFilter.connect(hissGain);
         hissGain.connect(outNode);
 
         hissSource.start(time);
-        hissSource.stop(time + 0.40);
+        hissSource.stop(time + 0.42);
       } catch (e) {}
     }
 
-    // 2. TIẾNG NỔ PHÁO HOA THƯỜNG TRẦM ẤM, DÀY DẶN (Warm Organic Standard Firework Burst)
+    // 2. TIẾNG NỔ PHÁO HOA THƯỜNG ĐA TẦNG CHÂN THẬT (Multi-Stage Realistic Firework Burst)
     function playFireworkExplosionSound(isMega = false, posX = null) {
       if (!isGrandShowActive || !audioCtx || isMuted) return;
       try {
         const time = audioCtx.currentTime;
-        const baseVol = 0.22 + Math.random() * 0.06;
+        const baseVol = 0.26 + Math.random() * 0.06;
 
-        // Node Panner stereo
+        // Panner không gian Stereo 3D theo vị trí phát nổ
         let outNode = audioMaster || audioCtx.destination;
         if (audioCtx.createStereoPanner && posX !== null) {
           try {
@@ -4590,47 +4678,51 @@
           } catch (pe) {}
         }
 
-        // TẦNG 1: Tiếng ĐÙNG siêu trầm mềm mại (Smooth Warm Sub-Bass Boom)
+        // TẦNG 1: Sóng xung kích siêu trầm dội lồng ngực (Chest-Punch Sub-Bass Wavefront: 110Hz -> 26Hz)
         const subOsc = audioCtx.createOscillator();
         const subGain = audioCtx.createGain();
         subOsc.type = "sine";
-        const subStartFreq = 95 + Math.random() * 15;
-        const subEndFreq = 28 + Math.random() * 6;
+        const subStartFreq = 105 + Math.random() * 15;
+        const subEndFreq = 26 + Math.random() * 6;
         subOsc.frequency.setValueAtTime(subStartFreq, time);
-        subOsc.frequency.exponentialRampToValueAtTime(subEndFreq, time + 0.45);
+        subOsc.frequency.exponentialRampToValueAtTime(subEndFreq, time + 0.42);
 
         subGain.gain.setValueAtTime(0.0001, time);
-        subGain.gain.exponentialRampToValueAtTime(baseVol * 1.05, time + 0.015);
-        subGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.75);
+        subGain.gain.exponentialRampToValueAtTime(baseVol * 1.15, time + 0.008);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.70);
 
         subOsc.connect(subGain);
         subGain.connect(outNode);
         subOsc.start(time);
-        subOsc.stop(time + 0.80);
+        subOsc.stop(time + 0.75);
 
-        // TẦNG 2: Tiếng nổ bung vỏ pháo mềm mại (Soft Shell-Break Thump)
+        // TẦNG 2: Tiếng nổ đanh giòn xé toạc vỏ pháo (Crisp Shell-Break Concussion Snap)
         const snapOsc = audioCtx.createOscillator();
         const snapGain = audioCtx.createGain();
         snapOsc.type = "sine";
-        snapOsc.frequency.setValueAtTime(140 + Math.random() * 30, time);
-        snapOsc.frequency.exponentialRampToValueAtTime(42, time + 0.12);
+        snapOsc.frequency.setValueAtTime(220 + Math.random() * 40, time);
+        snapOsc.frequency.exponentialRampToValueAtTime(45, time + 0.11);
 
         snapGain.gain.setValueAtTime(0.0001, time);
-        snapGain.gain.exponentialRampToValueAtTime(baseVol * 0.65, time + 0.010);
-        snapGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.22);
+        snapGain.gain.exponentialRampToValueAtTime(baseVol * 0.75, time + 0.005);
+        snapGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.18);
 
         snapOsc.connect(snapGain);
         snapGain.connect(outNode);
         snapOsc.start(time);
-        snapOsc.stop(time + 0.25);
+        snapOsc.stop(time + 0.20);
 
-        // TẦNG 3: Khối âm rền trầm ấm chân trời (Warm Horizon Rumble)
-        const rumbleDuration = 0.85;
+        // TẦNG 3: Khối âm rền trầm vang vọng chân trời (Atmospheric Horizon Rolling Reverb)
+        const rumbleDuration = 1.15;
         const rumbleBufSize = Math.floor(audioCtx.sampleRate * rumbleDuration);
         const rumbleBuf = audioCtx.createBuffer(1, rumbleBufSize, audioCtx.sampleRate);
         const rumbleData = rumbleBuf.getChannelData(0);
+        let rb0 = 0, rb1 = 0;
         for (let i = 0; i < rumbleBufSize; i++) {
-          rumbleData[i] = (Math.random() * 2 - 1) * 0.55;
+          const white = Math.random() * 2 - 1;
+          rb0 = 0.98 * rb0 + white * 0.08;
+          rb1 = 0.92 * rb1 + white * 0.15;
+          rumbleData[i] = (rb0 + rb1) * 0.65;
         }
 
         const rumbleSource = audioCtx.createBufferSource();
@@ -4638,13 +4730,13 @@
 
         const rumbleFilter = audioCtx.createBiquadFilter();
         rumbleFilter.type = "lowpass";
-        rumbleFilter.frequency.setValueAtTime(550, time);
-        rumbleFilter.frequency.exponentialRampToValueAtTime(85, time + rumbleDuration);
-        rumbleFilter.Q.value = 0.70;
+        rumbleFilter.frequency.setValueAtTime(680, time);
+        rumbleFilter.frequency.exponentialRampToValueAtTime(70, time + rumbleDuration);
+        rumbleFilter.Q.value = 0.85;
 
         const rumbleGain = audioCtx.createGain();
         rumbleGain.gain.setValueAtTime(0.0001, time);
-        rumbleGain.gain.exponentialRampToValueAtTime(baseVol * 0.55, time + 0.035);
+        rumbleGain.gain.exponentialRampToValueAtTime(baseVol * 0.60, time + 0.025);
         rumbleGain.gain.exponentialRampToValueAtTime(0.0001, time + rumbleDuration);
 
         rumbleSource.connect(rumbleFilter);
@@ -4654,51 +4746,71 @@
         rumbleSource.start(time);
         rumbleSource.stop(time + rumbleDuration);
 
-        // TẦNG 4: Tiếng xèo nhẹ tự nhiên của tàn hoa lửa (Soft Organic Embers Sizzle)
-        const crackleCount = 5 + Math.floor(Math.random() * 4);
+        // TẦNG 4: Tiếng hoa lửa nổ rào rào / lách tách giòn tan rõ nét và kéo dài (Extended Crispy Pyrotechnic Star Crackle Cluster)
+        const crackleCount = 16 + Math.floor(Math.random() * 8);
         for (let c = 0; c < crackleCount; c++) {
-          const delay = 0.08 + Math.random() * 0.38;
+          const delay = 0.08 + Math.random() * 1.15;
           const popTime = time + delay;
-          const popDuration = 0.040 + Math.random() * 0.025;
+          const popDuration = 0.038 + Math.random() * 0.024;
+          const popVol = baseVol * (0.24 + Math.random() * 0.16) * Math.max(0.35, 1 - (delay / 1.3));
 
-          const pBufSize = Math.floor(audioCtx.sampleRate * popDuration);
-          const pBuf = audioCtx.createBuffer(1, pBufSize, audioCtx.sampleRate);
-          const pData = pBuf.getChannelData(0);
-          for (let i = 0; i < pBufSize; i++) {
-            pData[i] = (Math.random() * 2 - 1) * 0.35;
-          }
-
-          const pSource = audioCtx.createBufferSource();
-          pSource.buffer = pBuf;
-
-          const pFilter = audioCtx.createBiquadFilter();
-          pFilter.type = "bandpass";
-          pFilter.frequency.value = 450 + Math.random() * 350;
-          pFilter.Q.value = 0.90;
-
+          // 1. Cú nổ đanh giòn tách (Micro-chirp snap)
+          const pOsc = audioCtx.createOscillator();
           const pGain = audioCtx.createGain();
+          pOsc.type = "sine";
+          pOsc.frequency.setValueAtTime(420 + Math.random() * 300, popTime);
+          pOsc.frequency.exponentialRampToValueAtTime(80, popTime + popDuration);
+
           pGain.gain.setValueAtTime(0.0001, popTime);
-          pGain.gain.exponentialRampToValueAtTime(baseVol * (0.10 + Math.random() * 0.08), popTime + 0.008);
+          pGain.gain.exponentialRampToValueAtTime(popVol, popTime + 0.003);
           pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
 
-          pSource.connect(pFilter);
-          pFilter.connect(pGain);
+          pOsc.connect(pGain);
           pGain.connect(outNode);
 
-          pSource.start(popTime);
-          pSource.stop(popTime + popDuration + 0.01);
+          pOsc.start(popTime);
+          pOsc.stop(popTime + popDuration + 0.005);
+
+          // 2. Vệt xèo giòn của tàn hoa lửa (Micro-sizzle puff)
+          if (c % 2 === 0) {
+            const sBufSize = Math.floor(audioCtx.sampleRate * 0.030);
+            const sBuf = audioCtx.createBuffer(1, sBufSize, audioCtx.sampleRate);
+            const sData = sBuf.getChannelData(0);
+            for (let i = 0; i < sBufSize; i++) {
+              sData[i] = (Math.random() * 2 - 1) * 0.45;
+            }
+            const sSource = audioCtx.createBufferSource();
+            sSource.buffer = sBuf;
+
+            const sFilter = audioCtx.createBiquadFilter();
+            sFilter.type = "bandpass";
+            sFilter.frequency.value = 750 + Math.random() * 450;
+            sFilter.Q.value = 1.3;
+
+            const sGain = audioCtx.createGain();
+            sGain.gain.setValueAtTime(0.0001, popTime);
+            sGain.gain.exponentialRampToValueAtTime(popVol * 0.65, popTime + 0.004);
+            sGain.gain.exponentialRampToValueAtTime(0.0001, popTime + 0.030);
+
+            sSource.connect(sFilter);
+            sFilter.connect(sGain);
+            sGain.connect(outNode);
+
+            sSource.start(popTime);
+            sSource.stop(popTime + 0.035);
+          }
         }
       } catch (e) {}
     }
 
-    // 3. TIẾNG NỔ SIÊU PHÁO HOA CỰC TRẦM UY LỰC, ÊM TAI (Deep Velvety Super-Mega Cannon Impact - No Harshness)
+    // 3. TIẾNG NỔ SIÊU ĐẠI BÁC PHÁO HOA UY LỰC, HOÀNH TRÁNG (Epic Thunderous Super-Mega Cannon Impact)
     function playSuperMegaFireworkBlast(posX = null) {
       if (!isGrandShowActive || !audioCtx || isMuted) return;
       try {
         const time = audioCtx.currentTime;
-        const baseVol = 0.38;
+        const baseVol = 0.44;
 
-        // Node Panner stereo
+        // Panner không gian Stereo 3D
         let outNode = audioMaster || audioCtx.destination;
         if (audioCtx.createStereoPanner && posX !== null) {
           try {
@@ -4710,67 +4822,71 @@
           } catch (pe) {}
         }
 
-        // TẦNG 1: Cú nổ đại bác siêu trầm, đầy đặn, không chói (Velvety Deep Sub-Bass: 68Hz -> 18Hz)
+        // TẦNG 1: Cú nổ đại bác siêu trầm rung chuyển không gian (Heavy Sub-Bass Cannon Impact: 78Hz -> 16Hz)
         const subOsc1 = audioCtx.createOscillator();
         const subGain1 = audioCtx.createGain();
         subOsc1.type = "sine";
-        subOsc1.frequency.setValueAtTime(68, time);
-        subOsc1.frequency.exponentialRampToValueAtTime(18, time + 0.85);
+        subOsc1.frequency.setValueAtTime(78, time);
+        subOsc1.frequency.exponentialRampToValueAtTime(16, time + 0.90);
 
         subGain1.gain.setValueAtTime(0.0001, time);
-        subGain1.gain.exponentialRampToValueAtTime(baseVol * 1.25, time + 0.018);
-        subGain1.gain.exponentialRampToValueAtTime(0.0001, time + 1.4);
+        subGain1.gain.exponentialRampToValueAtTime(baseVol * 1.35, time + 0.012);
+        subGain1.gain.exponentialRampToValueAtTime(0.0001, time + 1.5);
 
         subOsc1.connect(subGain1);
         subGain1.connect(outNode);
         subOsc1.start(time);
-        subOsc1.stop(time + 1.5);
+        subOsc1.stop(time + 1.55);
 
-        // TẦNG 2: Tiếng nén áp suất trầm ấm (Warm Resonant Body Punch)
+        // TẦNG 2: Khối áp suất không khí bung tỏa cực mạnh (Resonant Air Displacement Punch)
         const punchOsc = audioCtx.createOscillator();
         const punchGain = audioCtx.createGain();
         punchOsc.type = "sine";
-        punchOsc.frequency.setValueAtTime(130, time);
-        punchOsc.frequency.exponentialRampToValueAtTime(28, time + 0.20);
+        punchOsc.frequency.setValueAtTime(160, time);
+        punchOsc.frequency.exponentialRampToValueAtTime(32, time + 0.18);
 
         punchGain.gain.setValueAtTime(0.0001, time);
-        punchGain.gain.exponentialRampToValueAtTime(baseVol * 0.85, time + 0.010);
-        punchGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.40);
+        punchGain.gain.exponentialRampToValueAtTime(baseVol * 0.90, time + 0.006);
+        punchGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.38);
 
         punchOsc.connect(punchGain);
         punchGain.connect(outNode);
         punchOsc.start(time);
-        punchOsc.stop(time + 0.45);
+        punchOsc.stop(time + 0.40);
 
-        // TẦNG 3: Vụ nổ phụ liên hoàn kép sau 200ms trầm ấm (Secondary Shell Echo)
+        // TẦNG 3: Vụ nổ phụ kép sau 200ms khi các tầng cánh hoa sen / trái tim bung nở (Secondary Shell Cluster Burst)
         setTimeout(() => {
-          if (!audioCtx || isMuted) return;
+          if (!isGrandShowActive || !audioCtx || isMuted) return;
           try {
             const t2 = audioCtx.currentTime;
             const secOsc = audioCtx.createOscillator();
             const secGain = audioCtx.createGain();
             secOsc.type = "sine";
-            secOsc.frequency.setValueAtTime(78, t2);
-            secOsc.frequency.exponentialRampToValueAtTime(22, t2 + 0.55);
+            secOsc.frequency.setValueAtTime(95, t2);
+            secOsc.frequency.exponentialRampToValueAtTime(24, t2 + 0.55);
 
             secGain.gain.setValueAtTime(0.0001, t2);
-            secGain.gain.exponentialRampToValueAtTime(baseVol * 0.70, t2 + 0.015);
+            secGain.gain.exponentialRampToValueAtTime(baseVol * 0.75, t2 + 0.010);
             secGain.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.75);
 
             secOsc.connect(secGain);
             secGain.connect(outNode);
             secOsc.start(t2);
-            secOsc.stop(t2 + 0.8);
+            secOsc.stop(t2 + 0.80);
           } catch (e) {}
         }, 200);
 
-        // TẦNG 4: Tiếng sấm rền dội ngang chân trời êm dịu kéo dài 1.8 giây (Horizon Rolling Thunder Reverb)
-        const rumbleDuration = 1.8;
+        // TẦNG 4: Tiếng sấm rền dội ngang chân trời dài 2.2 giây (Epic Horizon Rolling Thunder Reverb)
+        const rumbleDuration = 2.2;
         const rumbleBufSize = Math.floor(audioCtx.sampleRate * rumbleDuration);
         const rumbleBuf = audioCtx.createBuffer(1, rumbleBufSize, audioCtx.sampleRate);
         const rumbleData = rumbleBuf.getChannelData(0);
+        let m0 = 0, m1 = 0;
         for (let i = 0; i < rumbleBufSize; i++) {
-          rumbleData[i] = (Math.random() * 2 - 1) * 0.6;
+          const white = Math.random() * 2 - 1;
+          m0 = 0.99 * m0 + white * 0.06;
+          m1 = 0.94 * m1 + white * 0.12;
+          rumbleData[i] = (m0 + m1) * 0.75;
         }
 
         const rumbleSource = audioCtx.createBufferSource();
@@ -4778,13 +4894,13 @@
 
         const rumbleFilter = audioCtx.createBiquadFilter();
         rumbleFilter.type = "lowpass";
-        rumbleFilter.frequency.setValueAtTime(650, time);
-        rumbleFilter.frequency.exponentialRampToValueAtTime(75, time + rumbleDuration);
-        rumbleFilter.Q.value = 0.75;
+        rumbleFilter.frequency.setValueAtTime(750, time);
+        rumbleFilter.frequency.exponentialRampToValueAtTime(65, time + rumbleDuration);
+        rumbleFilter.Q.value = 0.90;
 
         const rumbleGain = audioCtx.createGain();
         rumbleGain.gain.setValueAtTime(0.0001, time);
-        rumbleGain.gain.exponentialRampToValueAtTime(baseVol * 0.65, time + 0.04);
+        rumbleGain.gain.exponentialRampToValueAtTime(baseVol * 0.70, time + 0.03);
         rumbleGain.gain.exponentialRampToValueAtTime(0.0001, time + rumbleDuration);
 
         rumbleSource.connect(rumbleFilter);
@@ -4794,39 +4910,57 @@
         rumbleSource.start(time);
         rumbleSource.stop(time + rumbleDuration);
 
-        // TẦNG 5: Chùm nổ xèo nhẹ tự nhiên của hàng trăm tia pháo (Soft Pyrotechnic Embers Crackle)
-        const crackleCount = 14;
+        // TẦNG 5: Chùm nổ hoa lửa lách tách rào rào dồn dập, giòn tan và kéo dài ngân vang (Dense Extended Pyrotechnic Star Crackle Cluster)
+        const crackleCount = 32;
         for (let c = 0; c < crackleCount; c++) {
-          const delay = 0.08 + Math.random() * 0.65;
+          const delay = 0.08 + Math.random() * 1.65;
           const popTime = time + delay;
-          const popDuration = 0.045 + Math.random() * 0.03;
+          const popDuration = 0.040 + Math.random() * 0.026;
+          const popVol = baseVol * (0.26 + Math.random() * 0.18) * Math.max(0.35, 1 - (delay / 1.8));
 
-          const pBufSize = Math.floor(audioCtx.sampleRate * popDuration);
-          const pBuf = audioCtx.createBuffer(1, pBufSize, audioCtx.sampleRate);
-          const pData = pBuf.getChannelData(0);
-          for (let i = 0; i < pBufSize; i++) {
-            pData[i] = (Math.random() * 2 - 1) * 0.4;
-          }
-
-          const pSource = audioCtx.createBufferSource();
-          pSource.buffer = pBuf;
-
-          const pFilter = audioCtx.createBiquadFilter();
-          pFilter.type = "bandpass";
-          pFilter.frequency.value = 400 + Math.random() * 350;
-          pFilter.Q.value = 1.0;
-
+          const pOsc = audioCtx.createOscillator();
           const pGain = audioCtx.createGain();
+          pOsc.type = "sine";
+          pOsc.frequency.setValueAtTime(450 + Math.random() * 350, popTime);
+          pOsc.frequency.exponentialRampToValueAtTime(75, popTime + popDuration);
+
           pGain.gain.setValueAtTime(0.0001, popTime);
-          pGain.gain.exponentialRampToValueAtTime(baseVol * (0.12 + Math.random() * 0.09), popTime + 0.006);
+          pGain.gain.exponentialRampToValueAtTime(popVol, popTime + 0.003);
           pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
 
-          pSource.connect(pFilter);
-          pFilter.connect(pGain);
+          pOsc.connect(pGain);
           pGain.connect(outNode);
 
-          pSource.start(popTime);
-          pSource.stop(popTime + popDuration + 0.01);
+          pOsc.start(popTime);
+          pOsc.stop(popTime + popDuration + 0.005);
+
+          if (c % 2 === 0) {
+            const sBufSize = Math.floor(audioCtx.sampleRate * 0.035);
+            const sBuf = audioCtx.createBuffer(1, sBufSize, audioCtx.sampleRate);
+            const sData = sBuf.getChannelData(0);
+            for (let i = 0; i < sBufSize; i++) {
+              sData[i] = (Math.random() * 2 - 1) * 0.50;
+            }
+            const sSource = audioCtx.createBufferSource();
+            sSource.buffer = sBuf;
+
+            const sFilter = audioCtx.createBiquadFilter();
+            sFilter.type = "bandpass";
+            sFilter.frequency.value = 800 + Math.random() * 450;
+            sFilter.Q.value = 1.4;
+
+            const sGain = audioCtx.createGain();
+            sGain.gain.setValueAtTime(0.0001, popTime);
+            sGain.gain.exponentialRampToValueAtTime(popVol * 0.70, popTime + 0.004);
+            sGain.gain.exponentialRampToValueAtTime(0.0001, popTime + 0.035);
+
+            sSource.connect(sFilter);
+            sFilter.connect(sGain);
+            sGain.connect(outNode);
+
+            sSource.start(popTime);
+            sSource.stop(popTime + 0.040);
+          }
         }
       } catch (e) {}
     }
@@ -5545,7 +5679,7 @@
       setTimeout(() => createCelebrationBurst(originX + 55, originY - 35), 520);
       setTimeout(() => triggerMultiCelebration(), 750);
 
-      // Thông báo xuất hiện chậm hơn một tí để người nhận ngắm trọn vẹn chùm pháo hoa trái tim
+      // Thông báo xuất hiện với hiệu ứng âm thanh ngân vang và bụi sao lộng lẫy
       setTimeout(() => {
         const modalEl = $("agreeModal");
         if (modalEl) {
@@ -5553,6 +5687,7 @@
           modalEl.setAttribute("aria-hidden", "false");
           createSupernovaStarBurst(W / 2, H * 0.38);
           createSentenceSparkleShower(W / 2, H * 0.44);
+          playCelebrationFanfare();
           triggerHaptic([40, 80, 120]);
         }
         if (isFirst) {

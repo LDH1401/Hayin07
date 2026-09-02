@@ -1141,7 +1141,7 @@
       cursor: pointer;
       box-shadow:
         0 0 35px var(--primary-glow),
-        0 0 70px rgba(244, 63, 94, 0.25),
+        0 0 70px var(--primary-glow),
         0 12px 32px rgba(0, 0, 0, 0.65),
         inset 0 0 20px rgba(255, 255, 255, 0.3),
         inset 0 2px 4px rgba(255, 255, 255, 0.5);
@@ -1319,10 +1319,10 @@
 
     .agree-hint-badge.is-agreed {
       background: rgba(15, 23, 42, 0.85);
-      border: 1.5px solid #ff758f;
-      color: #ff758f;
-      text-shadow: 0 0 12px rgba(255, 117, 143, 0.7), 0 0 22px rgba(244, 63, 94, 0.5);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 25px rgba(244, 63, 94, 0.45);
+      border: 1.5px solid var(--border-glow);
+      color: var(--primary-light);
+      text-shadow: 0 0 12px var(--primary-glow), 0 0 22px var(--primary);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 25px var(--primary-glow);
       animation: badgeCelebrateBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
     @keyframes badgeCelebrateBounce {
@@ -2604,33 +2604,34 @@
       }
     }
 
-    function createCelebrationBurst(originX = W / 2, originY = H * 0.46) {
-      const count = 90;
+    function createCelebrationBurst(originX = W / 2, originY = H * 0.46, customCount = 110) {
+      const count = customCount;
       const styles = getComputedStyle(document.documentElement);
       const pri = styles.getPropertyValue("--primary").trim() || "#38bdf8";
       const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
-      const colors = ["#ffffff", pri, priLight, "#ffd166", "#ff70a6"];
+      const accent = styles.getPropertyValue("--accent").trim() || "#818cf8";
+      const colors = ["#ffffff", pri, priLight, "#ffd166", "#ff70a6", accent, "#fffbeb"];
 
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 7 + 2;
+        const speed = Math.random() * 8.5 + 2.5;
         celebrationParticles.push({
           x: originX,
           y: originY,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - (Math.random() * 3 + 1),
+          vy: Math.sin(angle) * speed - (Math.random() * 3.5 + 1.2),
           gravity: 0.07,
           alpha: 1,
-          decay: 0.007 + Math.random() * 0.009,
-          size: Math.random() * 4 + 2,
+          decay: 0.006 + Math.random() * 0.008,
+          size: Math.random() * 4.2 + 2,
           color: colors[(Math.random() * colors.length) | 0],
-          shape: Math.random() < 0.45 ? "heart" : "circle"
+          shape: Math.random() < 0.5 ? "heart" : (Math.random() < 0.4 ? "star" : "circle")
         });
       }
     }
 
     function createSupernovaStarBurst(originX = W / 2, originY = H * 0.47) {
-      const count = 130;
+      const count = 140;
       const styles = getComputedStyle(document.documentElement);
       const pri = styles.getPropertyValue("--primary").trim() || "#38bdf8";
       const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
@@ -2646,8 +2647,8 @@
           vy: Math.sin(angle) * speed,
           gravity: 0.04,
           alpha: 1,
-          decay: 0.008 + Math.random() * 0.012,
-          size: Math.random() * 4.5 + 1.8,
+          decay: 0.007 + Math.random() * 0.010,
+          size: Math.random() * 4.8 + 1.8,
           color: colors[(Math.random() * colors.length) | 0],
           shape: Math.random() < 0.45 ? "heart" : (Math.random() < 0.5 ? "star" : "circle")
         });
@@ -2655,7 +2656,7 @@
     }
 
     function createSentenceSparkleShower(originX = W / 2, originY = H * 0.47) {
-      const count = 50;
+      const count = 65;
       const styles = getComputedStyle(document.documentElement);
       const priLight = styles.getPropertyValue("--primary-light").trim() || "#bae6fd";
       const colors = ["#ffffff", "#fef08a", priLight, "#ffffff"];
@@ -2678,10 +2679,62 @@
     }
 
     function triggerMultiCelebration() {
-      createCelebrationBurst(W / 2, H * 0.45);
-      setTimeout(() => createCelebrationBurst(W * 0.3, H * 0.4), 250);
-      setTimeout(() => createCelebrationBurst(W * 0.7, H * 0.4), 500);
-      setTimeout(() => createCelebrationBurst(W / 2, H * 0.5), 800);
+      createCelebrationBurst(W / 2, H * 0.45, 120);
+      setTimeout(() => createCelebrationBurst(W * 0.28, H * 0.38, 100), 200);
+      setTimeout(() => createCelebrationBurst(W * 0.72, H * 0.38, 100), 400);
+      setTimeout(() => createSupernovaStarBurst(W / 2, H * 0.46), 650);
+      setTimeout(() => createCelebrationBurst(W * 0.38, H * 0.48, 90), 900);
+      setTimeout(() => createCelebrationBurst(W * 0.62, H * 0.48, 90), 900);
+    }
+
+    function triggerClimaxCelebration() {
+      // Chuỗi pháo hoa bùng nổ hoành tráng khi xuất hiện câu tỏ tình
+      createSupernovaStarBurst(W / 2, H * 0.42);
+      createCelebrationBurst(W * 0.24, H * 0.38, 120);
+      createCelebrationBurst(W * 0.76, H * 0.38, 120);
+      createSentenceSparkleShower(W / 2, H * 0.45);
+
+      setTimeout(() => {
+        createCelebrationBurst(W * 0.35, H * 0.30, 110);
+        createCelebrationBurst(W * 0.65, H * 0.30, 110);
+      }, 220);
+
+      setTimeout(() => {
+        createSupernovaStarBurst(W / 2, H * 0.46);
+        createCelebrationBurst(W * 0.16, H * 0.42, 105);
+        createCelebrationBurst(W * 0.84, H * 0.42, 105);
+      }, 500);
+
+      setTimeout(() => {
+        createCelebrationBurst(W * 0.30, H * 0.46, 100);
+        createCelebrationBurst(W * 0.70, H * 0.46, 100);
+        createCelebrationBurst(W / 2, H * 0.32, 120);
+      }, 820);
+
+      setTimeout(() => {
+        createSupernovaStarBurst(W * 0.5, H * 0.40);
+        createCelebrationBurst(W * 0.40, H * 0.50, 95);
+        createCelebrationBurst(W * 0.60, H * 0.50, 95);
+      }, 1150);
+    }
+
+    function startAutoFireworks() {
+      if (autoHeartInterval) return;
+      autoHeartInterval = setInterval(() => {
+        const rx = W * 0.16 + Math.random() * (W * 0.68);
+        const ry = H * 0.24 + Math.random() * (H * 0.34);
+        createCelebrationBurst(rx, ry, 95);
+        setTimeout(() => {
+          const rx2 = W * 0.16 + Math.random() * (W * 0.68);
+          const ry2 = H * 0.24 + Math.random() * (H * 0.34);
+          createCelebrationBurst(rx2, ry2, 85);
+        }, 280);
+        if (Math.random() < 0.55) {
+          setTimeout(() => {
+            createSupernovaStarBurst(W * 0.2 + Math.random() * (W * 0.6), H * 0.25 + Math.random() * (H * 0.3));
+          }, 560);
+        }
+      }, 2800);
     }
 
     function resize() {
@@ -3637,18 +3690,19 @@
           }
 
           if (isLast) {
-            schedule(400, () => {
-              triggerMultiCelebration();
+            schedule(250, () => {
+              triggerClimaxCelebration();
               playCelebrationFanfare();
-              triggerHaptic([40, 60, 80]);
+              triggerHaptic([40, 60, 80, 120]);
             });
 
-            // Smoothly show the agree heart button after the final message forms
+            // Smoothly show the agree heart button after the final message forms and start recurring fireworks
             schedule(900, () => {
               if (agreeWrap) {
                 agreeWrap.classList.add("visible");
                 agreeWrap.setAttribute("aria-hidden", "false");
               }
+              startAutoFireworks();
             });
           }
         });
@@ -4001,25 +4055,8 @@
         }
       }, 1800);
 
-      // Tự động thả tim định kỳ sau mỗi 3 giây sau khi đã ấn đồng ý
-      if (!autoHeartInterval) {
-        autoHeartInterval = setInterval(() => {
-          const agreeBtn = $("agreeHeartBtn");
-          if (!agreeBtn || !agreeBtn.classList.contains("is-agreed")) {
-            clearInterval(autoHeartInterval);
-            autoHeartInterval = null;
-            return;
-          }
-          const rx = W * 0.18 + Math.random() * (W * 0.64);
-          const ry = H * 0.30 + Math.random() * (H * 0.30);
-          createCelebrationBurst(rx, ry);
-          if (Math.random() < 0.4) {
-            setTimeout(() => {
-              createCelebrationBurst(W * 0.2 + Math.random() * (W * 0.6), H * 0.28 + Math.random() * (H * 0.32));
-            }, 320);
-          }
-        }, 3000);
-      }
+      // Duy trì pháo hoa định kỳ sau mỗi 3 giây
+      startAutoFireworks();
     }
 
     $("agreeHeartBtn").addEventListener("click", handleAgreement);

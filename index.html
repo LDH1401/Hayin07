@@ -3846,15 +3846,7 @@
     }
 
     function triggerEarthShatterShake() {
-      const stageEl = document.querySelector(".stage");
-      if (stageEl) {
-        stageEl.classList.remove("epic-impact", "earth-shatter");
-        void stageEl.offsetWidth; // Force reflow
-        stageEl.classList.add("earth-shatter");
-        setTimeout(() => {
-          if (stageEl) stageEl.classList.remove("earth-shatter");
-        }, 1500);
-      }
+      // Đã tắt hiệu ứng rung lắc để nút đồng ý và giao diện luôn cố định, êm ái
     }
 
     function triggerSuperClimaxFlash() {
@@ -3924,7 +3916,7 @@
       const startX = W * 0.50;
       const startY = H + 25;
       const targetX = W * 0.50;
-      const targetY = H * 0.32;
+      const targetY = H * 0.35;
       const duration = 54;
       const vx = (targetX - startX) / duration;
       const vy = (targetY - startY) / duration;
@@ -3946,229 +3938,239 @@
       triggerHaptic([80, 120]);
     }
 
-    // SIÊU PHÁO HOA ĐẠI BÁC KHỔNG LỒ RUNG CHUYỂN ĐẤT TRỜI, SIÊU LÃNG MẠN, SIÊU ĐẸP
-    function createColossalRomanticMasterpiece(originX = W / 2, originY = H * 0.32) {
-      const frictionVal = 0.962;
-      const mult = 1 / (1 - frictionVal); // ~26.3
-      const maxSpeedY = (H * 0.27) / (11.92 * mult);
-      const maxSpeedX = (W * 0.44) / (16 * mult);
-      const baseScale = Math.max(0.40, Math.min(maxSpeedY, maxSpeedX));
+    // SIÊU PHÁO HOA ĐẠI BÁC KHỔNG LỒ LAN TỎA TOÀN MÀN HÌNH TỐC ĐỘ CAO, SIÊU LÃNG MẠN, KHÔNG RUNG LẮC
+    function createColossalRomanticMasterpiece(originX = W / 2, originY = H * 0.35) {
+      // Tốc độ lan tỏa nhanh, bùng nổ mạnh mẽ (friction 0.932 giúp vận tốc ban đầu tăng ~80%, bung nở chỉ trong ~0.4-0.5s)
+      const frictionVal = 0.932;
+      const mult = 1 / (1 - frictionVal); // ~14.706
+
+      // Lan tỏa rộng ra toàn bộ màn hình (cả chiều rộng và chiều cao)
+      const baseScaleX = (W * 0.485) / (16 * mult);
+      const baseScaleY = (H * 0.43) / (16 * mult);
 
       const birth = performance.now();
-      const targetDuration = 9000; // Thời gian tan biến đúng 9 giây
+      const targetDuration = 6500; // Thời gian tan biến: 6.5 giây
 
-      const outerCount = 420;
-      const waterfallCount = 280;
-      const midCount = 220;
-      const innerCount = 140;
-      const coreCount = 150;
+      // Kích hoạt quầng sáng sương mù lãng mạn nền (Romantic Nebula Bloom)
+      const ambient = $("ambientNebula");
+      if (ambient) {
+        ambient.classList.add("phrase-bloom");
+        setTimeout(() => {
+          if (ambient) ambient.classList.remove("phrase-bloom");
+        }, 3200);
+      }
 
-      const pinkDiamondPalette = [
-        "#ff007f", "#ff1493", "#ff2a8d", "#ff69b4", "#ff758f",
-        "#ff85a1", "#ff4d6d", "#f72585", "#ff0055", "#fff0f5", "#ffffff"
+      // Bộ màu lãng mạn sang trọng chuẩn hoàng gia & thiên hà (Rose Gold, Sakura Crystal, 24K Gold & Diamond)
+      const celestialRosePalette = [
+        "#ffffff", "#fff0f5", "#ff85a1", "#ff69b4", "#ff2a8d",
+        "#ff007f", "#f72585", "#ffb3c6", "#fbcfe8", "#fda4af"
       ];
-      const goldPalette = ["#ffd700", "#fef08a", "#ffe066", "#fff3bf", "#ffffff"];
+      const royalGoldPalette = [
+        "#ffffff", "#fff9db", "#fef08a", "#ffd700", "#ffdf70",
+        "#f59e0b", "#fde047", "#fef3c7"
+      ];
+      const diamondCorePalette = [
+        "#ffffff", "#fff0f7", "#ffd700", "#ff85a1", "#fbcfe8"
+      ];
 
-      // 1. TẦNG 1: Vành tim vô cực khổng lồ bao trùm bầu trời (Colossal Romantic Infinity Heart - 420 hạt)
+      // 1. TẦNG 1: Vành Tim Vương Miện Kim Cương Hồng Lan Tỏa Tốc Độ Cao (480 hạt)
+      const outerCount = 480;
       for (let i = 0; i < outerCount; i++) {
         const t = (Math.PI * 2 * i) / outerCount;
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        const speed = (Math.random() * 0.12 + 0.94) * baseScale;
+        const thickness = 0.92 + Math.random() * 0.15;
+        const speed = (Math.random() * 0.10 + 0.94) * thickness;
 
         celebrationParticles.push({
           x: originX,
           y: originY,
-          vx: hx * speed,
-          vy: hy * speed,
+          vx: hx * baseScaleX * speed,
+          vy: hy * baseScaleY * speed,
           friction: frictionVal,
-          gravity: 0.004,
+          gravity: 0.0035,
           birth: birth,
           lifespan: targetDuration,
           alpha: 1,
-          decay: 0.00185,
-          size: Math.random() * 5.8 + 3.6,
-          color: pinkDiamondPalette[i % pinkDiamondPalette.length],
-          shape: "heart",
-          flicker: true
+          decay: 0.00256,
+          size: Math.random() * 5.4 + 3.2,
+          color: celestialRosePalette[i % celestialRosePalette.length],
+          shape: i % 3 === 0 ? "heart" : "star",
+          twinkle: true,
+          twinklePhase: Math.random() * Math.PI * 2
         });
-
-        // Bụi sao vàng bám theo gân tim
-        if (i % 2 === 0) {
-          celebrationParticles.push({
-            x: originX,
-            y: originY,
-            vx: hx * speed * (0.90 + Math.random() * 0.10),
-            vy: hy * speed * (0.90 + Math.random() * 0.10),
-            friction: frictionVal,
-            gravity: 0.004,
-            birth: birth,
-            lifespan: targetDuration,
-            alpha: 1,
-            decay: 0.00185,
-            size: Math.random() * 3.8 + 2.0,
-            color: "#ffd700",
-            shape: "spark",
-            flicker: true
-          });
-        }
       }
 
-      // 2. TẦNG 2: Thác sao vàng kim 24K buông rủ từ đỉnh trời (Royal 24K Gold Kamuro Waterfall - 280 hạt)
-      for (let i = 0; i < waterfallCount; i++) {
-        const t = (Math.PI * 2 * i) / waterfallCount;
+      // 2. TẦNG 2: Vành Tim Phụ Bụi Sao Vàng Kim 24K (24K Gold Stardust Ribbon - 320 hạt)
+      const goldRibbonCount = 320;
+      for (let i = 0; i < goldRibbonCount; i++) {
+        const t = (Math.PI * 2 * i) / goldRibbonCount;
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        const speed = (Math.random() * 0.14 + 0.86) * baseScale;
+        const thickness = 0.82 + Math.random() * 0.12;
+        const speed = (Math.random() * 0.10 + 0.88) * thickness;
 
         celebrationParticles.push({
           x: originX,
           y: originY,
-          vx: hx * speed * (Math.random() * 0.25 + 0.85),
-          vy: hy * speed * (Math.random() * 0.25 + 0.85) - 0.4,
-          friction: 0.965,
+          vx: hx * baseScaleX * speed,
+          vy: hy * baseScaleY * speed,
+          friction: frictionVal,
+          gravity: 0.0035,
+          birth: birth,
+          lifespan: targetDuration,
+          alpha: 1,
+          decay: 0.00256,
+          size: Math.random() * 4.2 + 2.2,
+          color: royalGoldPalette[i % royalGoldPalette.length],
+          shape: "spark",
+          twinkle: true,
+          twinklePhase: Math.random() * Math.PI * 2
+        });
+      }
+
+      // 3. TẦNG 3: Thác Mưa Sao Băng Liễu Rủ Vàng Kim & Hồng Ngọc (Cascading Kamuro Willow - 360 hạt)
+      const waterfallCount = 360;
+      for (let i = 0; i < waterfallCount; i++) {
+        const t = Math.random() * Math.PI * 2;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        const speed = (Math.random() * 0.20 + 0.78);
+
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: hx * baseScaleX * speed * (Math.random() * 0.25 + 0.85),
+          vy: hy * baseScaleY * speed * 0.82 - 0.5,
+          friction: 0.936,
           gravity: 0.012,
           birth: birth,
           lifespan: targetDuration,
           alpha: 1,
-          decay: 0.00185,
-          size: Math.random() * 4.2 + 2.2,
-          color: goldPalette[i % goldPalette.length],
+          decay: 0.00256,
+          size: Math.random() * 4.4 + 2.2,
+          color: i % 2 === 0 ? royalGoldPalette[i % royalGoldPalette.length] : "#ff85a1",
           shape: "spark",
-          flicker: true
+          twinkle: true,
+          twinklePhase: Math.random() * Math.PI * 2
         });
       }
 
-      // 3. TẦNG 3: Lớp tim hồng ngọc & pha lê tầng giữa (Inner Radiant Rose Crystal Heart - 220 hạt)
-      for (let i = 0; i < midCount; i++) {
-        const t = (Math.PI * 2 * i) / midCount;
+      // 4. TẦNG 4: Tinh Vân Bụi Tiên Lơ Lửng Lấp Đầy Lòng Tim (Volumetric Fairy Dust Nebula - 320 hạt)
+      const nebulaCount = 320;
+      for (let i = 0; i < nebulaCount; i++) {
+        const t = Math.random() * Math.PI * 2;
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        const speed = (Math.random() * 0.10 + 0.65) * baseScale;
+        const r = Math.sqrt(Math.random()) * 0.76;
+        const speed = r * (Math.random() * 0.15 + 0.90);
 
         celebrationParticles.push({
           x: originX,
           y: originY,
-          vx: hx * speed,
-          vy: hy * speed,
-          friction: frictionVal,
-          gravity: 0.004,
+          vx: hx * baseScaleX * speed,
+          vy: hy * baseScaleY * speed,
+          friction: 0.938,
+          gravity: 0.0025,
           birth: birth,
           lifespan: targetDuration,
           alpha: 1,
-          decay: 0.00185,
-          size: Math.random() * 4.8 + 2.6,
-          color: pinkDiamondPalette[(i + 3) % pinkDiamondPalette.length],
-          shape: "star",
-          flicker: true
+          decay: 0.00256,
+          size: Math.random() * 4.2 + 2.0,
+          color: celestialRosePalette[(i * 3) % celestialRosePalette.length],
+          shape: i % 4 === 0 ? "heart" : "star",
+          twinkle: true,
+          twinklePhase: Math.random() * Math.PI * 2
         });
       }
 
-      // 4. TẦNG 4: Lớp tim ngọc trai trong cùng (Core Pearl Sakura Heart - 140 hạt)
-      for (let i = 0; i < innerCount; i++) {
-        const t = (Math.PI * 2 * i) / innerCount;
-        const hx = 16 * Math.pow(Math.sin(t), 3);
-        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        const speed = (Math.random() * 0.08 + 0.38) * baseScale;
-
-        celebrationParticles.push({
-          x: originX,
-          y: originY,
-          vx: hx * speed,
-          vy: hy * speed,
-          friction: frictionVal,
-          gravity: 0.004,
-          birth: birth,
-          lifespan: targetDuration,
-          alpha: 1,
-          decay: 0.00185,
-          size: Math.random() * 4.2 + 2.2,
-          color: i % 2 === 0 ? "#ffffff" : "#ffb3c6",
-          shape: "heart",
-          flicker: true
-        });
-      }
-
-      // 5. TẦNG 5: Tâm siêu tân tinh kim cương trắng chói lòa (Diamond Supernova Core - 150 hạt)
+      // 5. TẦNG 5: Trái Tim Bạch Kim Lõi Siêu Tân Tinh (Pure Diamond Supernova Core - 160 hạt)
+      const coreCount = 160;
+      const avgScale = (baseScaleX + baseScaleY) / 2;
       for (let i = 0; i < coreCount; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = (Math.random() * 4.5 + 1.8) * baseScale * 4;
+        const speed = (Math.random() * 4.2 + 1.6) * avgScale * 3.6;
         celebrationParticles.push({
           x: originX,
           y: originY,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 0.8,
-          friction: 0.945,
-          gravity: 0.005,
+          vy: Math.sin(angle) * speed - 0.7,
+          friction: 0.910,
+          gravity: 0.004,
           birth: birth,
           lifespan: targetDuration,
           alpha: 1,
-          decay: 0.00185,
-          size: Math.random() * 5.8 + 2.8,
-          color: i % 2 === 0 ? "#ffffff" : (i % 3 === 0 ? "#ffd700" : "#ff758f"),
-          shape: Math.random() < 0.5 ? "star" : "spark"
+          decay: 0.00256,
+          size: Math.random() * 5.6 + 2.8,
+          color: diamondCorePalette[i % diamondCorePalette.length],
+          shape: "star",
+          twinkle: true,
+          twinklePhase: Math.random() * Math.PI * 2
         });
       }
 
-      // 6. TẦNG 6: Vòng vương miện 12 chùm hoa vệ tinh nở rộ sau 420ms (12 Satellite Tiara Starbursts)
-      const satelliteCount = 12;
+      // 6. TẦNG 6: 16 Chùm Tinh Tú Vệ Tinh Nở Bung Sau 240ms (16 Celestial Tiara Starbursts - 320 hạt)
+      const satelliteCount = 16;
       setTimeout(() => {
         if (!isGrandShowActive) return;
-        const satScaleRatio = baseScale / 0.71;
+        const satBirth = performance.now();
+        const satLifespan = Math.max(1000, targetDuration - 240);
+
         for (let s = 0; s < satelliteCount; s++) {
           const t = (Math.PI * 2 * s) / satelliteCount;
           const hx = 16 * Math.pow(Math.sin(t), 3);
           const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-          const dist = 0.98 * baseScale * mult;
-          const satX = originX + (hx / 16) * dist;
-          const satY = originY + (hy / 17) * dist;
+          const satX = originX + (hx / 16) * baseScaleX * mult * 0.98;
+          const satY = originY + (hy / 17) * baseScaleY * mult * 0.98;
 
-          const satColors = ["#ffd700", "#00f5d4", "#ff007f", "#ff85a1", "#ffffff"];
-          for (let p = 0; p < 22; p++) {
+          const satColors = ["#ffd700", "#ffffff", "#ff85a1", "#ffccd5", "#fff0a6"];
+          for (let p = 0; p < 20; p++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = (Math.random() * 2.8 + 1.2) * Math.min(1.5, Math.max(0.7, satScaleRatio));
+            const speed = (Math.random() * 3.2 + 1.5) * Math.max(0.9, avgScale / 0.75);
             celebrationParticles.push({
               x: satX,
               y: satY,
               vx: Math.cos(angle) * speed,
               vy: Math.sin(angle) * speed - 0.3,
-              friction: 0.955,
+              friction: 0.925,
               gravity: 0.006,
-              birth: performance.now(),
-              lifespan: Math.max(1000, targetDuration - 420),
+              birth: satBirth,
+              lifespan: satLifespan,
               alpha: 1,
-              decay: 0.00195,
-              size: Math.random() * 4.0 + 2.0,
+              decay: 0.00265,
+              size: Math.random() * 4.2 + 2.0,
               color: satColors[p % satColors.length],
               shape: "star",
-              flicker: true
+              twinkle: true,
+              twinklePhase: Math.random() * Math.PI * 2
             });
           }
         }
-      }, 420);
+      }, 240);
 
-      // 7. TẦNG 7: 5 Lớp sóng xung kích khổng lồ quét sạch chân trời (Colossal Shockwaves)
-      const shockwaveConfigs = [
-        { delay: 0,   color: "#ffffff", speed: 15.0, lw: 8.0, r: 20 },
-        { delay: 80,  color: "#ff007f", speed: 12.5, lw: 6.5, r: 16 },
-        { delay: 170, color: "#ffd700", speed: 10.0, lw: 5.0, r: 12 },
-        { delay: 270, color: "#00f5d4", speed: 8.0,  lw: 4.0, r: 10 },
-        { delay: 380, color: "#f72585", speed: 6.5,  lw: 3.5, r: 8  }
-      ];
-      shockwaveConfigs.forEach(cfg => {
-        setTimeout(() => {
-          cosmicShockwaves.push({
-            x: originX,
-            y: originY,
-            radius: cfg.r,
-            maxRadius: Math.max(W, H) * 1.15,
-            speed: cfg.speed,
-            alpha: 1,
-            color: cfg.color,
-            lineWidth: cfg.lw
-          });
-        }, cfg.delay);
+      // 7. TẦNG 7: 2 Làn Sóng Hào Quang Tình Yêu Mềm Mại Lan Nhanh (Romantic Silk Shockwaves)
+      cosmicShockwaves.push({
+        x: originX,
+        y: originY,
+        radius: 16,
+        maxRadius: Math.max(W, H) * 1.15,
+        speed: 19.0,
+        alpha: 0.85,
+        color: "#ffffff",
+        lineWidth: 4.5
       });
+      setTimeout(() => {
+        cosmicShockwaves.push({
+          x: originX,
+          y: originY,
+          radius: 12,
+          maxRadius: Math.max(W, H) * 0.95,
+          speed: 14.0,
+          alpha: 0.65,
+          color: "#ff85a1",
+          lineWidth: 3.5
+        });
+      }, 80);
     }
 
     // MÀN TRÌNH DIỄN PHÁO HOA CHÍNH: KÉO DÀI 30 GIÂY -> TẮT HẾT PHÁO KHÁC -> ĐẾM NGƯỢC 3S -> BẮN QUẢ SIÊU TO KHỔNG LỒ
@@ -4820,7 +4822,6 @@
 
           if (burstStyle === "colossal_masterpiece") {
             playColossalEarthShatterBlast(tx);
-            triggerEarthShatterShake();
             triggerSuperClimaxFlash();
             triggerHaptic([120, 80, 150, 100, 200, 120, 250, 300]);
             createColossalRomanticMasterpiece(tx, ty);
@@ -4863,41 +4864,60 @@
           continue;
         }
 
-        const currentAlpha = cp.flicker && Math.random() < 0.3 ? cp.alpha * 0.4 : cp.alpha;
+        let currentAlpha = cp.alpha;
+        if (cp.twinkle) {
+          const wave = Math.sin((now || performance.now()) * 0.006 + (cp.twinklePhase || 0));
+          currentAlpha *= (0.68 + 0.32 * wave);
+        } else if (cp.flicker && Math.random() < 0.25) {
+          currentAlpha *= 0.4;
+        }
         ctx.globalAlpha = Math.max(0, currentAlpha);
         ctx.fillStyle = cp.color;
-        ctx.beginPath();
+
         if (cp.shape === "heart") {
           const s = cp.size;
+          ctx.beginPath();
           ctx.arc(cp.x - s / 2, cp.y, s / 2, Math.PI, 0, false);
           ctx.arc(cp.x + s / 2, cp.y, s / 2, Math.PI, 0, false);
           ctx.lineTo(cp.x, cp.y + s);
           ctx.closePath();
           ctx.fill();
-        } else if (cp.shape === "star") {
-          const s = cp.size * 1.4;
+          if (s >= 3.6 && currentAlpha > 0.35) {
+            ctx.fillStyle = "#ffffff";
+            ctx.globalAlpha = currentAlpha * 0.55;
+            ctx.beginPath();
+            ctx.arc(cp.x, cp.y + s * 0.18, s * 0.22, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } else if (cp.shape === "star" || cp.shape === "spark") {
+          const s = cp.size * 1.35;
+          ctx.beginPath();
           ctx.moveTo(cp.x, cp.y - s);
-          ctx.lineTo(cp.x + s * 0.28, cp.y - s * 0.28);
-          ctx.lineTo(cp.x + s, cp.y);
-          ctx.lineTo(cp.x + s * 0.28, cp.y + s * 0.28);
-          ctx.lineTo(cp.x, cp.y + s);
-          ctx.lineTo(cp.x - s * 0.28, cp.y + s * 0.28);
-          ctx.lineTo(cp.x - s, cp.y);
-          ctx.lineTo(cp.x - s * 0.28, cp.y - s * 0.28);
+          ctx.quadraticCurveTo(cp.x, cp.y, cp.x + s, cp.y);
+          ctx.quadraticCurveTo(cp.x, cp.y, cp.x, cp.y + s);
+          ctx.quadraticCurveTo(cp.x, cp.y, cp.x - s, cp.y);
+          ctx.quadraticCurveTo(cp.x, cp.y, cp.x, cp.y - s);
           ctx.closePath();
           ctx.fill();
-        } else if (cp.shape === "spark") {
-          const s = cp.size * 1.35;
-          ctx.moveTo(cp.x - s, cp.y);
-          ctx.lineTo(cp.x + s, cp.y);
-          ctx.moveTo(cp.x, cp.y - s);
-          ctx.lineTo(cp.x, cp.y + s);
-          ctx.strokeStyle = cp.color;
-          ctx.lineWidth = 1.3;
-          ctx.stroke();
+
+          if (currentAlpha > 0.25) {
+            ctx.fillStyle = "#ffffff";
+            ctx.globalAlpha = Math.min(1, currentAlpha * 1.3);
+            ctx.beginPath();
+            ctx.arc(cp.x, cp.y, Math.max(0.7, s * 0.22), 0, Math.PI * 2);
+            ctx.fill();
+          }
         } else {
+          ctx.beginPath();
           ctx.arc(cp.x, cp.y, cp.size, 0, Math.PI * 2);
           ctx.fill();
+          if (cp.size >= 3.0 && currentAlpha > 0.35) {
+            ctx.fillStyle = "#ffffff";
+            ctx.globalAlpha = currentAlpha * 0.55;
+            ctx.beginPath();
+            ctx.arc(cp.x, cp.y, cp.size * 0.32, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
       }
       ctx.globalAlpha = 1;

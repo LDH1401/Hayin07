@@ -782,6 +782,131 @@
       100% { transform: scale(1); }
     }
 
+    /* Earth-Shattering Screen Shake Animation (Rung chuyển đất trời) */
+    .stage.earth-shatter {
+      animation: earthShatterShake 1.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+    @keyframes earthShatterShake {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1.045); }
+      7% { transform: translate(-18px, 14px) rotate(-1.8deg) scale(1.045); }
+      14% { transform: translate(18px, -15px) rotate(2deg) scale(1.04); }
+      21% { transform: translate(-16px, 12px) rotate(-1.5deg) scale(1.035); }
+      28% { transform: translate(14px, -10px) rotate(1.3deg) scale(1.03); }
+      36% { transform: translate(-11px, 8px) rotate(-1deg) scale(1.025); }
+      44% { transform: translate(9px, -7px) rotate(0.8deg) scale(1.02); }
+      54% { transform: translate(-7px, 5px) rotate(-0.5deg) scale(1.015); }
+      64% { transform: translate(5px, -4px) rotate(0.4deg) scale(1.01); }
+      74% { transform: translate(-3px, 2px) rotate(-0.2deg) scale(1.005); }
+      85% { transform: translate(2px, -1px) rotate(0.1deg) scale(1); }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    }
+
+    /* Fullscreen Super Climax Flash */
+    .super-climax-flash {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.96) 0%, rgba(255, 105, 180, 0.45) 45%, transparent 75%);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 999;
+      transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .super-climax-flash.active {
+      opacity: 1;
+      transition: none;
+    }
+
+    /* Grand Finale 3-Second Countdown Overlay */
+    .grand-finale-countdown {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 15;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .grand-finale-countdown.active {
+      opacity: 1;
+    }
+    .finale-count-ambient {
+      position: absolute;
+      width: min(500px, 90vw);
+      height: min(500px, 90vw);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 0, 127, 0.25) 0%, rgba(255, 215, 0, 0.15) 40%, transparent 70%);
+      filter: blur(40px);
+      animation: finaleAmbientPulse 1s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes finaleAmbientPulse {
+      0% { transform: scale(0.85); opacity: 0.6; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+    .finale-count-number {
+      font-size: clamp(6.5rem, 32vw, 14rem);
+      font-weight: 900;
+      line-height: 1;
+      font-family: var(--font-main);
+      color: #ffffff;
+      text-shadow:
+        0 0 25px #ffffff,
+        0 0 50px #ff007f,
+        0 0 90px #ff1493,
+        0 0 140px #ffd700;
+      opacity: 0;
+      transform: scale(0.4);
+      filter: blur(10px);
+      will-change: transform, opacity, filter;
+    }
+    .finale-count-number.tick-animate {
+      animation: finaleNumberPop 0.92s cubic-bezier(0.15, 0.85, 0.35, 1.2) forwards;
+    }
+    @keyframes finaleNumberPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-6deg);
+        filter: blur(14px) brightness(2);
+      }
+      25% {
+        opacity: 1;
+        transform: scale(1.22) rotate(2deg);
+        filter: blur(0px) brightness(1.6);
+      }
+      50% {
+        transform: scale(0.96) rotate(0deg);
+        filter: blur(0px) brightness(1.2);
+      }
+      75% {
+        opacity: 1;
+        transform: scale(1.02);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.35) translateY(-15px);
+        filter: blur(8px);
+      }
+    }
+    .finale-count-sub {
+      margin-top: 18px;
+      font-size: clamp(1.05rem, 3.8vw, 1.45rem);
+      font-weight: 600;
+      color: rgba(255, 240, 245, 0.95);
+      text-shadow: 0 0 16px rgba(255, 0, 127, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .finale-count-sub.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* ==========================================================================
        4. CINEMATIC FLOATING ROMANTIC TYPOGRAPHY (CHỈ HIỆN CHỮ - KHÔNG KHUNG / KHÔNG VIỀN)
        ========================================================================== */
@@ -2208,6 +2333,9 @@
   <!-- Atmospheric Nebula Glow -->
   <div class="ambient-nebula" id="ambientNebula" aria-hidden="true"></div>
 
+  <!-- Fullscreen Super Climax Flash for Colossal Firework -->
+  <div class="super-climax-flash" id="superClimaxFlash" aria-hidden="true"></div>
+
   <!-- Interactive Mouse / Touch Glow Aura -->
   <div class="cursor-aura" id="cursorAura" aria-hidden="true"></div>
 
@@ -2313,6 +2441,13 @@
         </button>
         <span class="agree-hint-badge" id="agreeHintBadge">Chạm để đồng ý ❤️</span>
       </div>
+    </div>
+
+    <!-- 6. Grand Finale 3-Second Countdown & Climax Display -->
+    <div class="grand-finale-countdown" id="grandFinaleCountdown" aria-hidden="true">
+      <div class="finale-count-ambient"></div>
+      <div class="finale-count-number" id="finaleCountNumber"></div>
+      <div class="finale-count-sub" id="finaleCountSub"></div>
     </div>
 
     <!-- Screen Reader Accessible Live Region -->
@@ -2738,6 +2873,8 @@
     let autoRocketInterval = null;
     let megaHeartInterval = null;
     let megaBlossomInterval = null;
+    let grandShowTimeouts = [];
+    let agreeModalAutoTimer = null;
     let isGrandShowActive = false;
 
     // Particle Text Engine
@@ -3537,8 +3674,9 @@
     function launchAscendingRocket(targetX, targetY, burstType = "random", customStartX = null) {
       const startX = customStartX !== null ? customStartX : (targetX + (Math.random() - 0.5) * 120);
       const startY = H + 15;
-      const isMega = burstType === "giant_heart" || burstType === "infinity_blossom";
-      const duration = isMega ? 44 : (28 + Math.floor(Math.random() * 12));
+      const isColossal = burstType === "colossal_masterpiece";
+      const isMega = isColossal || burstType === "giant_heart" || burstType === "infinity_blossom";
+      const duration = isColossal ? 54 : (isMega ? 44 : (28 + Math.floor(Math.random() * 12)));
       const vx = (targetX - startX) / duration;
       const vy = (targetY - startY) / duration;
 
@@ -3547,7 +3685,7 @@
         "#a855f7", "#ff70a6", "#10b981", "#ff5400", "#e879f9",
         "#fef08a", "#06b6d4", "#f43f5e"
       ];
-      const rocketColor = vibrantColors[(Math.random() * vibrantColors.length) | 0];
+      const rocketColor = isColossal ? "#ffffff" : vibrantColors[(Math.random() * vibrantColors.length) | 0];
 
       ascendingRockets.push({
         x: startX,
@@ -3559,10 +3697,12 @@
         life: duration,
         color: rocketColor,
         burstType: burstType,
-        trailHue: Math.random() < 0.35 ? "#ffd700" : rocketColor
+        trailHue: isColossal ? "#ffd700" : (Math.random() < 0.35 ? "#ffd700" : rocketColor)
       });
 
-      if (isMega) {
+      if (isColossal) {
+        playColossalRocketAscentSound(startX);
+      } else if (isMega) {
         playGiantFireworkWhistleLaunchSound(startX);
       } else {
         playFireworkLaunchSound(0.16, startX);
@@ -3705,8 +3845,329 @@
       if (ambient) ambient.classList.remove("phrase-bloom");
     }
 
+    function triggerEarthShatterShake() {
+      const stageEl = document.querySelector(".stage");
+      if (stageEl) {
+        stageEl.classList.remove("epic-impact", "earth-shatter");
+        void stageEl.offsetWidth; // Force reflow
+        stageEl.classList.add("earth-shatter");
+        setTimeout(() => {
+          if (stageEl) stageEl.classList.remove("earth-shatter");
+        }, 1500);
+      }
+    }
+
+    function triggerSuperClimaxFlash() {
+      const flashEl = $("superClimaxFlash");
+      if (flashEl) {
+        flashEl.classList.remove("active");
+        void flashEl.offsetWidth; // Force reflow
+        flashEl.classList.add("active");
+        setTimeout(() => {
+          if (flashEl) flashEl.classList.remove("active");
+        }, 50);
+      }
+    }
+
+    function showFinaleCount(num) {
+      const container = $("grandFinaleCountdown");
+      const numEl = $("finaleCountNumber");
+      const subEl = $("finaleCountSub");
+      if (!container || !numEl) return;
+
+      container.classList.add("active");
+      numEl.textContent = num;
+      numEl.classList.remove("tick-animate");
+      void numEl.offsetWidth; // Force reflow
+      numEl.classList.add("tick-animate");
+
+      if (subEl) {
+        if (num === 3) {
+          subEl.textContent = "Khoảnh khắc tuyệt vời nhất...";
+          subEl.classList.add("show");
+        } else if (num === 2) {
+          subEl.textContent = "Sắp bùng nổ rồi...";
+        } else if (num === 1) {
+          subEl.textContent = "Sẵn sàng đón nhận tình yêu nhé... 💖";
+        }
+      }
+    }
+
+    function hideFinaleCount() {
+      const container = $("grandFinaleCountdown");
+      const subEl = $("finaleCountSub");
+      if (container) container.classList.remove("active");
+      if (subEl) subEl.classList.remove("show");
+    }
+
+    function scheduleGrandShow(delayMs, fn) {
+      const t = setTimeout(() => {
+        if (!isGrandShowActive) return;
+        fn();
+      }, delayMs);
+      grandShowTimeouts.push(t);
+      return t;
+    }
+
+    function clearGrandShowTimers() {
+      grandShowTimeouts.forEach(t => clearTimeout(t));
+      grandShowTimeouts = [];
+      if (autoHeartInterval) { clearInterval(autoHeartInterval); autoHeartInterval = null; }
+      if (autoRocketInterval) { clearInterval(autoRocketInterval); autoRocketInterval = null; }
+      if (megaHeartInterval) { clearInterval(megaHeartInterval); megaHeartInterval = null; }
+      if (megaBlossomInterval) { clearInterval(megaBlossomInterval); megaBlossomInterval = null; }
+      if (agreeModalAutoTimer) { clearTimeout(agreeModalAutoTimer); agreeModalAutoTimer = null; }
+      hideFinaleCount();
+    }
+
+    function launchColossalMasterpieceRocket() {
+      const startX = W * 0.50;
+      const startY = H + 25;
+      const targetX = W * 0.50;
+      const targetY = H * 0.32;
+      const duration = 54;
+      const vx = (targetX - startX) / duration;
+      const vy = (targetY - startY) / duration;
+
+      ascendingRockets.push({
+        x: startX,
+        y: startY,
+        vx: vx,
+        vy: vy,
+        targetX: targetX,
+        targetY: targetY,
+        life: duration,
+        color: "#ffffff",
+        burstType: "colossal_masterpiece",
+        trailHue: "#ffd700"
+      });
+
+      playColossalRocketAscentSound(startX);
+      triggerHaptic([80, 120]);
+    }
+
+    // SIÊU PHÁO HOA ĐẠI BÁC KHỔNG LỒ RUNG CHUYỂN ĐẤT TRỜI, SIÊU LÃNG MẠN, SIÊU ĐẸP
+    function createColossalRomanticMasterpiece(originX = W / 2, originY = H * 0.32) {
+      const frictionVal = 0.962;
+      const mult = 1 / (1 - frictionVal); // ~26.3
+      const maxSpeedY = (H * 0.27) / (11.92 * mult);
+      const maxSpeedX = (W * 0.44) / (16 * mult);
+      const baseScale = Math.max(0.40, Math.min(maxSpeedY, maxSpeedX));
+
+      const outerCount = 420;
+      const waterfallCount = 280;
+      const midCount = 220;
+      const innerCount = 140;
+      const coreCount = 150;
+
+      const pinkDiamondPalette = [
+        "#ff007f", "#ff1493", "#ff2a8d", "#ff69b4", "#ff758f",
+        "#ff85a1", "#ff4d6d", "#f72585", "#ff0055", "#fff0f5", "#ffffff"
+      ];
+      const goldPalette = ["#ffd700", "#fef08a", "#ffe066", "#fff3bf", "#ffffff"];
+
+      // 1. TẦNG 1: Vành tim vô cực khổng lồ bao trùm bầu trời (Colossal Romantic Infinity Heart - 420 hạt)
+      for (let i = 0; i < outerCount; i++) {
+        const t = (Math.PI * 2 * i) / outerCount;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        const speed = (Math.random() * 0.12 + 0.94) * baseScale;
+
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: hx * speed,
+          vy: hy * speed,
+          friction: frictionVal,
+          gravity: 0.004,
+          alpha: 1,
+          decay: 0.00085 + Math.random() * 0.00055, // Đọng lại lấp lánh suốt 12-16 giây
+          size: Math.random() * 5.8 + 3.6,
+          color: pinkDiamondPalette[i % pinkDiamondPalette.length],
+          shape: "heart",
+          flicker: true
+        });
+
+        // Bụi sao vàng bám theo gân tim
+        if (i % 2 === 0) {
+          celebrationParticles.push({
+            x: originX,
+            y: originY,
+            vx: hx * speed * (0.90 + Math.random() * 0.10),
+            vy: hy * speed * (0.90 + Math.random() * 0.10),
+            friction: frictionVal,
+            gravity: 0.004,
+            alpha: 1,
+            decay: 0.00095 + Math.random() * 0.00060,
+            size: Math.random() * 3.8 + 2.0,
+            color: "#ffd700",
+            shape: "spark",
+            flicker: true
+          });
+        }
+      }
+
+      // 2. TẦNG 2: Thác sao vàng kim 24K buông rủ từ đỉnh trời (Royal 24K Gold Kamuro Waterfall - 280 hạt)
+      for (let i = 0; i < waterfallCount; i++) {
+        const t = (Math.PI * 2 * i) / waterfallCount;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        const speed = (Math.random() * 0.14 + 0.86) * baseScale;
+
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: hx * speed * (Math.random() * 0.25 + 0.85),
+          vy: hy * speed * (Math.random() * 0.25 + 0.85) - 0.4,
+          friction: 0.965,
+          gravity: 0.012,
+          alpha: 1,
+          decay: 0.0010 + Math.random() * 0.00065,
+          size: Math.random() * 4.2 + 2.2,
+          color: goldPalette[i % goldPalette.length],
+          shape: "spark",
+          flicker: true
+        });
+      }
+
+      // 3. TẦNG 3: Lớp tim hồng ngọc & pha lê tầng giữa (Inner Radiant Rose Crystal Heart - 220 hạt)
+      for (let i = 0; i < midCount; i++) {
+        const t = (Math.PI * 2 * i) / midCount;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        const speed = (Math.random() * 0.10 + 0.65) * baseScale;
+
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: hx * speed,
+          vy: hy * speed,
+          friction: frictionVal,
+          gravity: 0.004,
+          alpha: 1,
+          decay: 0.0010 + Math.random() * 0.00060,
+          size: Math.random() * 4.8 + 2.6,
+          color: pinkDiamondPalette[(i + 3) % pinkDiamondPalette.length],
+          shape: "star",
+          flicker: true
+        });
+      }
+
+      // 4. TẦNG 4: Lớp tim ngọc trai trong cùng (Core Pearl Sakura Heart - 140 hạt)
+      for (let i = 0; i < innerCount; i++) {
+        const t = (Math.PI * 2 * i) / innerCount;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        const speed = (Math.random() * 0.08 + 0.38) * baseScale;
+
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: hx * speed,
+          vy: hy * speed,
+          friction: frictionVal,
+          gravity: 0.004,
+          alpha: 1,
+          decay: 0.0010 + Math.random() * 0.00060,
+          size: Math.random() * 4.2 + 2.2,
+          color: i % 2 === 0 ? "#ffffff" : "#ffb3c6",
+          shape: "heart",
+          flicker: true
+        });
+      }
+
+      // 5. TẦNG 5: Tâm siêu tân tinh kim cương trắng chói lòa (Diamond Supernova Core - 150 hạt)
+      for (let i = 0; i < coreCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (Math.random() * 4.5 + 1.8) * baseScale * 4;
+        celebrationParticles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 0.8,
+          friction: 0.945,
+          gravity: 0.005,
+          alpha: 1,
+          decay: 0.0012 + Math.random() * 0.00075,
+          size: Math.random() * 5.8 + 2.8,
+          color: i % 2 === 0 ? "#ffffff" : (i % 3 === 0 ? "#ffd700" : "#ff758f"),
+          shape: Math.random() < 0.5 ? "star" : "spark"
+        });
+      }
+
+      // 6. TẦNG 6: Vòng vương miện 12 chùm hoa vệ tinh nở rộ sau 420ms (12 Satellite Tiara Starbursts)
+      const satelliteCount = 12;
+      setTimeout(() => {
+        if (!isGrandShowActive) return;
+        const satScaleRatio = baseScale / 0.71;
+        for (let s = 0; s < satelliteCount; s++) {
+          const t = (Math.PI * 2 * s) / satelliteCount;
+          const hx = 16 * Math.pow(Math.sin(t), 3);
+          const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+          const dist = 0.98 * baseScale * mult;
+          const satX = originX + (hx / 16) * dist;
+          const satY = originY + (hy / 17) * dist;
+
+          const satColors = ["#ffd700", "#00f5d4", "#ff007f", "#ff85a1", "#ffffff"];
+          for (let p = 0; p < 22; p++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = (Math.random() * 2.8 + 1.2) * Math.min(1.5, Math.max(0.7, satScaleRatio));
+            celebrationParticles.push({
+              x: satX,
+              y: satY,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 0.3,
+              friction: 0.955,
+              gravity: 0.006,
+              alpha: 1,
+              decay: 0.0013 + Math.random() * 0.00085,
+              size: Math.random() * 4.0 + 2.0,
+              color: satColors[p % satColors.length],
+              shape: "star",
+              flicker: true
+            });
+          }
+        }
+      }, 420);
+
+      // 7. TẦNG 7: 5 Lớp sóng xung kích khổng lồ quét sạch chân trời (Colossal Shockwaves)
+      const shockwaveConfigs = [
+        { delay: 0,   color: "#ffffff", speed: 15.0, lw: 8.0, r: 20 },
+        { delay: 80,  color: "#ff007f", speed: 12.5, lw: 6.5, r: 16 },
+        { delay: 170, color: "#ffd700", speed: 10.0, lw: 5.0, r: 12 },
+        { delay: 270, color: "#00f5d4", speed: 8.0,  lw: 4.0, r: 10 },
+        { delay: 380, color: "#f72585", speed: 6.5,  lw: 3.5, r: 8  }
+      ];
+      shockwaveConfigs.forEach(cfg => {
+        setTimeout(() => {
+          cosmicShockwaves.push({
+            x: originX,
+            y: originY,
+            radius: cfg.r,
+            maxRadius: Math.max(W, H) * 1.15,
+            speed: cfg.speed,
+            alpha: 1,
+            color: cfg.color,
+            lineWidth: cfg.lw
+          });
+        }, cfg.delay);
+      });
+
+      // 8. TẦNG 8: Dòng chữ tình yêu lãng mạn thăng hoa (Romantic Stardust Message)
+      setTimeout(() => {
+        if (!isGrandShowActive) return;
+        const lovePhrase = CONFIG.to ? `Mãi bên nhau nhé, ${CONFIG.to}! 💖✨` : "Trọn vẹn tình yêu này... gửi đến em 💖✨";
+        buildTextParticles(lovePhrase, false);
+        textStart = performance.now();
+      }, 1600);
+    }
+
+    // MÀN TRÌNH DIỄN PHÁO HOA CHÍNH: KÉO DÀI 30 GIÂY -> TẮT HẾT PHÁO KHÁC -> ĐẾM NGƯỢC 3S -> BẮN QUẢ SIÊU TO KHỔNG LỒ
     function startGrandFireworksShow() {
-      // 1. Tắt nhạc nền để thưởng thức trọn vẹn âm thanh pháo hoa sống động
+      // Dọn sạch mọi timer cũ nếu đang chạy
+      clearGrandShowTimers();
+
+      // 1. Tắt nhạc nền cũ để thưởng thức trọn vẹn âm thanh pháo hoa sống động
       stopBackgroundMusic();
 
       // Khởi tạo và kích hoạt âm thanh Web Audio cho pháo hoa
@@ -3715,94 +4176,110 @@
         audioCtx.resume().catch(() => {});
       }
 
-      // 2. Kích hoạt cờ màn trình diễn, xóa sao băng và dòng chữ câu hỏi cũ
+      // 2. Kích hoạt cờ màn trình diễn, xóa sao băng và chữ cũ
       isGrandShowActive = true;
       shootingStars = [];
       shootingStarDust = [];
       clearTextParticles();
+      hideFinaleCount();
 
-      // 2. Kích hoạt đợt pháo hoa bùng nổ khai màn: 100% PHÁO ĐỀU BẮN TỪ DƯỚI ĐÁY LÊN
-      launchRocketFanSalvo(3);
+      // === GIAI ĐOẠN 1: MÀN TRÌNH DIỄN PHÁO HOA KÉO DÀI ĐÚNG 30 GIÂY ===
+      // Khai màn rực rỡ (0s - 3s)
+      launchRocketFanSalvo(5);
       playCelebrationFanfare();
       triggerHaptic([60, 100, 150, 200]);
 
-      setTimeout(() => {
-        launchCrossfireRockets();
-      }, 750);
+      scheduleGrandShow(750, () => launchCrossfireRockets());
+      scheduleGrandShow(1500, () => launchAscendingRocket(W * 0.50, H * 0.32, "heart", W * 0.50));
+      scheduleGrandShow(2800, () => launchAscendingRocket(W * 0.50, H * 0.30, "giant_heart", W * 0.50));
 
-      setTimeout(() => {
-        launchAscendingRocket(W * 0.50, H * 0.32, "heart", W * 0.50);
-      }, 1500);
+      // Đợt 2: 5s - 10s (Liễu rủ vàng 24K + Ngân hà xoắn ốc + Hoa sen thiên hà)
+      scheduleGrandShow(5200, () => launchRocketFanSalvo(4));
+      scheduleGrandShow(7000, () => {
+        launchAscendingRocket(W * 0.30, H * 0.28, "willow", W * 0.25);
+        launchAscendingRocket(W * 0.70, H * 0.28, "spiral", W * 0.75);
+      });
+      scheduleGrandShow(9200, () => launchAscendingRocket(W * 0.50, H * 0.33, "infinity_blossom", W * 0.50));
 
-      // 3. Đại tiệc pháo hoa liên hoàn: Nhịp độ chậm rãi, thư thả, thanh lịch
-      if (autoHeartInterval) {
-        clearInterval(autoHeartInterval);
-        autoHeartInterval = null;
-      }
-      if (autoRocketInterval) {
-        clearInterval(autoRocketInterval);
-        autoRocketInterval = null;
-      }
-      if (megaHeartInterval) {
-        clearInterval(megaHeartInterval);
-        megaHeartInterval = null;
-      }
-      if (megaBlossomInterval) {
-        clearInterval(megaBlossomInterval);
-        megaBlossomInterval = null;
-      }
+      // Đợt 3: 11s - 18s (Vòng hào quang sao + Siêu tân tinh + Đan chéo)
+      scheduleGrandShow(12000, () => launchCrossfireRockets());
+      scheduleGrandShow(13800, () => {
+        launchAscendingRocket(W * 0.35, H * 0.26, "ring", W * 0.30);
+        launchAscendingRocket(W * 0.65, H * 0.26, "supernova", W * 0.70);
+      });
+      scheduleGrandShow(16000, () => launchRocketFanSalvo(5));
+      scheduleGrandShow(18200, () => launchAscendingRocket(W * 0.50, H * 0.30, "giant_heart", W * 0.50));
 
-      // Kênh 0: SIÊU PHÁO HOA NGHỆ THUẬT TRÁI TIM KHỔNG LỒ ĐỊNH KỲ 9 GIÂY 1 LẦN
-      setTimeout(() => {
-        launchAscendingRocket(W * 0.50, H * 0.32, "giant_heart", W * 0.50);
-      }, 2000);
+      // Đợt 4: 20s - 27s (Cao trào pháo hoa liên hoàn dồn dập rực rỡ nhất)
+      scheduleGrandShow(20500, () => launchCrossfireRockets());
+      scheduleGrandShow(22000, () => {
+        launchAscendingRocket(W * 0.25, H * 0.25, "willow", W * 0.20);
+        launchAscendingRocket(W * 0.75, H * 0.25, "spiral", W * 0.80);
+      });
+      scheduleGrandShow(24000, () => launchRocketFanSalvo(5));
+      scheduleGrandShow(26000, () => {
+        launchAscendingRocket(W * 0.40, H * 0.30, "heart", W * 0.35);
+        launchAscendingRocket(W * 0.60, H * 0.30, "infinity_blossom", W * 0.65);
+      });
+      scheduleGrandShow(27800, () => launchCrossfireRockets());
 
-      megaHeartInterval = setInterval(() => {
-        const targetX = W * 0.50 + (Math.random() - 0.5) * (W * 0.16);
-        const targetY = H * 0.30 + (Math.random() - 0.5) * (H * 0.08);
-        launchAscendingRocket(targetX, targetY, "giant_heart", targetX);
-      }, 9000);
-
-      // Kênh 0.2: SIÊU PHÁO HOA NGHỆ THUẬT HOA SEN THIÊN HÀ VÔ CỰC ĐỊNH KỲ 12 GIÂY 1 LẦN
-      setTimeout(() => {
-        launchAscendingRocket(W * 0.50, H * 0.34, "infinity_blossom", W * 0.50);
-      }, 6000);
-
-      megaBlossomInterval = setInterval(() => {
-        const targetX = W * 0.50 + (Math.random() - 0.5) * (W * 0.18);
-        const targetY = H * 0.33 + (Math.random() - 0.5) * (H * 0.08);
-        launchAscendingRocket(targetX, targetY, "infinity_blossom", targetX);
-      }, 12000);
-
-      // Kênh 1: Thỉnh thoảng phóng một chùm tia pháo đan chéo / nan quạt / đơn (mỗi ~3.0s)
+      // Kênh đệm pháo hoa ngẫu nhiên duy trì nhịp độ sôi động trong 30s
       autoRocketInterval = setInterval(() => {
-        const rand = Math.random();
-        if (rand < 0.35) {
-          launchCrossfireRockets();
-        } else if (rand < 0.65) {
-          launchRocketFanSalvo(3);
-        } else {
-          const rx = W * 0.15 + Math.random() * (W * 0.70);
-          const ry = H * 0.16 + Math.random() * (H * 0.28);
-          launchAscendingRocket(rx, ry, "random");
+        if (!isGrandShowActive) return;
+        const rx = W * 0.18 + Math.random() * (W * 0.64);
+        const ry = H * 0.18 + Math.random() * (H * 0.25);
+        launchAscendingRocket(rx, ry, "random");
+      }, 2600);
+
+      // === GIAI ĐOẠN 2: ĐÚNG 30 GIÂY -> TẮT HẾT PHÁO HOA KHÁC ===
+      scheduleGrandShow(30000, () => {
+        // 1. Tắt hết toàn bộ các đợt bắn pháo hoa khác
+        if (autoHeartInterval) { clearInterval(autoHeartInterval); autoHeartInterval = null; }
+        if (autoRocketInterval) { clearInterval(autoRocketInterval); autoRocketInterval = null; }
+        if (megaHeartInterval) { clearInterval(megaHeartInterval); megaHeartInterval = null; }
+        if (megaBlossomInterval) { clearInterval(megaBlossomInterval); megaBlossomInterval = null; }
+
+        // 2. Xóa các tên lửa đang bay dở
+        ascendingRockets = [];
+
+        // 3. Cho các hạt pháo hoa còn sót lại tàn nhanh để bầu trời tĩnh lặng, sâu thẳm
+        for (let i = 0; i < celebrationParticles.length; i++) {
+          celebrationParticles[i].decay = Math.max(celebrationParticles[i].decay, 0.032);
         }
-      }, 3000);
+      });
 
-      // Kênh 2: Luân phiên phóng các quả pháo hoa nghệ thuật chính (Trái tim, Liễu rủ, Ngân hà, Vòng sao...) mỗi ~3.8s
-      const showStyles = ["heart", "willow", "spiral", "ring", "supernova", "celebration"];
-      let showIndex = 0;
+      // === GIAI ĐOẠN 3: ĐẾM NGƯỢC 3 GIÂY (3... 2... 1...) ===
+      // T = 31.0s: Đếm số 3
+      scheduleGrandShow(31000, () => {
+        showFinaleCount(3);
+        playFinaleHeartbeatTick(3);
+        triggerHaptic([50, 70]);
+      });
 
-      autoHeartInterval = setInterval(() => {
-        const style = showStyles[showIndex % showStyles.length];
-        showIndex++;
+      // T = 32.0s: Đếm số 2
+      scheduleGrandShow(32000, () => {
+        showFinaleCount(2);
+        playFinaleHeartbeatTick(2);
+        triggerHaptic([60, 90]);
+      });
 
-        const rx = W * 0.16 + Math.random() * (W * 0.68);
-        const ry = H * 0.18 + Math.random() * (H * 0.26);
-        const startX = W * 0.16 + Math.random() * (W * 0.68);
+      // T = 33.0s: Đếm số 1
+      scheduleGrandShow(33000, () => {
+        showFinaleCount(1);
+        playFinaleHeartbeatTick(1);
+        triggerHaptic([70, 120]);
+      });
 
-        // Bắn tia pháo từ chân trời lên cao rồi nổ bung theo style tương ứng
-        launchAscendingRocket(rx, ry, style, startX);
-      }, 3800);
+      // T = 33.9s: Ẩn đếm ngược, giữ khoảng lặng tĩnh mịch 0.3s
+      scheduleGrandShow(33900, () => {
+        hideFinaleCount();
+      });
+
+      // === GIAI ĐOẠN 4: BẮN QUẢ PHÁO HOA SIÊU TO KHỔNG LỒ RUNG CHUYỂN ĐẤT TRỜI ===
+      // T = 34.2s: Phóng quả tên lửa đại bác siêu khổng lồ
+      scheduleGrandShow(34200, () => {
+        launchColossalMasterpieceRocket();
+      });
     }
 
     function resize() {
@@ -4274,33 +4751,47 @@
         rk.y += rk.vy;
         rk.life--;
 
-        const isMega = rk.burstType === "giant_heart" || rk.burstType === "infinity_blossom";
-        const sparkCount = isMega ? 3 : 1;
+        const isColossal = rk.burstType === "colossal_masterpiece";
+        const isMega = isColossal || rk.burstType === "giant_heart" || rk.burstType === "infinity_blossom";
+        const sparkCount = isColossal ? 8 : (isMega ? 3 : 1);
         for (let s = 0; s < sparkCount; s++) {
+          const colColors = ["#ffd700", "#ff007f", "#ffffff", "#ff85a1", "#fef08a"];
+          const sparkCol = isColossal
+            ? colColors[(Math.random() * colColors.length) | 0]
+            : (isMega ? (rk.burstType === "giant_heart" ? (Math.random() < 0.5 ? "#ff007f" : "#ff85a1") : (Math.random() < 0.5 ? "#00f5d4" : "#ffd700")) : rk.color);
           celebrationParticles.push({
-            x: rk.x + (Math.random() - 0.5) * (isMega ? 6 : 4),
-            y: rk.y + (Math.random() - 0.5) * (isMega ? 6 : 4),
-            vx: -rk.vx * 0.12 + (Math.random() - 0.5) * 1.4,
-            vy: -rk.vy * 0.12 + Math.random() * 1.8,
+            x: rk.x + (Math.random() - 0.5) * (isColossal ? 10 : (isMega ? 6 : 4)),
+            y: rk.y + (Math.random() - 0.5) * (isColossal ? 10 : (isMega ? 6 : 4)),
+            vx: -rk.vx * 0.14 + (Math.random() - 0.5) * (isColossal ? 2.6 : 1.4),
+            vy: -rk.vy * 0.14 + Math.random() * (isColossal ? 2.6 : 1.8),
             gravity: 0.02,
             alpha: 0.98,
-            decay: isMega ? 0.022 : 0.038,
-            size: Math.random() * (isMega ? 4.5 : 3.2) + 1.8,
-            color: isMega ? (rk.burstType === "giant_heart" ? (Math.random() < 0.5 ? "#ff007f" : "#ff85a1") : (Math.random() < 0.5 ? "#00f5d4" : "#ffd700")) : rk.color,
-            shape: isMega && Math.random() < 0.35 ? "star" : "spark"
+            decay: isColossal ? 0.015 : (isMega ? 0.022 : 0.038),
+            size: Math.random() * (isColossal ? 5.5 : (isMega ? 4.5 : 3.2)) + 1.8,
+            color: sparkCol,
+            shape: isColossal ? (Math.random() < 0.4 ? "star" : "spark") : (isMega && Math.random() < 0.35 ? "star" : "spark")
           });
         }
 
         // Glowing rocket head
         ctx.save();
         ctx.fillStyle = "#ffffff";
-        ctx.shadowBlur = isMega ? 26 : 16;
-        ctx.shadowColor = isMega ? (rk.burstType === "giant_heart" ? "#ff007f" : (rk.burstType === "infinity_blossom" ? "#00f5d4" : "#ffd700")) : rk.color;
+        ctx.shadowBlur = isColossal ? 42 : (isMega ? 26 : 16);
+        ctx.shadowColor = isColossal ? "#ff007f" : (isMega ? (rk.burstType === "giant_heart" ? "#ff007f" : (rk.burstType === "infinity_blossom" ? "#00f5d4" : "#ffd700")) : rk.color);
         ctx.beginPath();
-        ctx.arc(rk.x, rk.y, isMega ? 4.8 : 3.2, 0, Math.PI * 2);
+        ctx.arc(rk.x, rk.y, isColossal ? 7.2 : (isMega ? 4.8 : 3.2), 0, Math.PI * 2);
         ctx.fill();
 
-        if (isMega) {
+        if (isColossal) {
+          ctx.strokeStyle = "#ffd700";
+          ctx.lineWidth = 2.4;
+          ctx.beginPath();
+          ctx.moveTo(rk.x - 18, rk.y); ctx.lineTo(rk.x + 18, rk.y);
+          ctx.moveTo(rk.x, rk.y - 18); ctx.lineTo(rk.x, rk.y + 18);
+          ctx.moveTo(rk.x - 12, rk.y - 12); ctx.lineTo(rk.x + 12, rk.y + 12);
+          ctx.moveTo(rk.x - 12, rk.y + 12); ctx.lineTo(rk.x + 12, rk.y - 12);
+          ctx.stroke();
+        } else if (isMega) {
           ctx.strokeStyle = rk.burstType === "giant_heart" ? "#ff007f" : (rk.burstType === "infinity_blossom" ? "#00f5d4" : "#ffd700");
           ctx.lineWidth = 2.0;
           ctx.beginPath();
@@ -4318,26 +4809,35 @@
           const burstStyle = rk.burstType;
           ascendingRockets.splice(i, 1);
 
-          if (isMega) {
+          if (burstStyle === "colossal_masterpiece") {
+            playColossalEarthShatterBlast(tx);
+            triggerEarthShatterShake();
+            triggerSuperClimaxFlash();
+            triggerHaptic([120, 80, 150, 100, 200, 120, 250, 300]);
+            createColossalRomanticMasterpiece(tx, ty);
+          } else if (isMega) {
             playSuperMegaFireworkBlast(tx);
+            if (burstStyle === "infinity_blossom") createCosmicInfinityBlossom(tx, ty);
+            else if (burstStyle === "giant_heart") createMasterpieceGiantHeart(tx, ty);
           } else {
             playFireworkExplosionSound(false, tx);
+            if (burstStyle === "heart") createHeartRingBurst(tx, ty);
+            else if (burstStyle === "willow") createWillowBurst(tx, ty);
+            else if (burstStyle === "spiral") createSpiralGalaxyBurst(tx, ty);
+            else if (burstStyle === "ring") createRingHaloBurst(tx, ty);
+            else if (burstStyle === "supernova") createSupernovaStarBurst(tx, ty);
+            else createCelebrationBurst(tx, ty, 120);
           }
-
-          if (burstStyle === "infinity_blossom") createCosmicInfinityBlossom(tx, ty);
-          else if (burstStyle === "giant_heart") createMasterpieceGiantHeart(tx, ty);
-          else if (burstStyle === "heart") createHeartRingBurst(tx, ty);
-          else if (burstStyle === "willow") createWillowBurst(tx, ty);
-          else if (burstStyle === "spiral") createSpiralGalaxyBurst(tx, ty);
-          else if (burstStyle === "ring") createRingHaloBurst(tx, ty);
-          else if (burstStyle === "supernova") createSupernovaStarBurst(tx, ty);
-          else createCelebrationBurst(tx, ty, 120);
         }
       }
 
       // 4. Draw Celebration Fireworks Particles
       for (let i = celebrationParticles.length - 1; i >= 0; i--) {
         const cp = celebrationParticles[i];
+        if (cp.friction) {
+          cp.vx *= cp.friction;
+          cp.vy *= cp.friction;
+        }
         cp.x += cp.vx;
         cp.y += cp.vy;
         cp.vy += cp.gravity;
@@ -5072,6 +5572,310 @@
       } catch (e) {}
     }
 
+    // 4. TIẾNG ĐẬP THÌNH THỊCH HỒI HỘP CHO ĐẾM NGƯỢC 3 GIÂY (Cinematic Sub-bass Heartbeat & Ethereal Chime)
+    function playFinaleHeartbeatTick(num) {
+      if (!isGrandShowActive || !audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime;
+        const outNode = audioMaster || audioCtx.destination;
+
+        // Tần số và độ mạnh tăng dần: 3 -> 2 -> 1
+        const startFreq = num === 3 ? 74 : (num === 2 ? 86 : 98);
+        const endFreq = 20;
+        const vol = num === 3 ? 0.38 : (num === 2 ? 0.44 : 0.52);
+
+        // A. Cú đập trầm ấm rung lồng ngực (Chest-Thumping Sub-Bass Heartbeat Pulse)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(startFreq, time);
+        osc.frequency.exponentialRampToValueAtTime(endFreq, time + 0.38);
+
+        gain.gain.setValueAtTime(0.0001, time);
+        gain.gain.exponentialRampToValueAtTime(vol, time + 0.014);
+        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.58);
+
+        osc.connect(gain);
+        gain.connect(outNode);
+        osc.start(time);
+        osc.stop(time + 0.62);
+
+        // B. Tiếng chuông ngân tinh tú lãng mạn (D-Major Chord Progression: D5 -> F#5 -> A5)
+        const chimeOsc = audioCtx.createOscillator();
+        const chimeGain = audioCtx.createGain();
+        chimeOsc.type = "triangle";
+        const chimeFreq = num === 3 ? 587.33 : (num === 2 ? 739.99 : 880.00);
+        chimeOsc.frequency.setValueAtTime(chimeFreq, time);
+
+        chimeGain.gain.setValueAtTime(0.0001, time);
+        chimeGain.gain.exponentialRampToValueAtTime(0.12, time + 0.012);
+        chimeGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.72);
+
+        chimeOsc.connect(chimeGain);
+        chimeGain.connect(outNode);
+        chimeOsc.start(time);
+        chimeOsc.stop(time + 0.75);
+      } catch (e) {}
+    }
+
+    // 5. TIẾNG RÍT HÚ SIÊU ÂM CỰC ĐẠI KHI PHÓNG QUẢ PHÁO HOA SIÊU TO KHỔNG LỒ (Epic Ascending Colossal Whistle)
+    function playColossalRocketAscentSound(posX = null) {
+      if (!isGrandShowActive || !audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime;
+        const duration = 0.98;
+
+        let outNode = audioMaster || audioCtx.destination;
+        if (audioCtx.createStereoPanner && posX !== null) {
+          try {
+            const panner = audioCtx.createStereoPanner();
+            const panVal = Math.max(-0.85, Math.min(0.85, (posX - W * 0.5) / (W * 0.5)));
+            panner.pan.setValueAtTime(panVal, time);
+            panner.connect(audioMaster || audioCtx.destination);
+            outNode = panner;
+          } catch (pe) {}
+        }
+
+        // TẦNG 1: Cú thốc nòng đại bác siêu uy lực (Heavy Colossal Mortar Thud: 110Hz -> 22Hz)
+        const kickOsc = audioCtx.createOscillator();
+        const kickGain = audioCtx.createGain();
+        kickOsc.type = "sine";
+        kickOsc.frequency.setValueAtTime(110, time);
+        kickOsc.frequency.exponentialRampToValueAtTime(22, time + 0.16);
+
+        kickGain.gain.setValueAtTime(0.0001, time);
+        kickGain.gain.exponentialRampToValueAtTime(0.48, time + 0.008);
+        kickGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.22);
+
+        kickOsc.connect(kickGain);
+        kickGain.connect(outNode);
+        kickOsc.start(time);
+        kickOsc.stop(time + 0.24);
+
+        // TẦNG 2: Tiếng rít hú siêu thanh dâng trào mạnh mẽ (Ascending Resonant Whistle: 300Hz -> 1600Hz)
+        const bufLen = Math.floor(audioCtx.sampleRate * duration);
+        const noiseBuf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+        const data = noiseBuf.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufLen; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99 * b0 + white * 0.05;
+          b1 = 0.95 * b1 + white * 0.10;
+          b2 = 0.85 * b2 + white * 0.20;
+          data[i] = (b0 + b1 + b2) * 0.55;
+        }
+
+        const whistleSource = audioCtx.createBufferSource();
+        whistleSource.buffer = noiseBuf;
+
+        const bp1 = audioCtx.createBiquadFilter();
+        bp1.type = "bandpass";
+        bp1.frequency.setValueAtTime(320, time);
+        bp1.frequency.exponentialRampToValueAtTime(1650, time + duration);
+        bp1.Q.value = 18;
+
+        const bp2 = audioCtx.createBiquadFilter();
+        bp2.type = "bandpass";
+        bp2.frequency.setValueAtTime(320, time);
+        bp2.frequency.exponentialRampToValueAtTime(1650, time + duration);
+        bp2.Q.value = 18;
+
+        const whistleGain = audioCtx.createGain();
+        whistleGain.gain.setValueAtTime(0.0001, time);
+        whistleGain.gain.exponentialRampToValueAtTime(0.45, time + 0.12);
+        whistleGain.gain.linearRampToValueAtTime(0.55, time + duration * 0.82);
+        whistleGain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+        whistleSource.connect(bp1);
+        bp1.connect(bp2);
+        bp2.connect(whistleGain);
+        whistleGain.connect(outNode);
+
+        whistleSource.start(time);
+        whistleSource.stop(time + duration + 0.02);
+
+        // TẦNG 3: Luồng gió phản lực cuồn cuộn (Turbulent Jet Engine Draft)
+        const rushSource = audioCtx.createBufferSource();
+        rushSource.buffer = noiseBuf;
+
+        const rushFilter = audioCtx.createBiquadFilter();
+        rushFilter.type = "bandpass";
+        rushFilter.frequency.setValueAtTime(250, time);
+        rushFilter.frequency.exponentialRampToValueAtTime(980, time + duration);
+        rushFilter.Q.value = 1.4;
+
+        const rushGain = audioCtx.createGain();
+        rushGain.gain.setValueAtTime(0.0001, time);
+        rushGain.gain.exponentialRampToValueAtTime(0.28, time + 0.09);
+        rushGain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+        rushSource.connect(rushFilter);
+        rushFilter.connect(rushGain);
+        rushGain.connect(outNode);
+
+        rushSource.start(time);
+        rushSource.stop(time + duration + 0.02);
+      } catch (e) {}
+    }
+
+    // 6. CÚ NỔ ĐẠI BÁC SIÊU TO KHỔNG LỒ RUNG CHUYỂN ĐẤT TRỜI (Earth-Shattering Colossal Cannon Impact)
+    function playColossalEarthShatterBlast(posX = null) {
+      if (!isGrandShowActive || !audioCtx || isMuted) return;
+      try {
+        const time = audioCtx.currentTime;
+        const baseVol = 0.58;
+
+        let outNode = audioMaster || audioCtx.destination;
+        if (audioCtx.createStereoPanner && posX !== null) {
+          try {
+            const panner = audioCtx.createStereoPanner();
+            const panVal = Math.max(-0.85, Math.min(0.85, (posX - W * 0.5) / (W * 0.5)));
+            panner.pan.setValueAtTime(panVal, time);
+            panner.connect(audioMaster || audioCtx.destination);
+            outNode = panner;
+          } catch (pe) {}
+        }
+
+        // TẦNG 1: CÚ NỔ SUB-BASS KINH THIÊN ĐỘNG ĐỊA LÀM RUNG CHUYỂN MỌI THỨ (Ultra Sub-Bass 55Hz -> 10Hz)
+        const subOsc = audioCtx.createOscillator();
+        const subGain = audioCtx.createGain();
+        subOsc.type = "sine";
+        subOsc.frequency.setValueAtTime(55, time);
+        subOsc.frequency.exponentialRampToValueAtTime(10, time + 1.2);
+
+        subGain.gain.setValueAtTime(0.0001, time);
+        subGain.gain.exponentialRampToValueAtTime(baseVol * 2.2, time + 0.015);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, time + 1.8);
+
+        subOsc.connect(subGain);
+        subGain.connect(outNode);
+        subOsc.start(time);
+        subOsc.stop(time + 1.85);
+
+        // TẦNG 2: KHỐI ÁP SUẤT NÉN XÉ TOẠC KHÔNG KHÍ (Compressed Shockwave Punch: 180Hz -> 20Hz)
+        const punchOsc = audioCtx.createOscillator();
+        const punchGain = audioCtx.createGain();
+        punchOsc.type = "sine";
+        punchOsc.frequency.setValueAtTime(180, time);
+        punchOsc.frequency.exponentialRampToValueAtTime(20, time + 0.25);
+
+        punchGain.gain.setValueAtTime(0.0001, time);
+        punchGain.gain.exponentialRampToValueAtTime(baseVol * 1.5, time + 0.008);
+        punchGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.45);
+
+        punchOsc.connect(punchGain);
+        punchGain.connect(outNode);
+        punchOsc.start(time);
+        punchOsc.stop(time + 0.48);
+
+        // TẦNG 3: VỤ NỔ PHỤ KÉP SAU 200MS KHI VÀNH TIM BUNG NỞ (Secondary Shell Detonation Cluster)
+        setTimeout(() => {
+          if (!isGrandShowActive || !audioCtx || isMuted) return;
+          try {
+            const t2 = audioCtx.currentTime;
+            const secOsc = audioCtx.createOscillator();
+            const secGain = audioCtx.createGain();
+            secOsc.type = "sine";
+            secOsc.frequency.setValueAtTime(95, t2);
+            secOsc.frequency.exponentialRampToValueAtTime(18, t2 + 0.70);
+
+            secGain.gain.setValueAtTime(0.0001, t2);
+            secGain.gain.exponentialRampToValueAtTime(baseVol * 1.2, t2 + 0.012);
+            secGain.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.90);
+
+            secOsc.connect(secGain);
+            secGain.connect(outNode);
+            secOsc.start(t2);
+            secOsc.stop(t2 + 0.95);
+          } catch (e) {}
+        }, 200);
+
+        // TẦNG 4: TIẾNG SẤM RỀN VANG VỌNG CHÂN TRỜI KÉO DÀI 3.5 GIÂY (Epic Horizon Rolling Thunder Reverb)
+        const rumbleDuration = 3.5;
+        const rumbleBufSize = Math.floor(audioCtx.sampleRate * rumbleDuration);
+        const rumbleBuf = audioCtx.createBuffer(1, rumbleBufSize, audioCtx.sampleRate);
+        const rumbleData = rumbleBuf.getChannelData(0);
+        let m0 = 0, m1 = 0;
+        for (let i = 0; i < rumbleBufSize; i++) {
+          const white = Math.random() * 2 - 1;
+          m0 = 0.99 * m0 + white * 0.07;
+          m1 = 0.94 * m1 + white * 0.14;
+          rumbleData[i] = (m0 + m1) * 0.85;
+        }
+
+        const rumbleSource = audioCtx.createBufferSource();
+        rumbleSource.buffer = rumbleBuf;
+
+        const rumbleFilter = audioCtx.createBiquadFilter();
+        rumbleFilter.type = "lowpass";
+        rumbleFilter.frequency.setValueAtTime(750, time);
+        rumbleFilter.frequency.exponentialRampToValueAtTime(40, time + rumbleDuration);
+        rumbleFilter.Q.value = 0.95;
+
+        const rumbleGain = audioCtx.createGain();
+        rumbleGain.gain.setValueAtTime(0.0001, time);
+        rumbleGain.gain.exponentialRampToValueAtTime(baseVol * 0.95, time + 0.04);
+        rumbleGain.gain.exponentialRampToValueAtTime(0.0001, time + rumbleDuration);
+
+        rumbleSource.connect(rumbleFilter);
+        rumbleFilter.connect(rumbleGain);
+        rumbleGain.connect(outNode);
+
+        rumbleSource.start(time);
+        rumbleSource.stop(time + rumbleDuration);
+
+        // TẦNG 5: 65 TIẾNG NỔ HOA LỬA LÁCH TÁCH NGÂN VANG DÀI 3.2 GIÂY (Dense Extended Stardust Crackles)
+        const crackleCount = 65;
+        for (let c = 0; c < crackleCount; c++) {
+          const delay = 0.10 + Math.random() * 3.10;
+          const popTime = time + delay;
+          const popDuration = 0.045 + Math.random() * 0.035;
+          const popVol = baseVol * (0.45 + Math.random() * 0.28) * Math.max(0.35, 1 - (delay / 3.3));
+
+          const pOsc = audioCtx.createOscillator();
+          const pGain = audioCtx.createGain();
+          pOsc.type = "sine";
+          pOsc.frequency.setValueAtTime(450 + Math.random() * 400, popTime);
+          pOsc.frequency.exponentialRampToValueAtTime(70, popTime + 0.022);
+
+          pGain.gain.setValueAtTime(0.0001, popTime);
+          pGain.gain.exponentialRampToValueAtTime(popVol * 0.70, popTime + 0.002);
+          pGain.gain.exponentialRampToValueAtTime(0.0001, popTime + 0.024);
+
+          pOsc.connect(pGain);
+          pGain.connect(outNode);
+          pOsc.start(popTime);
+          pOsc.stop(popTime + 0.028);
+
+          const sBufSize = Math.floor(audioCtx.sampleRate * popDuration);
+          const sBuf = audioCtx.createBuffer(1, sBufSize, audioCtx.sampleRate);
+          const sData = sBuf.getChannelData(0);
+          for (let i = 0; i < sBufSize; i++) {
+            sData[i] = (Math.random() * 2 - 1) * 0.60;
+          }
+          const sSource = audioCtx.createBufferSource();
+          sSource.buffer = sBuf;
+
+          const sFilter = audioCtx.createBiquadFilter();
+          sFilter.type = "bandpass";
+          sFilter.frequency.value = 850 + Math.random() * 600;
+          sFilter.Q.value = 1.9;
+
+          const sGain = audioCtx.createGain();
+          sGain.gain.setValueAtTime(0.0001, popTime);
+          sGain.gain.exponentialRampToValueAtTime(popVol * 1.1, popTime + 0.003);
+          sGain.gain.exponentialRampToValueAtTime(0.0001, popTime + popDuration);
+
+          sSource.connect(sFilter);
+          sFilter.connect(sGain);
+          sGain.connect(outNode);
+
+          sSource.start(popTime);
+          sSource.stop(popTime + popDuration + 0.01);
+        }
+      } catch (e) {}
+    }
+
     function triggerSupernovaTransition() {
       // 1. Cosmic Shockwaves on canvas
       const styles = getComputedStyle(document.documentElement);
@@ -5289,9 +6093,12 @@
       const novaEl = $("supernovaBurst");
       if (novaEl) novaEl.classList.remove("active");
       const stageEl = document.querySelector(".stage");
-      if (stageEl) stageEl.classList.remove("epic-impact");
+      if (stageEl) stageEl.classList.remove("epic-impact", "earth-shatter");
+      const flashEl = $("superClimaxFlash");
+      if (flashEl) flashEl.classList.remove("active");
       const ambient = $("ambientNebula");
       if (ambient) ambient.classList.remove("phrase-bloom");
+      clearGrandShowTimers();
       cosmicShockwaves = [];
       celebrationParticles = [];
       ascendingRockets = [];
@@ -5796,6 +6603,15 @@
           createSentenceSparkleShower(W / 2, H * 0.44);
           playCelebrationFanfare();
           triggerHaptic([40, 80, 120]);
+
+          // Tự động chuyển sang màn trình diễn pháo hoa sau 6.5 giây nếu người dùng không bấm nút
+          clearTimeout(agreeModalAutoTimer);
+          agreeModalAutoTimer = setTimeout(() => {
+            const m = $("agreeModal");
+            if (m && m.classList.contains("open")) {
+              closeAgreeModal();
+            }
+          }, 6500);
         }
         if (isFirst) {
           showToast("Yayyy! Lời đồng ý ngọt ngào đã được trao trọn vẹn! 💖✨");
@@ -5810,6 +6626,10 @@
 
 
     function closeAgreeModal() {
+      if (agreeModalAutoTimer) {
+        clearTimeout(agreeModalAutoTimer);
+        agreeModalAutoTimer = null;
+      }
       const modalEl = $("agreeModal");
       if (modalEl) {
         modalEl.classList.remove("open");
@@ -5830,6 +6650,11 @@
         if ($("agreeModal") && $("agreeModal").classList.contains("open")) closeAgreeModal();
       }
     });
+
+    // Expose for testing & external triggers
+    window.startGrandFireworksShow = startGrandFireworksShow;
+    window.launchColossalMasterpieceRocket = launchColossalMasterpieceRocket;
+    window.createColossalRomanticMasterpiece = createColossalRomanticMasterpiece;
 
   })();
   </script>

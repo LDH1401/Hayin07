@@ -3954,6 +3954,9 @@
       const maxSpeedX = (W * 0.44) / (16 * mult);
       const baseScale = Math.max(0.40, Math.min(maxSpeedY, maxSpeedX));
 
+      const birth = performance.now();
+      const targetDuration = 9000; // Thời gian tan biến đúng 9 giây
+
       const outerCount = 420;
       const waterfallCount = 280;
       const midCount = 220;
@@ -3980,8 +3983,10 @@
           vy: hy * speed,
           friction: frictionVal,
           gravity: 0.004,
+          birth: birth,
+          lifespan: targetDuration,
           alpha: 1,
-          decay: 0.00085 + Math.random() * 0.00055, // Đọng lại lấp lánh suốt 12-16 giây
+          decay: 0.00185,
           size: Math.random() * 5.8 + 3.6,
           color: pinkDiamondPalette[i % pinkDiamondPalette.length],
           shape: "heart",
@@ -3997,8 +4002,10 @@
             vy: hy * speed * (0.90 + Math.random() * 0.10),
             friction: frictionVal,
             gravity: 0.004,
+            birth: birth,
+            lifespan: targetDuration,
             alpha: 1,
-            decay: 0.00095 + Math.random() * 0.00060,
+            decay: 0.00185,
             size: Math.random() * 3.8 + 2.0,
             color: "#ffd700",
             shape: "spark",
@@ -4021,8 +4028,10 @@
           vy: hy * speed * (Math.random() * 0.25 + 0.85) - 0.4,
           friction: 0.965,
           gravity: 0.012,
+          birth: birth,
+          lifespan: targetDuration,
           alpha: 1,
-          decay: 0.0010 + Math.random() * 0.00065,
+          decay: 0.00185,
           size: Math.random() * 4.2 + 2.2,
           color: goldPalette[i % goldPalette.length],
           shape: "spark",
@@ -4044,8 +4053,10 @@
           vy: hy * speed,
           friction: frictionVal,
           gravity: 0.004,
+          birth: birth,
+          lifespan: targetDuration,
           alpha: 1,
-          decay: 0.0010 + Math.random() * 0.00060,
+          decay: 0.00185,
           size: Math.random() * 4.8 + 2.6,
           color: pinkDiamondPalette[(i + 3) % pinkDiamondPalette.length],
           shape: "star",
@@ -4067,8 +4078,10 @@
           vy: hy * speed,
           friction: frictionVal,
           gravity: 0.004,
+          birth: birth,
+          lifespan: targetDuration,
           alpha: 1,
-          decay: 0.0010 + Math.random() * 0.00060,
+          decay: 0.00185,
           size: Math.random() * 4.2 + 2.2,
           color: i % 2 === 0 ? "#ffffff" : "#ffb3c6",
           shape: "heart",
@@ -4087,8 +4100,10 @@
           vy: Math.sin(angle) * speed - 0.8,
           friction: 0.945,
           gravity: 0.005,
+          birth: birth,
+          lifespan: targetDuration,
           alpha: 1,
-          decay: 0.0012 + Math.random() * 0.00075,
+          decay: 0.00185,
           size: Math.random() * 5.8 + 2.8,
           color: i % 2 === 0 ? "#ffffff" : (i % 3 === 0 ? "#ffd700" : "#ff758f"),
           shape: Math.random() < 0.5 ? "star" : "spark"
@@ -4119,8 +4134,10 @@
               vy: Math.sin(angle) * speed - 0.3,
               friction: 0.955,
               gravity: 0.006,
+              birth: performance.now(),
+              lifespan: Math.max(1000, targetDuration - 420),
               alpha: 1,
-              decay: 0.0013 + Math.random() * 0.00085,
+              decay: 0.00195,
               size: Math.random() * 4.0 + 2.0,
               color: satColors[p % satColors.length],
               shape: "star",
@@ -4152,14 +4169,6 @@
           });
         }, cfg.delay);
       });
-
-      // 8. TẦNG 8: Dòng chữ tình yêu lãng mạn thăng hoa (Romantic Stardust Message)
-      setTimeout(() => {
-        if (!isGrandShowActive) return;
-        const lovePhrase = CONFIG.to ? `Mãi bên nhau nhé, ${CONFIG.to}! 💖✨` : "Trọn vẹn tình yêu này... gửi đến em 💖✨";
-        buildTextParticles(lovePhrase, false);
-        textStart = performance.now();
-      }, 1600);
     }
 
     // MÀN TRÌNH DIỄN PHÁO HOA CHÍNH: KÉO DÀI 30 GIÂY -> TẮT HẾT PHÁO KHÁC -> ĐẾM NGƯỢC 3S -> BẮN QUẢ SIÊU TO KHỔNG LỒ
@@ -4841,7 +4850,13 @@
         cp.x += cp.vx;
         cp.y += cp.vy;
         cp.vy += cp.gravity;
-        cp.alpha -= cp.decay;
+        if (cp.lifespan && cp.birth) {
+          const elapsed = (now || performance.now()) - cp.birth;
+          const p = Math.min(1, Math.max(0, elapsed / cp.lifespan));
+          cp.alpha = p <= 0.15 ? 1.0 : Math.max(0, 1 - (p - 0.15) / 0.85);
+        } else {
+          cp.alpha -= cp.decay;
+        }
 
         if (cp.alpha <= 0) {
           celebrationParticles.splice(i, 1);

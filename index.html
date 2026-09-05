@@ -6628,7 +6628,7 @@
       setTimeout(() => createCelebrationBurst(originX + 55, originY - 35), 520);
       setTimeout(() => triggerMultiCelebration(), 750);
 
-      // Thông báo xuất hiện với hiệu ứng âm thanh ngân vang và bụi sao lộng lẫy
+      // Thông báo xuất hiện sau 3 giây (đợi hết đợt pháo hoa chúc mừng ban đầu)
       setTimeout(() => {
         const modalEl = $("agreeModal");
         if (modalEl) {
@@ -6638,20 +6638,11 @@
           createSentenceSparkleShower(W / 2, H * 0.44);
           playCelebrationFanfare();
           triggerHaptic([40, 80, 120]);
-
-          // Tự động chuyển sang màn trình diễn pháo hoa sau 6.5 giây nếu người dùng không bấm nút
-          clearTimeout(agreeModalAutoTimer);
-          agreeModalAutoTimer = setTimeout(() => {
-            const m = $("agreeModal");
-            if (m && m.classList.contains("open")) {
-              closeAgreeModal();
-            }
-          }, 6500);
         }
         if (isFirst) {
           showToast("Yayyy! Lời đồng ý ngọt ngào đã được trao trọn vẹn! 💖✨");
         }
-      }, 1800);
+      }, 3000);
 
       // Duy trì pháo hoa định kỳ sau mỗi 3 giây
       startAutoFireworks();
@@ -6660,7 +6651,7 @@
     $("agreeHeartBtn").addEventListener("click", handleAgreement);
 
 
-    function closeAgreeModal() {
+    function closeAgreeModal(shouldStartFireworks = false) {
       if (agreeModalAutoTimer) {
         clearTimeout(agreeModalAutoTimer);
         agreeModalAutoTimer = null;
@@ -6669,20 +6660,22 @@
       if (modalEl) {
         modalEl.classList.remove("open");
         modalEl.setAttribute("aria-hidden", "true");
+      }
+      if (shouldStartFireworks) {
         startGrandFireworksShow();
       }
     }
 
-    $("closeAgreeModalBtn").addEventListener("click", closeAgreeModal);
+    $("closeAgreeModalBtn").addEventListener("click", () => closeAgreeModal(true));
     $("agreeModal").addEventListener("click", e => {
-      if (e.target === $("agreeModal")) closeAgreeModal();
+      if (e.target === $("agreeModal")) closeAgreeModal(false);
     });
 
     // Keyboard Shortcuts
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") {
         if (modal.classList.contains("open")) closeCreatorModal();
-        if ($("agreeModal") && $("agreeModal").classList.contains("open")) closeAgreeModal();
+        if ($("agreeModal") && $("agreeModal").classList.contains("open")) closeAgreeModal(false);
       }
     });
 
